@@ -52,6 +52,7 @@ from .blockchain import InvalidHeader
 
 NODES_RETRY_INTERVAL = 60
 SERVER_RETRY_INTERVAL = 10
+BLOCKCHAIN_REQUEST_TIMEOUT = 20
 
 
 def parse_servers(result):
@@ -1039,7 +1040,7 @@ class Network(util.DaemonThread):
         with self.interface_lock:
             interfaces = list(self.interfaces.values())
         for interface in interfaces:
-            if interface.request and time.time() - interface.request_time > 20:
+            if interface.request and time.time() - interface.request_time > BLOCKCHAIN_REQUEST_TIMEOUT:
                 interface.print_error("blockchain request timed out")
                 self.connection_down(interface.server)
                 continue
