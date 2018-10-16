@@ -8,11 +8,11 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 
-from electrum.wallet import Wallet
-from electrum.storage import WalletStorage
-from electrum.util import UserCancelled, InvalidPassword
-from electrum.base_wizard import BaseWizard, HWD_SETUP_DECRYPT_WALLET, GoBack
-from electrum.i18n import _
+from electrum_civx.wallet import Wallet
+from electrum_civx.storage import WalletStorage
+from electrum_civx.util import UserCancelled, InvalidPassword
+from electrum_civx.base_wizard import BaseWizard, HWD_SETUP_DECRYPT_WALLET, GoBack
+from electrum_civx.i18n import _
 
 from .seed_dialog import SeedLayout, KeysLayout
 from .network_dialog import NetworkChoiceLayout
@@ -106,7 +106,7 @@ class InstallWizard(QDialog, MessageBoxMixin, BaseWizard):
     def __init__(self, config, app, plugins, storage):
         BaseWizard.__init__(self, config, plugins, storage)
         QDialog.__init__(self, None)
-        self.setWindowTitle('Electrum  -  ' + _('Install Wizard'))
+        self.setWindowTitle('Electrum CivX -  ' + _('Install Wizard'))
         self.app = app
         self.config = config
         # Set for base base class
@@ -177,7 +177,7 @@ class InstallWizard(QDialog, MessageBoxMixin, BaseWizard):
         hbox2.addWidget(self.pw_e)
         hbox2.addStretch()
         vbox.addLayout(hbox2)
-        self.set_layout(vbox, title=_('Electrum wallet'))
+        self.set_layout(vbox, title=_('Electrum CivX wallet'))
 
         wallet_folder = os.path.dirname(self.storage.path)
 
@@ -414,8 +414,9 @@ class InstallWizard(QDialog, MessageBoxMixin, BaseWizard):
         title = _('Confirm Seed')
         message = ' '.join([
             _('Your seed is important!'),
-            _('If you lose your seed, your money will be permanently lost.'),
-            _('To make sure that you have properly saved your seed, please retype it here.')
+            _('With it, you can recover your tokens if you loose your wallet.'),
+            _('Without it, your tokens will be lost forever.'),
+            _('To make sure that you have properly saved your seed, please enter it here to validate.')
         ])
         seed, is_bip39, is_ext = self.seed_input(title, message, test, None)
         return seed
@@ -576,10 +577,10 @@ class InstallWizard(QDialog, MessageBoxMixin, BaseWizard):
         return None
 
     def init_network(self, network):
-        message = _("Electrum communicates with remote servers to get "
+        message = _("Electrum-CIVX communicates with remote servers to get "
                   "information about your transactions and addresses. The "
                   "servers all fulfill the same purpose only differing in "
-                  "hardware. In most cases you simply want to let Electrum "
+                  "hardware. In most cases you simply want to let Electrum-CIVX "
                   "pick one at random.  However if you prefer feel free to "
                   "select a server manually.")
         choices = [_("Auto connect"), _("Select server manually")]
