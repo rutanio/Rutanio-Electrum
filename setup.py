@@ -21,7 +21,7 @@ with open('contrib/requirements/requirements-hw.txt') as f:
 version = imp.load_source('version', 'electrum/version.py')
 
 if sys.version_info[:3] < (3, 4, 0):
-    sys.exit("Error: Electrum requires Python version >= 3.4.0...")
+    sys.exit("Error: Electrum-CIVX requires Python version >= 3.4.0...")
 
 data_files = []
 
@@ -39,7 +39,7 @@ if platform.system() in ['Linux', 'FreeBSD', 'DragonFly']:
         else:
             usr_share = os.path.expanduser('~/.local/share')
     data_files += [
-        (os.path.join(usr_share, 'applications/'), ['electrum.desktop']),
+        (os.path.join(usr_share, 'applications/'), ['electrum-civx.desktop']),
         (os.path.join(usr_share, icons_dirname), ['icons/electrum.png'])
     ]
 
@@ -69,34 +69,34 @@ class CustomInstallCommand(install):
 
 
 setup(
-    name="Electrum",
+    name="Electrum-civx",
     version=version.ELECTRUM_VERSION,
     install_requires=requirements,
     extras_require=extras_require,
     packages=[
-        'electrum',
-        'electrum.gui',
-        'electrum.gui.qt',
-        'electrum.plugins',
-    ] + [('electrum.plugins.'+pkg) for pkg in find_packages('electrum/plugins')],
+        'electrum_civx',
+        'electrum_civx.gui',
+        'electrum_civx.gui.qt',
+        'electrum_civx.plugins',
+    ] + [('electrum_civx.plugins.'+pkg) for pkg in find_packages('electrum_civx/plugins')],
     package_dir={
-        'electrum': 'electrum'
+        'electrum_civx': 'electrum'
     },
     package_data={
         '': ['*.txt', '*.json', '*.ttf', '*.otf'],
-        'electrum': [
+        'electrum_civx': [
             'wordlist/*.txt',
             'locale/*/LC_MESSAGES/electrum.mo',
         ],
     },
     scripts=['electrum/electrum'],
     data_files=data_files,
-    description="Lightweight Bitcoin Wallet",
-    author="Thomas Voegtlin",
-    author_email="thomasv@electrum.org",
+    description="Lightweight CivX Wallet",
+    author="ExF Developers, Fluid Chains",
+    author_email="turcol@gmail.com",
     license="MIT Licence",
-    url="https://electrum.org",
-    long_description="""Lightweight Bitcoin Wallet""",
+    url="https://civxeconomy.com",
+    long_description="""Lightweight CivX Wallet""",
     cmdclass={
         'install': CustomInstallCommand,
     },
