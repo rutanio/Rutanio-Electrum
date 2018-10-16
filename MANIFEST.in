@@ -1,7 +1,7 @@
 include LICENCE RELEASE-NOTES AUTHORS
 include README.rst
-include electrum.conf.sample
-include electrum.desktop
+include electrum-civx.conf.sample
+include electrum-civx.desktop
 include *.py
 include run_electrum
 include contrib/requirements/requirements.txt
