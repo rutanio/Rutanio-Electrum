@@ -45,13 +45,13 @@ def inv_dict(d):
     return {v: k for k, v in d.items()}
 
 
-base_units = {'BTC':8, 'mBTC':5, 'bits':2, 'sat':0}
+base_units = {'CIVX':8, 'mCIVX':5, 'uCIVX':2, 'exo':0}
 base_units_inverse = inv_dict(base_units)
-base_units_list = ['BTC', 'mBTC', 'bits', 'sat']  # list(dict) does not guarantee order
+base_units_list = ['CIVX', 'mCIVX', 'uCIVX', 'exo']  # list(dict) does not guarantee order
 
 
 def decimal_point_to_base_unit_name(dp: int) -> str:
-    # e.g. 8 -> "BTC"
+    # e.g. 8 -> "CIVX"
     try:
         return base_units_inverse[dp]
     except KeyError:
@@ -59,7 +59,7 @@ def decimal_point_to_base_unit_name(dp: int) -> str:
 
 
 def base_unit_name_to_decimal_point(unit_name: str) -> int:
-    # e.g. "BTC" -> 8
+    # e.g. "CIVX" -> 8
     try:
         return base_units[unit_name]
     except KeyError:
@@ -132,7 +132,7 @@ class Satoshis(object):
         return 'Satoshis(%d)'%self.value
 
     def __str__(self):
-        return format_satoshis(self.value) + " BTC"
+        return format_satoshis(self.value) + " CIVX"
 
 class Fiat(object):
     __slots__ = ('value', 'ccy')
@@ -347,7 +347,7 @@ def android_data_dir():
     return PythonActivity.mActivity.getFilesDir().getPath() + '/data'
 
 def android_headers_dir():
-    d = android_ext_dir() + '/org.electrum.electrum'
+    d = android_ext_dir() + '/com.civxeconomy.electrumcivx'
     if not os.path.exists(d):
         try:
             os.mkdir(d)
@@ -382,7 +382,7 @@ def assert_datadir_available(config_path):
         return
     else:
         raise FileNotFoundError(
-            'Electrum datadir does not exist. Was it deleted while running?' + '\n' +
+            'Electrum-CIVX datadir does not exist. Was it deleted while running?' + '\n' +
             'Should be at {}'.format(path))
 
 
@@ -461,11 +461,11 @@ def user_dir():
     if 'ANDROID_DATA' in os.environ:
         return android_check_data_dir()
     elif os.name == 'posix':
-        return os.path.join(os.environ["HOME"], ".electrum")
+        return os.path.join(os.environ["HOME"], ".electrum-civx")
     elif "APPDATA" in os.environ:
-        return os.path.join(os.environ["APPDATA"], "Electrum")
+        return os.path.join(os.environ["APPDATA"], "Electrum-civx")
     elif "LOCALAPPDATA" in os.environ:
-        return os.path.join(os.environ["LOCALAPPDATA"], "Electrum")
+        return os.path.join(os.environ["LOCALAPPDATA"], "Electrum-civx")
     else:
         #raise Exception("No home directory found in environment variables.")
         return
@@ -505,7 +505,7 @@ def format_satoshis(x, num_zeros=0, decimal_point=8, precision=None, is_diff=Fal
     return result
 
 
-FEERATE_PRECISION = 1  # num fractional decimal places for sat/byte fee rates
+FEERATE_PRECISION = 1  # num fractional decimal places for exo/byte fee rates
 _feerate_quanta = Decimal(10) ** (-FEERATE_PRECISION)
 
 
@@ -514,7 +514,7 @@ def format_fee_satoshis(fee, num_zeros=0):
 
 
 def quantize_feerate(fee):
-    """Strip sat/byte fee rate of excess precision."""
+    """Strip exo/byte fee rate of excess precision."""
     if fee is None:
         return None
     return Decimal(fee).quantize(_feerate_quanta, rounding=decimal.ROUND_HALF_DOWN)
@@ -584,42 +584,18 @@ def time_difference(distance_in_time, include_seconds):
         return "over %d years" % (round(distance_in_minutes / 525600))
 
 mainnet_block_explorers = {
-    'Biteasy.com': ('https://www.biteasy.com/blockchain/',
+    'BlockCIVX': ('http://blockexplorer.civxeconomy.com/#/civx/',
                         {'tx': 'transactions/', 'addr': 'addresses/'}),
-    'Bitflyer.jp': ('https://chainflyer.bitflyer.jp/',
-                        {'tx': 'Transaction/', 'addr': 'Address/'}),
-    'Blockchain.info': ('https://blockchain.info/',
-                        {'tx': 'tx/', 'addr': 'address/'}),
-    'blockchainbdgpzk.onion': ('https://blockchainbdgpzk.onion/',
-                        {'tx': 'tx/', 'addr': 'address/'}),
-    'Blockr.io': ('https://btc.blockr.io/',
-                        {'tx': 'tx/info/', 'addr': 'address/info/'}),
-    'Blocktrail.com': ('https://www.blocktrail.com/BTC/',
-                        {'tx': 'tx/', 'addr': 'address/'}),
-    'BTC.com': ('https://chain.btc.com/',
-                        {'tx': 'tx/', 'addr': 'address/'}),
-    'Chain.so': ('https://www.chain.so/',
-                        {'tx': 'tx/BTC/', 'addr': 'address/BTC/'}),
-    'Insight.is': ('https://insight.bitpay.com/',
-                        {'tx': 'tx/', 'addr': 'address/'}),
-    'TradeBlock.com': ('https://tradeblock.com/blockchain/',
-                        {'tx': 'tx/', 'addr': 'address/'}),
-    'BlockCypher.com': ('https://live.blockcypher.com/btc/',
-                        {'tx': 'tx/', 'addr': 'address/'}),
-    'Blockchair.com': ('https://blockchair.com/bitcoin/',
-                        {'tx': 'transaction/', 'addr': 'address/'}),
-    'blockonomics.co': ('https://www.blockonomics.co/',
-                        {'tx': 'api/tx?txid=', 'addr': '#/search?q='}),
-    'OXT.me': ('https://oxt.me/',
-                        {'tx': 'transaction/', 'addr': 'address/'}),
+    'cryptoID.info': ('https://chainz.cryptoid.info/civx/',
+                        {'tx': 'tx.dws?', 'addr': 'address.dws?'}),
     'system default': ('blockchain:/',
                         {'tx': 'tx/', 'addr': 'address/'}),
 }
 
 testnet_block_explorers = {
-    'Blocktrail.com': ('https://www.blocktrail.com/tBTC/',
-                       {'tx': 'tx/', 'addr': 'address/'}),
-    'system default': ('blockchain://000000000933ea01ad0ee984209779baaec3ced90fa3f408719526f8d77f4943/',
+    'BlockCIVX': ('http://blockexplorer.civxeconomy.com/#/tcivx/',
+                        {'tx': 'transactions/', 'addr': 'addresses/'}),
+    'system default': ('blockchain://0000059bb2c2048493efcb0f1a034972b3ce4089d54c93b69aaab212fb369887/',
                        {'tx': 'tx/', 'addr': 'address/'}),
 }
 
@@ -628,7 +604,7 @@ def block_explorer_info():
     return testnet_block_explorers if constants.net.TESTNET else mainnet_block_explorers
 
 def block_explorer(config):
-    return config.get('block_explorer', 'Blocktrail.com')
+    return config.get('block_explorer', 'BlockCIVX')
 
 def block_explorer_tuple(config):
     return block_explorer_info().get(block_explorer(config))
@@ -653,12 +629,12 @@ def parse_URI(uri, on_pr=None):
 
     if ':' not in uri:
         if not bitcoin.is_address(uri):
-            raise Exception("Not a bitcoin address")
+            raise Exception("Not a civx address")
         return {'address': uri}
 
     u = urllib.parse.urlparse(uri)
-    if u.scheme != 'bitcoin':
-        raise Exception("Not a bitcoin URI")
+    if u.scheme != 'civx':
+        raise Exception("Not a civx URI")
     address = u.path
 
     # python for android fails to parse query
@@ -675,7 +651,7 @@ def parse_URI(uri, on_pr=None):
     out = {k: v[0] for k, v in pq.items()}
     if address:
         if not bitcoin.is_address(address):
-            raise Exception("Invalid bitcoin address:" + address)
+            raise Exception("Invalid civx address:" + address)
         out['address'] = address
     if 'amount' in out:
         am = out['amount']
@@ -725,7 +701,7 @@ def create_URI(addr, amount, message):
         query.append('amount=%s'%format_satoshis_plain(amount))
     if message:
         query.append('message=%s'%urllib.parse.quote(message))
-    p = urllib.parse.ParseResult(scheme='bitcoin', netloc='', path=addr, params='', query='&'.join(query), fragment='')
+    p = urllib.parse.ParseResult(scheme='civx', netloc='', path=addr, params='', query='&'.join(query), fragment='')
     return urllib.parse.urlunparse(p)
 
 
