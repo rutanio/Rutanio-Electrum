@@ -1,6 +1,3 @@
 [submodule "contrib/deterministic-build/electrum-civx-locale"]
 	path = contrib/deterministic-build/electrum-civx-locale
 	url = https://github.com/exofoundation/electrum-civx-locale
-[submodule "contrib/deterministic-build/electrum-civx-icons"]
-	path = contrib/deterministic-build/electrum-civx-icons
-	url = https://github.com/exofoundation/electrum-civx-icons
