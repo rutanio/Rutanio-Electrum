@@ -29,7 +29,7 @@ import os
 import requests
 
 from .version import ELECTRUM_VERSION
-from .import constants
+from . import constants
 from .i18n import _
 
 
