@@ -1,6 +1,7 @@
 #!/bin/bash
 # Lucky number
 export PYTHONHASHSEED=22
+export WINEPREFIX=/opt/wine64
 
 here=$(dirname "$0")
 test -n "$here" -a -d "$here" || exit

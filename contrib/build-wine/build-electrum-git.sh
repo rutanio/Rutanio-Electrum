@@ -16,6 +16,8 @@ PYTHON="wine $PYHOME/python.exe -OO -B"
 cd `dirname $0`
 set -e
 
+mkdir -p $WINEPREFIX/drive_c/electrum-civx
+
 pushd ../..
 cp -r electrum* .git* icons* pubkeys* setup* run_electrum LICENCE Info.plist $WINEPREFIX/drive_c/electrum-civx/
 cp --parents contrib/requirements/* $WINEPREFIX/drive_c/electrum-civx/
