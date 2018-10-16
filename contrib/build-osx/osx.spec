@@ -5,10 +5,11 @@ from PyInstaller.utils.hooks import collect_data_files, collect_submodules, coll
 import sys
 import os
 
-PACKAGE='Electrum'
+PACKAGE='Electrum-CIVX'
 PYPKG='electrum'
+ALIASPKGPATH='electrum_civx'
 MAIN_SCRIPT='run_electrum'
-ICONS_FILE='electrum.icns'
+ICONS_FILE='electrum-civx.icns'
 
 for i, x in enumerate(sys.argv):
     if x == '--name':
@@ -30,10 +31,10 @@ hiddenimports += collect_submodules('websocket')
 hiddenimports += collect_submodules('ckcc')
 
 datas = [
-    (electrum + PYPKG + '/*.json', PYPKG),
-    (electrum + PYPKG + '/wordlist/english.txt', PYPKG + '/wordlist'),
-    (electrum + PYPKG + '/locale', PYPKG + '/locale'),
-    (electrum + PYPKG + '/plugins', PYPKG + '/plugins'),
+    (electrum + PYPKG + '/*.json', ALIASPKGPATH),
+    (electrum + PYPKG + '/wordlist/english.txt', ALIASPKGPATH + '/wordlist'),
+    (electrum + PYPKG + '/locale', ALIASPKGPATH + '/locale'),
+    (electrum + PYPKG + '/plugins', ALIASPKGPATH + '/plugins'),
 ]
 datas += collect_data_files('trezorlib')
 datas += collect_data_files('safetlib')
