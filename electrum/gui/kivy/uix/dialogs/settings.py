@@ -3,17 +3,17 @@ from kivy.factory import Factory
 from kivy.properties import ObjectProperty
 from kivy.lang import Builder
 
-from electrum.util import base_units_list
-from electrum.i18n import languages
-from electrum.gui.kivy.i18n import _
-from electrum.plugin import run_hook
-from electrum import coinchooser
+from electrum_civx.util import base_units_list
+from electrum_civx.i18n import languages
+from electrum_civx.gui.kivy.i18n import _
+from electrum_civx.plugin import run_hook
+from electrum_civx import coinchooser
 
 from .choice_dialog import ChoiceDialog
 
 Builder.load_string('''
 #:import partial functools.partial
-#:import _ electrum.gui.kivy.i18n._
+#:import _ electrum_civx.gui.kivy.i18n._
 
 <SettingsDialog@Popup>
     id: settings
@@ -44,7 +44,7 @@ Builder.load_string('''
                 SettingsItem:
                     bu: app.base_unit
                     title: _('Denomination') + ': ' + self.bu
-                    description: _("Base unit for Bitcoin amounts.")
+                    description: _("Base unit for CivX amounts.")
                     action: partial(root.unit_dialog, self)
                 CardSeparator
                 SettingsItem:
