@@ -71,7 +71,7 @@ class PRNG:
 Bucket = namedtuple('Bucket',
                     ['desc',
                      'weight',      # as in BIP-141
-                     'value',       # in satoshis
+                     'value',       # in exos
                      'coins',       # UTXOs
                      'min_height',  # min block height where a coin was confirmed
                      'witness'])    # whether any coin uses segwit
@@ -159,7 +159,7 @@ class CoinChooserBase(PrintError):
 
         # Last change output.  Round down to maximum precision but lose
         # no more than 10**max_dp_to_round_for_privacy
-        # e.g. a max of 2 decimal places means losing 100 satoshis to fees
+        # e.g. a max of 2 decimal places means losing 100 exos to fees
         max_dp_to_round_for_privacy = 2 if self.enable_output_value_rounding else 0
         N = pow(10, min(max_dp_to_round_for_privacy, zeroes[0]))
         amount = (remaining // N) * N
