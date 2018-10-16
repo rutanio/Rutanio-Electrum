@@ -28,7 +28,7 @@ import sys
 
 script_dir = os.path.dirname(os.path.realpath(__file__))
 is_bundle = getattr(sys, 'frozen', False)
-is_local = not is_bundle and os.path.exists(os.path.join(script_dir, "electrum.desktop"))
+is_local = not is_bundle and os.path.exists(os.path.join(script_dir, "electrum-civx.desktop"))
 is_android = 'ANDROID_DATA' in os.environ
 
 # move this back to gui/kivy/__init.py once plugins are moved
@@ -63,19 +63,24 @@ def check_imports():
 if not is_android:
     check_imports()
 
+# load local module as electrum
+if is_local or is_android:
+    import imp
+    imp.load_module('electrum_civx', *imp.find_module('electrum'))
 
-from electrum import bitcoin, util
-from electrum import constants
-from electrum import SimpleConfig, Network
-from electrum.wallet import Wallet, Imported_Wallet
-from electrum import bitcoin, util, constants
-from electrum.storage import WalletStorage, get_derivation_used_for_hw_device_encryption
-from electrum.util import print_msg, print_stderr, json_encode, json_decode, UserCancelled
-from electrum.util import set_verbosity, InvalidPassword
-from electrum.commands import get_parser, known_commands, Commands, config_variables
-from electrum import daemon
-from electrum import keystore
-from electrum.mnemonic import Mnemonic
+
+from electrum_civx import bitcoin, util
+from electrum_civx import constants
+from electrum_civx import SimpleConfig, Network
+from electrum_civx.wallet import Wallet, Imported_Wallet
+from electrum_civx import bitcoin, util, constants
+from electrum_civx.storage import WalletStorage, get_derivation_used_for_hw_device_encryption
+from electrum_civx.util import print_msg, print_stderr, json_encode, json_decode, UserCancelled
+from electrum_civx.util import set_verbosity, InvalidPassword
+from electrum_civx.commands import get_parser, known_commands, Commands, config_variables
+from electrum_civx import daemon
+from electrum_civx import keystore
+from electrum_civx.mnemonic import Mnemonic
 
 # get password routine
 def prompt_password(prompt, confirm=True):
@@ -169,7 +174,7 @@ def init_daemon(config_options):
     storage = WalletStorage(config.get_wallet_path())
     if not storage.file_exists():
         print_msg("Error: Wallet file not found.")
-        print_msg("Type 'electrum create' to create a new wallet, or provide a path to a wallet with the -w option")
+        print_msg("Type 'electrum-civx create' to create a new wallet, or provide a path to a wallet with the -w option")
         sys.exit(0)
     if storage.is_encrypted():
         if storage.is_encrypted_with_hw_device():
@@ -207,7 +212,7 @@ def init_cmdline(config_options, server):
 
     if cmd.requires_wallet and not storage.file_exists():
         print_msg("Error: Wallet file not found.")
-        print_msg("Type 'electrum create' to create a new wallet, or provide a path to a wallet with the -w option")
+        print_msg("Type 'electrum-civx create' to create a new wallet, or provide a path to a wallet with the -w option")
         sys.exit(0)
 
     # important warning
@@ -320,7 +325,7 @@ def run_offline_command(config, config_options, plugins):
     return result
 
 def init_plugins(config, gui_name):
-    from electrum.plugin import Plugins
+    from electrum_civx.plugin import Plugins
     return Plugins(config, is_local or is_android, gui_name)
 
 
@@ -389,7 +394,7 @@ if __name__ == '__main__':
     # check uri
     uri = config_options.get('url')
     if uri:
-        if not uri.startswith('bitcoin:'):
+        if not uri.startswith('civx:'):
             print_stderr('unknown command:', uri)
             sys.exit(1)
         config_options['url'] = uri
@@ -438,13 +443,13 @@ if __name__ == '__main__':
                 d = daemon.Daemon(config, fd, False)
                 d.start()
                 if config.get('websocket_server'):
-                    from electrum import websockets
+                    from electrum_civx import websockets
                     websockets.WebSocketServer(config, d.network).start()
                 if config.get('requests_dir'):
                     path = os.path.join(config.get('requests_dir'), 'index.html')
                     if not os.path.exists(path):
                         print("Requests directory not configured.")
-                        print("You can configure it using https://github.com/spesmilo/electrum-merchant")
+                        print("You can configure it using https://github.com/exofoundation/electrum-civx-merchant")
                         sys.exit(1)
                 d.join()
                 sys.exit(0)
@@ -466,7 +471,7 @@ if __name__ == '__main__':
         else:
             cmd = known_commands[cmdname]
             if cmd.requires_network:
-                print_msg("Daemon not running; try 'electrum daemon start'")
+                print_msg("Daemon not running; try 'electrum-civx daemon start'")
                 sys.exit(1)
             else:
                 plugins = init_plugins(config, 'cmdline')
