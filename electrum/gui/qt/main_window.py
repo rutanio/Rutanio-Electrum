@@ -397,8 +397,8 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, PrintError):
         if self.wallet.is_watching_only():
             msg = ' '.join([
                 _("This wallet is watching-only."),
-                _("This means you will not be able to spend CivXs with it."),
-                _("Make sure you own the seed phrase or the private keys, before you request CivXs to be sent to this wallet.")
+                _("This means you will not be able to spend CivX with it."),
+                _("Make sure you own and securely store the seed phrase or the private keys, before you request CivX to be sent to this wallet.")
             ])
             self.show_warning(msg, title=_('Information'))
 
@@ -565,19 +565,19 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, PrintError):
     def show_about(self):
         QMessageBox.about(self, "Electrum-CIVX",
                           (_("Version")+" %s" % self.wallet.electrum_version + "\n\n" +
-                           _("Electrum-CIVX's focus is speed, with low resource usage and simplifying CivX.") + " " +
+                           _("Electrum-CIVX's focus is speed, low resource usage, and simplicity.") + " " +
                            _("You do not need to perform regular backups, because your wallet can be "
                               "recovered from a secret phrase that you can memorize or write on paper.") + " " +
-                           _("Startup times are instant because it operates in conjunction with high-performance "
-                              "servers that handle the most complicated parts of the CivX system.") + "\n\n" +
-                           _("Uses icons from the Icons8 icon pack (icons8.com).")))
+                           _("Startup times are fast because it operates in conjunction with high-performance "
+                              "servers that handle the many complicated parts of the CivX system.") + "\n\n" +
+                           _("This software uses icons from the Icons8 icon pack (icons8.com).")))
 
     def show_report_bug(self):
         msg = ' '.join([
             _("Please report any bugs as issues on github:<br/>"),
             "<a href=\"https://github.com/exofoundation/electrum-civx/issues\">https://github.com/exofoundation/electrum-civx/issues</a><br/><br/>",
-            _("Before reporting a bug, upgrade to the most recent version of Electrum-CIVX (latest release or git HEAD), and include the version number in your report."),
-            _("Try to explain not only what the bug is, but how it occurs.")
+            _("Before reporting a bug, please upgrade to the most recent version of Electrum-CIVX (latest release or git HEAD), and include the version number in your report."),
+            _("Try to explain not only what the bug is, but how it occurs. The more detail you provide, the better the team will be able to help.")
          ])
         self.show_message(msg, title="Electrum-CIVX - " + _("Reporting Bugs"))
 
@@ -824,7 +824,7 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, PrintError):
             _('Expiration date of your request.'),
             _('This information is seen by the recipient if you send them a signed payment request.'),
             _('Expired requests have to be deleted manually from your list, in order to free the corresponding CivX addresses.'),
-            _('The civx address never expires and will always be part of this Electrum-CIVX wallet.'),
+            _('The CivX address never expires and will always be part of this Electrum-CivX wallet.'),
         ])
         grid.addWidget(HelpLabel(_('Request expires'), msg), 3, 0)
         grid.addWidget(self.expires_combo, 3, 1)
@@ -970,7 +970,7 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, PrintError):
             if not self.wallet.is_deterministic():
                 msg = [
                     _('No more addresses in your wallet.'),
-                    _('You are using a non-deterministic wallet, which cannot create new addresses.'),
+                    _('You are using a non-deterministic wallet that cannot create new addresses.'),
                     _('If you want to create new addresses, use a deterministic wallet instead.')
                    ]
                 self.show_message(' '.join(msg))
@@ -1097,9 +1097,9 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, PrintError):
         hbox.addStretch(1)
         grid.addLayout(hbox, 4, 4)
 
-        msg = _('CivX transactions are in general not free. A transaction fee is paid by the sender of the funds.') + '\n\n'\
-              + _('The amount of fee can be decided freely by the sender. However, transactions with low fees take more time to be processed.') + '\n\n'\
-              + _('A suggested fee is automatically added to this field. You may override it. The suggested fee increases with the size of the transaction.')
+        msg = _('CivX transactions are not free. A transaction fee is paid by the sender of the funds. The fee is collected by the staker who forges the block containing the transaction.') + '\n\n'\
+              + _('The amount of fee can be decided freely by the sender. However, transactions with low fees take more time to be processed. Transactions with fees less that 0.0001 CivX will be rejected.') + '\n\n'\
+              + _('A suggested fee is automatically added to this field. You may override it. The suggested fee increases with the size, in bytes, of the transaction.')
         self.fee_e_label = HelpLabel(_('Fee'), msg)
 
         def fee_cb(dyn, pos, fee_rate):
@@ -1532,7 +1532,7 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, PrintError):
 
         if fee < self.wallet.relayfee() * tx.estimated_size() / 1000:
             self.show_error('\n'.join([
-                _("This transaction requires a higher fee, or it will not be propagated by your current server"),
+                _("This transaction requires a higher fee, or it will not be processed or propagated by your current server"),
                 _("Try to raise your transaction fee, or use a server with a lower relay fee.")
             ]))
             return
@@ -1542,13 +1542,13 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, PrintError):
             return
 
         if not self.network:
-            self.show_error(_("You can't broadcast a transaction without a live network connection."))
+            self.show_error(_("You cannot broadcast a transaction without a live network connection."))
             return
 
         # confirmation dialog
         msg = [
             _("Amount to be sent") + ": " + self.format_amount_and_units(amount),
-            _("Mining fee") + ": " + self.format_amount_and_units(fee),
+            _("Transaction fee") + ": " + self.format_amount_and_units(fee),
         ]
 
         x_fee = run_hook('get_tx_extra_fee', self.wallet, tx)
@@ -1808,8 +1808,8 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, PrintError):
         self.show_send_tab()
         self.payto_e.paytomany()
         msg = '\n'.join([
-            _('Enter a list of outputs in the \'Pay to\' field.'),
-            _('One output per line.'),
+            _('Enter a list of payees in the \'Pay to\' field.'),
+            _('One payee per line.'),
             _('Format: address, amount'),
             _('You may load a CSV file using the file icon.')
         ])
@@ -2149,7 +2149,7 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, PrintError):
                 "private key, and verifying with the corresponding public key. The "
                 "address you have entered does not have a unique public key, so these "
                 "operations cannot be performed.") + '\n\n' + \
-               _('The operation is undefined. Not just in Electrum-CIVX, but in general.')
+               _('The operation is undefined. Not just in Electrum-CivX, but in general.')
 
     @protected
     def do_sign(self, address, message, signature, password):
@@ -2395,7 +2395,7 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, PrintError):
 
         msg = "%s\n%s\n%s" % (_("WARNING: ALL your private keys are secret."),
                               _("Exposing a single private key can compromise your entire wallet!"),
-                              _("In particular, DO NOT use 'redeem private key' services proposed by third parties."))
+                              _("DO NOT use 'redeem private key' services proposed by third parties."))
         vbox.addWidget(QLabel(msg))
 
         e = QTextEdit()
@@ -2403,7 +2403,7 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, PrintError):
         vbox.addWidget(e)
 
         defaultname = 'electrum-civx-private-keys.csv'
-        select_msg = _('Select file to export your private keys to')
+        select_msg = _('Select file and location to export your private keys to')
         hbox, filename_e, csv_button = filename_field(self, self.config, defaultname, select_msg)
         vbox.addLayout(hbox)
 
@@ -2659,8 +2659,8 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, PrintError):
         gui_widgets.append((nz_label, nz))
 
         msg = '\n'.join([
-            _('Time based: fee rate is based on average confirmation time estimates'),
-            _('Mempool based: fee rate is targeting a depth in the memory pool')
+            _('Time based: Fee rate is based on average confirmation time estimates'),
+            _('Mempool based: Fee rate is targeting a depth in the memory pool')
             ]
         )
         fee_type_label = HelpLabel(_('Fee estimation') + ':', msg)
@@ -2746,7 +2746,7 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, PrintError):
 
         units = base_units_list
         msg = (_('Base unit of your wallet.')
-               + '\n1 CIVX = 1000 mCIVX. 1 mCIVX = 1000 uCIVX. 1 uCIVX = 100 exo.\n'
+               + '\n1 CIVX = 1000 mCIVX. 1 mCIVX = 1000 µCIVX. 1 µCIVX = 100 exo.\n'
                + _('This setting affects the Send tab, and all balance related fields.'))
         unit_label = HelpLabel(_('Base unit') + ':', msg)
         unit_combo = QComboBox()
@@ -2875,8 +2875,8 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, PrintError):
         outrounding_cb = QCheckBox(_('Enable output value rounding'))
         outrounding_cb.setToolTip(
             _('Set the value of the change output so that it has similar precision to the other outputs.') + '\n' +
-            _('This might improve your privacy somewhat.') + '\n' +
-            _('If enabled, at most 100 exo might be lost due to this, per transaction.'))
+            _('This might improve your privacy somewhat by obfuscating your actual transaction amount.') + '\n' +
+            _('If enabled, at most 100 additional exo could be spent per transaction.'))
         outrounding_cb.setChecked(enable_outrounding)
         outrounding_cb.stateChanged.connect(on_outrounding)
         tx_widgets.append((outrounding_cb, None))
@@ -3112,7 +3112,7 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, PrintError):
         vbox = QVBoxLayout(d)
         msg = (
             "A CPFP is a transaction that sends an unconfirmed output back to "
-            "yourself, with a high fee. The goal is to have miners confirm "
+            "the sender, with a high fee. The goal is to have miners confirm "
             "the parent transaction in order to get the fee attached to the "
             "child transaction.")
         vbox.addWidget(WWLabel(_(msg)))
@@ -3189,7 +3189,7 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, PrintError):
         new_fee = fee_e.get_amount()
         delta = new_fee - fee
         if delta < 0:
-            self.show_error("fee too low")
+            self.show_error("fee is too low")
             return
         try:
             new_tx = self.wallet.bump_fee(tx, delta)
