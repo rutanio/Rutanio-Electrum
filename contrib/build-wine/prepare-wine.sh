@@ -79,14 +79,19 @@ retry() {
 here=$(dirname $(readlink -e $0))
 set -e
 
+# Clean up Wine environment
+echo "Cleaning $WINEPREFIX"
+rm -rf $WINEPREFIX
+echo "done cleaning $WINEPREFIX"
+
 wine 'wineboot'
 
 # HACK to work around https://bugs.winehq.org/show_bug.cgi?id=42474#c22
 # needed for python 3.6+
-rm -f /opt/wine-stable/lib/wine/fakedlls/api-ms-win-core-path-l1-1-0.dll
-rm -f /opt/wine-stable/lib/wine/api-ms-win-core-path-l1-1-0.dll.so
+#rm -f /opt/wine-stable/lib/wine/fakedlls/api-ms-win-core-path-l1-1-0.dll
+#rm -f /opt/wine-stable/lib/wine/api-ms-win-core-path-l1-1-0.dll.so
 
-cd /tmp/electrum-build
+cd /tmp/electrum-civx-build
 
 # Install Python
 # note: you might need "sudo apt-get install dirmngr" for the following
@@ -127,7 +132,7 @@ download_if_not_exist $ZBAR_FILENAME "$ZBAR_URL"
 verify_hash $ZBAR_FILENAME "$ZBAR_SHA256"
 wine "$PWD/$ZBAR_FILENAME" /S
 
-# Upgrade setuptools (so Electrum can be installed later)
+# Upgrade setuptools (so Electrum-CIVX can be installed later)
 $PYTHON -m pip install setuptools --upgrade
 
 # Install NSIS installer
