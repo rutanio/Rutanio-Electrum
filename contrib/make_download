@@ -3,7 +3,7 @@ import re
 import os
 import sys
 
-from electrum.version import ELECTRUM_VERSION, APK_VERSION
+from electrum_civx.version import ELECTRUM_VERSION, APK_VERSION
 print("version", ELECTRUM_VERSION)
 
 dirname = sys.argv[1]
@@ -23,17 +23,17 @@ string = string.replace("##VERSION_ANDROID##", version_android)
 string = string.replace("##VERSION_APK##", APK_VERSION)
 
 files = {
-    'tgz': "Electrum-%s.tar.gz" % version,
-    'zip': "Electrum-%s.zip" % version,
-    'mac': "electrum-%s.dmg" % version_mac,
-    'win': "electrum-%s.exe" % version_win,
-    'win_setup': "electrum-%s-setup.exe" % version_win,
-    'win_portable': "electrum-%s-portable.exe" % version_win,
+    'tgz': "Electrum-CIVX-%s.tar.gz" % version,
+    'zip': "Electrum-CIVX-%s.zip" % version,
+    'mac': "electrum-civx-%s.dmg" % version_mac,
+    'win': "electrum-civx-%s.exe" % version_win,
+    'win_setup': "electrum-civx-%s-setup.exe" % version_win,
+    'win_portable': "electrum-civx-%s-portable.exe" % version_win,
 }
 
 for k, n in files.items():
     path = "dist/%s"%n
-    link = "https://download.electrum.org/%s/%s"%(version,n)
+    link = "https://download.civxeconomy.com/%s/%s"%(version,n)
     if not os.path.exists(path):
         os.system("wget -q %s -O %s" % (link, path))
     if not os.path.getsize(path):
