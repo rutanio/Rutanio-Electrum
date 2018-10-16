@@ -16,6 +16,12 @@ env/
 .buildozer/
 bin/
 /app.fil
+*Cache*
+logs/
+Local Storage/
+Cookies*
+User/
+Backups/
 
 # tox files
 .cache/
