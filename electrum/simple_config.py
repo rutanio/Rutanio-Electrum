@@ -20,9 +20,9 @@ FEE_DEPTH_TARGETS = [10000000, 5000000, 2000000, 1000000, 500000, 200000, 100000
 # satoshi per kbyte
 FEERATE_MAX_DYNAMIC = 1500000
 FEERATE_WARNING_HIGH_FEE = 600000
-FEERATE_FALLBACK_STATIC_FEE = 150000
-FEERATE_DEFAULT_RELAY = 1000
-FEERATE_STATIC_VALUES = [5000, 10000, 20000, 30000, 50000, 70000, 100000, 150000, 200000, 300000]
+FEERATE_FALLBACK_STATIC_FEE = 50000
+FEERATE_DEFAULT_RELAY = 10000
+FEERATE_STATIC_VALUES = [50000, 60000, 70000, 80000, 90000, 100000, 110000, 200000, 300000, 434800]
 
 
 config = None
@@ -118,7 +118,7 @@ class SimpleConfig(PrintError):
             path = os.path.join(path, 'simnet')
             make_dir(path, allow_symlink=False)
 
-        self.print_error("electrum directory", path)
+        self.print_error("electrum-civx directory", path)
         return path
 
     def rename_config_keys(self, config, keypairs, deprecation_warning=False):
@@ -195,7 +195,7 @@ class SimpleConfig(PrintError):
         base_unit = self.user_config.get('base_unit')
         if isinstance(base_unit, str):
             self._set_key_in_user_config('base_unit', None)
-            map_ = {'btc':8, 'mbtc':5, 'ubtc':2, 'bits':2, 'sat':0}
+            map_ = {'civx':8, 'mcivx':5, 'ucivx':2, 'ucvix':2, 'exo':0}
             decimal_point = map_.get(base_unit.lower())
             self._set_key_in_user_config('decimal_point', decimal_point)
 
@@ -297,7 +297,7 @@ class SimpleConfig(PrintError):
         return get_fee_within_limits
 
     def eta_to_fee(self, slider_pos) -> Optional[int]:
-        """Returns fee in sat/kbyte."""
+        """Returns fee in exo/kbyte."""
         slider_pos = max(slider_pos, 0)
         slider_pos = min(slider_pos, len(FEE_ETA_TARGETS))
         if slider_pos < len(FEE_ETA_TARGETS):
@@ -309,7 +309,7 @@ class SimpleConfig(PrintError):
 
     @impose_hard_limits_on_fee
     def eta_target_to_fee(self, num_blocks: int) -> Optional[int]:
-        """Returns fee in sat/kbyte."""
+        """Returns fee in exo/kbyte."""
         if num_blocks == 1:
             fee = self.fee_estimates.get(2)
             if fee is not None:
@@ -320,7 +320,7 @@ class SimpleConfig(PrintError):
         return fee
 
     def fee_to_depth(self, target_fee: Real) -> int:
-        """For a given sat/vbyte fee, returns an estimate of how deep
+        """For a given exo/vbyte fee, returns an estimate of how deep
         it would be in the current mempool in vbytes.
         Pessimistic == overestimates the depth.
         """
@@ -332,13 +332,13 @@ class SimpleConfig(PrintError):
         return depth
 
     def depth_to_fee(self, slider_pos) -> int:
-        """Returns fee in sat/kbyte."""
+        """Returns fee in exo/kbyte."""
         target = self.depth_target(slider_pos)
         return self.depth_target_to_fee(target)
 
     @impose_hard_limits_on_fee
     def depth_target_to_fee(self, target: int) -> int:
-        """Returns fee in sat/kbyte.
+        """Returns fee in exo/kbyte.
         target: desired mempool depth in vbytes
         """
         depth = 0
@@ -348,10 +348,10 @@ class SimpleConfig(PrintError):
                 break
         else:
             return 0
-        # add one sat/byte as currently that is
+        # add one exo/byte as currently that is
         # the max precision of the histogram
         fee += 1
-        # convert to sat/kbyte
+        # convert to exo/kbyte
         return fee * 1000
 
     def depth_target(self, slider_pos):
@@ -400,7 +400,7 @@ class SimpleConfig(PrintError):
         if fee_rate is None:
             rate_str = 'unknown'
         else:
-            rate_str = format_fee_satoshis(fee_rate/1000) + ' sat/byte'
+            rate_str = format_fee_satoshis(fee_rate/1000) + ' exo/byte'
 
         if dyn:
             if mempool:
@@ -468,7 +468,7 @@ class SimpleConfig(PrintError):
             return self.has_fee_etas()
 
     def is_dynfee(self):
-        return bool(self.get('dynamic_fees', True))
+        return bool(self.get('dynamic_fees', False))
 
     def use_mempool_fees(self):
         return bool(self.get('mempool_fees', False))
@@ -488,7 +488,7 @@ class SimpleConfig(PrintError):
         return fee_rate
 
     def fee_per_kb(self, dyn: bool=None, mempool: bool=None, fee_level: float=None) -> Union[int, None]:
-        """Returns sat/kvB fee to pay for a txn.
+        """Returns exo/kvB fee to pay for a txn.
         Note: might return None.
 
         fee_level: float between 0.0 and 1.0, representing fee slider position
@@ -512,7 +512,7 @@ class SimpleConfig(PrintError):
         return fee_rate
 
     def fee_per_byte(self):
-        """Returns sat/vB fee to pay for a txn.
+        """Returns exo/vB fee to pay for a txn.
         Note: might return None.
         """
         fee_per_kb = self.fee_per_kb()
@@ -555,7 +555,7 @@ class SimpleConfig(PrintError):
 
 
 def read_user_config(path):
-    """Parse and store the user config settings in electrum.conf into user_config[]."""
+    """Parse and store the user config settings in electrum-civx.conf into user_config[]."""
     if not path:
         return {}
     config_path = os.path.join(path, "config")
