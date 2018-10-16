@@ -38,6 +38,8 @@ import struct
 import traceback
 import sys
 
+import time
+
 #
 # Workalike python implementation of Bitcoin's CDataStream class.
 #
@@ -589,6 +591,7 @@ def deserialize(raw: str, force_full_parse=False) -> dict:
     vds = BCDataStream()
     vds.write(raw_bytes)
     d['version'] = vds.read_int32()
+    d['time'] = vds.read_int32()
     n_vin = vds.read_compact_size()
     is_segwit = (n_vin == 0)
     if is_segwit:
@@ -646,6 +649,7 @@ class Transaction:
         self._outputs = None
         self.locktime = 0
         self.version = 1
+        self.time = int(time.time())
         # by default we assume this is a partial txn;
         # this value will get properly set when deserializing
         self.is_partial_originally = True
@@ -737,6 +741,7 @@ class Transaction:
         self._outputs = [TxOutput(x['type'], x['address'], x['value']) for x in d['outputs']]
         self.locktime = d['lockTime']
         self.version = d['version']
+        self.time = d['time']
         self.is_partial_originally = d['partial']
         self._segwit_ser = d['segwit_ser']
         return d
@@ -998,6 +1003,7 @@ class Transaction:
         nVersion = int_to_hex(self.version, 4)
         nHashType = int_to_hex(1, 4)
         nLocktime = int_to_hex(self.locktime, 4)
+        nTime = int_to_hex(self.time, 4)
         inputs = self.inputs()
         outputs = self.outputs()
         txin = inputs[i]
@@ -1015,7 +1021,7 @@ class Transaction:
         else:
             txins = var_int(len(inputs)) + ''.join(self.serialize_input(txin, self.get_preimage_script(txin) if i==k else '') for k, txin in enumerate(inputs))
             txouts = var_int(len(outputs)) + ''.join(self.serialize_output(o) for o in outputs)
-            preimage = nVersion + txins + txouts + nLocktime + nHashType
+            preimage = nVersion + nTime + txins + txouts + nLocktime + nHashType
         return preimage
 
     def is_segwit(self, guess_for_address=False):
@@ -1036,6 +1042,7 @@ class Transaction:
     def serialize_to_network(self, estimate_size=False, witness=True):
         nVersion = int_to_hex(self.version, 4)
         nLocktime = int_to_hex(self.locktime, 4)
+        nTime = int_to_hex(self.time, 4)
         inputs = self.inputs()
         outputs = self.outputs()
         txins = var_int(len(inputs)) + ''.join(self.serialize_input(txin, self.input_script(txin, estimate_size)) for txin in inputs)
@@ -1050,7 +1057,7 @@ class Transaction:
             witness = ''.join(self.serialize_witness(x, estimate_size) for x in inputs)
             return nVersion + marker + flag + txins + txouts + witness + nLocktime
         else:
-            return nVersion + txins + txouts + nLocktime
+            return nVersion + nTime + txins + txouts + nLocktime
 
     def txid(self):
         self.deserialize()
