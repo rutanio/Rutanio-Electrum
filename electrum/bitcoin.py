@@ -36,9 +36,9 @@ from .crypto import Hash, sha256, hash_160, hmac_oneshot
 
 ################################## transactions
 
-COINBASE_MATURITY = 100
+COINBASE_MATURITY = 50
 COIN = 100000000
-TOTAL_COIN_SUPPLY_LIMIT_IN_BTC = 21000000
+TOTAL_COIN_SUPPLY_LIMIT_IN_BTC = 300000000
 
 # supported types of transaction outputs
 TYPE_ADDRESS = 0
@@ -686,7 +686,7 @@ def xpub_from_xprv(xprv):
 
 
 def bip32_root(seed, xtype):
-    I = hmac_oneshot(b"Bitcoin seed", seed, hashlib.sha512)
+    I = hmac_oneshot(b"CivX seed", seed, hashlib.sha512)
     master_k = I[0:32]
     master_c = I[32:]
     # create xprv first, as that will check if master_k is within curve order
