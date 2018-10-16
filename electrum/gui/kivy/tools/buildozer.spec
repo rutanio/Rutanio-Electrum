@@ -1,13 +1,13 @@
 [app]
 
 # (str) Title of your application
-title = Electrum
+title = Electrum-CIVX
 
 # (str) Package name
-package.name = Electrum
+package.name = ElectrumCIVX
 
 # (str) Package domain (needed for android/ios packaging)
-package.domain = org.electrum
+package.domain = com.civxeconomy
 
 # (str) Source code where the main.py live
 source.dir = .
@@ -34,7 +34,6 @@ version.filename = %(source.dir)s/electrum/version.py
 requirements = python3crystax==3.6, android, openssl, plyer, kivy==master, libsecp256k1
 
 # (str) Presplash of the application
-#presplash.filename = %(source.dir)s/gui/kivy/theming/splash.png
 presplash.filename = %(source.dir)s/icons/electrum_presplash.png
 
 # (str) Icon of the application
