@@ -1,4 +1,4 @@
-from electrum.i18n import _
+from electrum_civx.i18n import _
 
 fullname = _('Two Factor Authentication')
 description = ''.join([
@@ -8,4 +8,4 @@ description = ''.join([
 ])
 requires_wallet_type = ['2fa']
 registers_wallet_type = '2fa'
-available_for = ['qt', 'cmdline', 'kivy']
+available_for = []

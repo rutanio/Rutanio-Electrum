@@ -32,13 +32,13 @@ from decimal import Decimal
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 
-from electrum.gui.qt.util import *
-from electrum.gui.qt.qrcodewidget import QRCodeWidget
-from electrum.gui.qt.amountedit import AmountEdit
-from electrum.gui.qt.main_window import StatusBarButton
-from electrum.i18n import _
-from electrum.plugin import hook
-from electrum.util import PrintError, is_valid_email
+from electrum_civx.gui.qt.util import *
+from electrum_civx.gui.qt.qrcodewidget import QRCodeWidget
+from electrum_civx.gui.qt.amountedit import AmountEdit
+from electrum_civx.gui.qt.main_window import StatusBarButton
+from electrum_civx.i18n import _
+from electrum_civx.plugin import hook
+from electrum_civx.util import PrintError, is_valid_email
 from .trustedcoin import TrustedCoinPlugin, server
 
 
@@ -200,7 +200,7 @@ class Plugin(TrustedCoinPlugin):
         if window.pluginsdialog:
             window.pluginsdialog.close()
         wallet = window.wallet
-        uri = "bitcoin:" + wallet.billing_info['billing_address'] + "?message=TrustedCoin %d Prepaid Transactions&amount="%k + str(Decimal(v)/100000000)
+        uri = "civx:" + wallet.billing_info['billing_address'] + "?message=TrustedCoin %d Prepaid Transactions&amount="%k + str(Decimal(v)/100000000)
         wallet.is_billing = True
         window.pay_to_URI(uri)
         window.payto_e.setFrozen(True)

@@ -24,11 +24,11 @@
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-from electrum.plugin import BasePlugin, hook
-from electrum.i18n import _
-from electrum.bitcoin import is_address, TYPE_SCRIPT
-from electrum.util import bfh, versiontuple
-from electrum.transaction import opcodes, TxOutput
+from electrum_civx.plugin import BasePlugin, hook
+from electrum_civx.i18n import _
+from electrum_civx.bitcoin import is_address, TYPE_SCRIPT
+from electrum_civx.util import bfh, versiontuple
+from electrum_civx.transaction import opcodes, TxOutput
 
 
 class HW_PluginBase(BasePlugin):
@@ -71,7 +71,7 @@ class HW_PluginBase(BasePlugin):
         if keystore is None:
             keystore = wallet.get_keystore()
         if not is_address(address):
-            keystore.handler.show_error(_('Invalid Bitcoin Address'))
+            keystore.handler.show_error(_('Invalid CivX Address'))
             return False
         if not wallet.is_mine(address):
             keystore.handler.show_error(_('Address not in wallet.'))
