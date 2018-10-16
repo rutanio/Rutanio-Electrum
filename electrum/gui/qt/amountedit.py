@@ -6,7 +6,7 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import (QLineEdit, QStyle, QStyleOptionFrame)
 
-from electrum.util import (format_satoshis_plain, decimal_point_to_base_unit_name,
+from electrum_civx.util import (format_satoshis_plain, decimal_point_to_base_unit_name,
                            FEERATE_PRECISION, quantize_feerate)
 
 
@@ -117,7 +117,7 @@ class FeerateEdit(BTCAmountEdit):
         self.extra_precision = FEERATE_PRECISION
 
     def _base_unit(self):
-        return 'sat/byte'
+        return 'exo/byte'
 
     def get_amount(self):
         sat_per_byte_amount = BTCAmountEdit.get_amount(self)

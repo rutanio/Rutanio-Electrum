@@ -3,17 +3,17 @@ import hashlib
 import sys
 import traceback
 
-from electrum import bitcoin
-from electrum.bitcoin import TYPE_ADDRESS, int_to_hex, var_int
-from electrum.i18n import _
-from electrum.plugin import BasePlugin
-from electrum.keystore import Hardware_KeyStore
-from electrum.transaction import Transaction
-from electrum.wallet import Standard_Wallet
+from electrum_civx import bitcoin
+from electrum_civx.bitcoin import TYPE_ADDRESS, int_to_hex, var_int
+from electrum_civx.i18n import _
+from electrum_civx.plugin import BasePlugin
+from electrum_civx.keystore import Hardware_KeyStore
+from electrum_civx.transaction import Transaction
+from electrum_civx.wallet import Standard_Wallet
 from ..hw_wallet import HW_PluginBase
 from ..hw_wallet.plugin import is_any_tx_output_on_change_branch
-from electrum.util import print_error, bfh, bh2u, versiontuple
-from electrum.base_wizard import ScriptTypeNotSupported
+from electrum_civx.util import print_error, bfh, bh2u, versiontuple
+from electrum_civx.base_wizard import ScriptTypeNotSupported
 
 try:
     import hid
@@ -30,7 +30,7 @@ except ImportError:
 
 MSG_NEEDS_FW_UPDATE_GENERIC = _('Firmware version too old. Please update at') + \
                       ' https://www.ledgerwallet.com'
-MSG_NEEDS_FW_UPDATE_SEGWIT = _('Firmware version (or "Bitcoin" app) too old for Segwit support. Please update at') + \
+MSG_NEEDS_FW_UPDATE_SEGWIT = _('Firmware version (or "CivX" app) too old for Segwit support. Please update at') + \
                       ' https://www.ledgerwallet.com'
 MULTI_OUTPUT_SUPPORT = '1.1.4'
 SEGWIT_SUPPORT = '1.1.10'
@@ -192,7 +192,7 @@ class Ledger_Client():
                 self.perform_hw1_preflight()
             except BTChipException as e:
                 if (e.sw == 0x6d00 or e.sw == 0x6700):
-                    raise Exception(_("Device not in Bitcoin mode")) from e
+                    raise Exception(_("Device not in CivX mode")) from e
                 raise e
             self.preflightDone = True
 
@@ -599,7 +599,7 @@ class LedgerPlugin(HW_PluginBase):
             raise Exception(_('Failed to create a client for this device.') + '\n' +
                             _('Make sure it is in the correct state.'))
         client.handler = self.create_handler(wizard)
-        client.get_xpub("m/44'/0'", 'standard') # TODO replace by direct derivation once Nano S > 1.1
+        client.get_xpub("m/44'/248'", 'standard') # TODO replace by direct derivation once Nano S > 1.1
 
     def get_xpub(self, device_id, derivation, xtype, wizard):
         if xtype not in self.SUPPORTED_XTYPES:

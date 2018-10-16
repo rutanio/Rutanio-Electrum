@@ -26,13 +26,13 @@
 import webbrowser
 import datetime
 
-from electrum.address_synchronizer import TX_HEIGHT_LOCAL
+from electrum_civx.address_synchronizer import TX_HEIGHT_LOCAL
 from .util import *
-from electrum.i18n import _
-from electrum.util import block_explorer_URL, profiler, print_error, TxMinedStatus
+from electrum_civx.i18n import _
+from electrum_civx.util import block_explorer_URL, profiler, print_error, TxMinedStatus
 
 try:
-    from electrum.plot import plot_history, NothingToPlotException
+    from electrum_civx.plot import plot_history, NothingToPlotException
 except:
     print_error("qt/history_list: could not import electrum.plot. This feature needs matplotlib to be installed.")
     plot_history = None
@@ -432,5 +432,5 @@ class HistoryList(MyTreeWidget, AcceptFileDragDrop):
                 for line in lines:
                     transaction.writerow(line)
             else:
-                from electrum.util import json_encode
+                from electrum_civx.util import json_encode
                 f.write(json_encode(history))

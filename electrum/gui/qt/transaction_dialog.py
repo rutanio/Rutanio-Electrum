@@ -34,13 +34,13 @@ from PyQt5.QtWidgets import *
 import qrcode
 from qrcode import exceptions
 
-from electrum.bitcoin import base_encode
-from electrum.i18n import _
-from electrum.plugin import run_hook
-from electrum import simple_config
+from electrum_civx.bitcoin import base_encode
+from electrum_civx.i18n import _
+from electrum_civx.plugin import run_hook
+from electrum_civx import simple_config
 
-from electrum.util import bfh
-from electrum.transaction import SerializationError
+from electrum_civx.util import bfh
+from electrum_civx.transaction import SerializationError
 
 from .util import *
 
@@ -57,7 +57,7 @@ def show_transaction(tx, parent, desc=None, prompt_if_unsaved=False):
         d = TxDialog(tx, parent, desc, prompt_if_unsaved)
     except SerializationError as e:
         traceback.print_exc(file=sys.stderr)
-        parent.show_critical(_("Electrum was unable to deserialize the transaction:") + "\n" + str(e))
+        parent.show_critical(_("Electrum-CIVX was unable to deserialize the transaction:") + "\n" + str(e))
     else:
         dialogs.append(d)
         d.show()

@@ -7,20 +7,20 @@ import hashlib
 import os, sys, time, io
 import traceback
 
-from electrum import bitcoin
-from electrum.bitcoin import serialize_xpub, deserialize_xpub, InvalidMasterKeyVersionBytes
-from electrum import constants
-from electrum.bitcoin import TYPE_ADDRESS, int_to_hex
-from electrum.i18n import _
-from electrum.plugin import BasePlugin, Device
-from electrum.keystore import Hardware_KeyStore, xpubkey_to_pubkey, Xpub
-from electrum.transaction import Transaction
-from electrum.wallet import Standard_Wallet
-from electrum.crypto import hash_160
+from electrum_civx import bitcoin
+from electrum_civx.bitcoin import serialize_xpub, deserialize_xpub, InvalidMasterKeyVersionBytes
+from electrum_civx import constants
+from electrum_civx.bitcoin import TYPE_ADDRESS, int_to_hex
+from electrum_civx.i18n import _
+from electrum_civx.plugin import BasePlugin, Device
+from electrum_civx.keystore import Hardware_KeyStore, xpubkey_to_pubkey, Xpub
+from electrum_civx.transaction import Transaction
+from electrum_civx.wallet import Standard_Wallet
+from electrum_civx.crypto import hash_160
 from ..hw_wallet import HW_PluginBase
 from ..hw_wallet.plugin import is_any_tx_output_on_change_branch
-from electrum.util import print_error, bfh, bh2u, versiontuple
-from electrum.base_wizard import ScriptTypeNotSupported
+from electrum_civx.util import print_error, bfh, bh2u, versiontuple
+from electrum_civx.base_wizard import ScriptTypeNotSupported
 
 try:
     import hid
@@ -43,7 +43,7 @@ try:
         def mitm_verify(self, sig, expect_xpub):
             # verify a signature (65 bytes) over the session key, using the master bip32 node
             # - customized to use specific EC library of Electrum.
-            from electrum.ecc import ECPubkey
+            from electrum_civx.ecc import ECPubkey
 
             xtype, depth, parent_fingerprint, child_number, chain_code, K_or_k \
                 = bitcoin.deserialize_xpub(expect_xpub)
