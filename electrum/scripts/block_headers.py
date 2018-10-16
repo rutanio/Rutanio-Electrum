@@ -4,7 +4,7 @@
 
 import time
 from .. import SimpleConfig, Network
-from electrum.util import print_msg, json_encode
+from electrum_civx.util import print_msg, json_encode
 
 # start network
 c = SimpleConfig()
