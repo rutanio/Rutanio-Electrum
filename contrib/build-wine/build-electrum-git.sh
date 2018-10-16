@@ -1,6 +1,6 @@
 #!/bin/bash
 
-NAME_ROOT=electrum
+NAME_ROOT=electrum-civx
 PYTHON_VERSION=3.6.6
 
 # These settings probably don't need any change
@@ -16,25 +16,27 @@ PYTHON="wine $PYHOME/python.exe -OO -B"
 cd `dirname $0`
 set -e
 
-mkdir -p tmp
-cd tmp
+pushd ../..
+cp -r electrum* .git* icons* pubkeys* setup* run_electrum LICENCE Info.plist $WINEPREFIX/drive_c/electrum-civx/
+cp --parents contrib/requirements/* $WINEPREFIX/drive_c/electrum-civx/
+popd
 
-pushd $WINEPREFIX/drive_c/electrum
+pushd $WINEPREFIX/drive_c/electrum-civx
 
-# Load electrum-icons and electrum-locale for this release
+# Load electrum-civx-icons and electrum-civx-locale for this release
 git submodule init
 git submodule update
 
-VERSION=`git describe --tags --dirty || printf 'custom'`
+VERSION=`git describe --tags || printf 'custom'`
 echo "Last commit: $VERSION"
 
-pushd ./contrib/deterministic-build/electrum-locale
+pushd ./contrib/deterministic-build/electrum-civx-locale
 if ! which msgfmt > /dev/null 2>&1; then
     echo "Please install gettext"
     exit 1
 fi
 for i in ./locale/*; do
-    dir=$i/LC_MESSAGES
+    dir=$WINEPREFIX/drive_c/electrum-civx/electrum/$i/LC_MESSAGES
     mkdir -p $dir
     msgfmt --output-file=$dir/electrum.mo $i/electrum.po || true
 done
@@ -43,20 +45,14 @@ popd
 find -exec touch -d '2000-11-11T11:11:11+00:00' {} +
 popd
 
-cp $WINEPREFIX/drive_c/electrum/LICENCE .
-cp -r $WINEPREFIX/drive_c/electrum/contrib/deterministic-build/electrum-locale/locale $WINEPREFIX/drive_c/electrum/electrum/
-cp $WINEPREFIX/drive_c/electrum/contrib/deterministic-build/electrum-icons/icons_rc.py $WINEPREFIX/drive_c/electrum/electrum/gui/qt/
-
 # Install frozen dependencies
-$PYTHON -m pip install -r ../../deterministic-build/requirements.txt
+$PYTHON -m pip install -r ../deterministic-build/requirements.txt
 
-$PYTHON -m pip install -r ../../deterministic-build/requirements-hw.txt
+$PYTHON -m pip install -r ../deterministic-build/requirements-hw.txt
 
-pushd $WINEPREFIX/drive_c/electrum
+pushd $WINEPREFIX/drive_c/electrum-civx
 $PYTHON setup.py install
 popd
-
-cd ..
 
 rm -rf dist/
 
@@ -73,8 +69,8 @@ popd
 wine "$WINEPREFIX/drive_c/Program Files (x86)/NSIS/makensis.exe" /DPRODUCT_VERSION=$VERSION electrum.nsi
 
 cd dist
-mv electrum-setup.exe $NAME_ROOT-$VERSION-setup.exe
+mv electrum-civx-setup.exe $NAME_ROOT-$VERSION-setup.exe
 cd ..
 
 echo "Done."
-md5sum dist/electrum*exe
+md5sum dist/electrum-civx*exe
