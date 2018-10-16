@@ -4,15 +4,15 @@ import shutil
 import tempfile
 from typing import Sequence
 
-from electrum import storage, bitcoin, keystore, constants
-from electrum import Transaction
-from electrum import SimpleConfig
-from electrum.address_synchronizer import TX_HEIGHT_UNCONFIRMED, TX_HEIGHT_UNCONF_PARENT
-from electrum.wallet import sweep, Multisig_Wallet, Standard_Wallet, Imported_Wallet
-from electrum.util import bfh, bh2u
-from electrum.transaction import TxOutput
+from electrum_civx import storage, bitcoin, keystore, constants
+from electrum_civx import Transaction
+from electrum_civx import SimpleConfig
+from electrum_civx.address_synchronizer import TX_HEIGHT_UNCONFIRMED, TX_HEIGHT_UNCONF_PARENT
+from electrum_civx.wallet import sweep, Multisig_Wallet, Standard_Wallet, Imported_Wallet
+from electrum_civx.util import bfh, bh2u
+from electrum_civx.transaction import TxOutput
 
-from electrum.plugins.trustedcoin import trustedcoin
+from electrum_civx.plugins.trustedcoin import trustedcoin
 
 from . import TestCaseForTestnet
 from . import SequentialTestCase
@@ -195,7 +195,7 @@ class TestWalletKeystoreAddressIntegrityForMainnet(SequentialTestCase):
         seed_words = 'treat dwarf wealth gasp brass outside high rent blood crowd make initial'
         self.assertEqual(keystore.bip39_is_checksum_valid(seed_words), (True, True))
 
-        ks = keystore.from_bip39_seed(seed_words, '', "m/44'/0'/0'")
+        ks = keystore.from_bip39_seed(seed_words, '', "m/44'/248'/0'")
 
         self.assertTrue(isinstance(ks, keystore.BIP32_KeyStore))
 
@@ -214,7 +214,7 @@ class TestWalletKeystoreAddressIntegrityForMainnet(SequentialTestCase):
         seed_words = 'treat dwarf wealth gasp brass outside high rent blood crowd make initial'
         self.assertEqual(keystore.bip39_is_checksum_valid(seed_words), (True, True))
 
-        ks = keystore.from_bip39_seed(seed_words, UNICODE_HORROR, "m/44'/0'/0'")
+        ks = keystore.from_bip39_seed(seed_words, UNICODE_HORROR, "m/44'/248'/0'")
 
         self.assertTrue(isinstance(ks, keystore.BIP32_KeyStore))
 
