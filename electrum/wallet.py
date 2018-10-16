@@ -137,9 +137,9 @@ def sweep(privkeys, network, config, recipient, fee=None, imax=100):
         tx = Transaction.from_io(inputs, outputs)
         fee = config.estimate_fee(tx.estimated_size())
     if total - fee < 0:
-        raise Exception(_('Not enough funds on address.') + '\nTotal: %d satoshis\nFee: %d'%(total, fee))
+        raise Exception(_('Not enough funds on address.') + '\nTotal: %d exos\nFee: %d'%(total, fee))
     if total - fee < dust_threshold(network):
-        raise Exception(_('Not enough funds on address.') + '\nTotal: %d satoshis\nFee: %d\nDust Threshold: %d'%(total, fee, dust_threshold(network)))
+        raise Exception(_('Not enough funds on address.') + '\nTotal: %d exos\nFee: %d\nDust Threshold: %d'%(total, fee, dust_threshold(network)))
 
     outputs = [TxOutput(TYPE_ADDRESS, recipient, total - fee)]
     locktime = network.get_local_height()
@@ -222,7 +222,7 @@ class Abstract_Wallet(AddressSynchronizer):
         addrs = self.get_receiving_addresses()
         if len(addrs) > 0:
             if not bitcoin.is_address(addrs[0]):
-                raise WalletFileException('The addresses in this wallet are not bitcoin addresses.')
+                raise WalletFileException('The addresses in this wallet are not civx addresses.')
 
     def synchronize(self):
         pass
@@ -514,7 +514,7 @@ class Abstract_Wallet(AddressSynchronizer):
             if fee is not None:
                 size = tx.estimated_size()
                 fee_per_byte = fee / size
-                extra.append(format_fee_satoshis(fee_per_byte) + ' sat/b')
+                extra.append(format_fee_satoshis(fee_per_byte) + ' exo/b')
             if fee is not None and height in (TX_HEIGHT_UNCONF_PARENT, TX_HEIGHT_UNCONFIRMED) \
                and self.network and self.network.config.has_fee_mempool():
                 exp_n = self.network.config.fee_to_depth(fee_per_byte)
@@ -549,7 +549,7 @@ class Abstract_Wallet(AddressSynchronizer):
         for i, o in enumerate(outputs):
             if o.type == TYPE_ADDRESS:
                 if not is_address(o.address):
-                    raise Exception("Invalid bitcoin address: {}".format(o.address))
+                    raise Exception("Invalid civx address: {}".format(o.address))
             if o.value == '!':
                 if i_max is not None:
                     raise Exception("More than one output set to spend max")
@@ -871,7 +871,7 @@ class Abstract_Wallet(AddressSynchronizer):
         if not r:
             return
         out = copy.copy(r)
-        out['URI'] = 'bitcoin:' + addr + '?amount=' + format_satoshis(out.get('amount'))
+        out['URI'] = 'civx:' + addr + '?amount=' + format_satoshis(out.get('amount'))
         status, conf = self.get_request_status(addr)
         out['status'] = status
         if conf is not None:
@@ -948,7 +948,7 @@ class Abstract_Wallet(AddressSynchronizer):
     def add_payment_request(self, req, config):
         addr = req['address']
         if not bitcoin.is_address(addr):
-            raise Exception(_('Invalid Bitcoin address.'))
+            raise Exception(_('Invalid CivX address.'))
         if not self.is_mine(addr):
             raise Exception(_('Address not in wallet.'))
 
@@ -1094,7 +1094,7 @@ class Abstract_Wallet(AddressSynchronizer):
         return None
 
     def price_at_timestamp(self, txid, price_func):
-        """Returns fiat price of bitcoin at the time tx got confirmed."""
+        """Returns fiat price of civx at the time tx got confirmed."""
         timestamp = self.get_tx_height(txid).timestamp
         return price_func(timestamp if timestamp else time.time())
 
