@@ -2,7 +2,7 @@ import base64
 import unittest
 import sys
 
-from electrum.bitcoin import (
+from electrum_civx.bitcoin import (
     public_key_to_p2pkh,
     bip32_root, bip32_public_derivation, bip32_private_derivation,
     Hash, address_from_private_key,
@@ -12,14 +12,14 @@ from electrum.bitcoin import (
     is_b58_address, address_to_scripthash, is_minikey, is_compressed, is_xpub,
     xpub_type, is_xprv, is_bip32_derivation, seed_type, EncodeBase58Check,
     script_num_to_hex, push_script, add_number_to_script, int_to_hex, convert_bip32_path_to_list_of_uint32)
-from electrum import ecc, crypto, constants
-from electrum.ecc import number_to_string, string_to_number
-from electrum.transaction import opcodes
-from electrum.util import bfh, bh2u
-from electrum.storage import WalletStorage
-from electrum.keystore import xtype_from_derivation
+from electrum_civx import ecc, crypto, constants
+from electrum_civx.ecc import number_to_string, string_to_number
+from electrum_civx.transaction import opcodes
+from electrum_civx.util import bfh, bh2u
+from electrum_civx.storage import WalletStorage
+from electrum_civx.keystore import xtype_from_derivation
 
-from electrum import ecc_fast
+from electrum_civx import ecc_fast
 
 from . import SequentialTestCase
 from . import TestCaseForTestnet
@@ -463,8 +463,8 @@ class Test_xprv_xpub(SequentialTestCase):
     def test_is_bip32_derivation(self):
         self.assertTrue(is_bip32_derivation("m/0'/1"))
         self.assertTrue(is_bip32_derivation("m/0'/0'"))
-        self.assertTrue(is_bip32_derivation("m/44'/0'/0'/0/0"))
-        self.assertTrue(is_bip32_derivation("m/49'/0'/0'/0/0"))
+        self.assertTrue(is_bip32_derivation("m/44'/248'/0'/0/0"))
+        self.assertTrue(is_bip32_derivation("m/49'/248'/0'/0/0"))
         self.assertFalse(is_bip32_derivation("mmmmmm"))
         self.assertFalse(is_bip32_derivation("n/"))
         self.assertFalse(is_bip32_derivation(""))
@@ -478,7 +478,7 @@ class Test_xprv_xpub(SequentialTestCase):
     def test_xtype_from_derivation(self):
         self.assertEqual('standard', xtype_from_derivation("m/44'"))
         self.assertEqual('standard', xtype_from_derivation("m/44'/"))
-        self.assertEqual('standard', xtype_from_derivation("m/44'/0'/0'"))
+        self.assertEqual('standard', xtype_from_derivation("m/44'/248'/0'"))
         self.assertEqual('standard', xtype_from_derivation("m/44'/5241'/221"))
         self.assertEqual('standard', xtype_from_derivation("m/45'"))
         self.assertEqual('standard', xtype_from_derivation("m/45'/56165/271'"))
