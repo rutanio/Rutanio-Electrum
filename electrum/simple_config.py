@@ -195,7 +195,7 @@ class SimpleConfig(PrintError):
         base_unit = self.user_config.get('base_unit')
         if isinstance(base_unit, str):
             self._set_key_in_user_config('base_unit', None)
-            map_ = {'civx':8, 'mcivx':5, 'ucivx':2, 'ucvix':2, 'exo':0}
+            map_ = {'civx':8, 'mcivx':5, 'ucivx':2, 'ucivx':2, 'exo':0}
             decimal_point = map_.get(base_unit.lower())
             self._set_key_in_user_config('decimal_point', decimal_point)
 
