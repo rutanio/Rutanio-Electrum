@@ -2746,7 +2746,7 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, PrintError):
 
         units = base_units_list
         msg = (_('Base unit of your wallet.')
-               + '\n1 CIVX = 1000 mCIVX. 1 mCIVX = 1000 µCIVX. 1 µCIVX = 100 exo.\n'
+               + '\n1 CIVX = 1000 mCIVX. \n1 mCIVX = 1000 µCIVX. \n1 µCIVX = 100 exo.\n\n'
                + _('This setting affects the Send tab, and all balance related fields.'))
         unit_label = HelpLabel(_('Base unit') + ':', msg)
         unit_combo = QComboBox()
