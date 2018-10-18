@@ -63,37 +63,37 @@ class TestUtil(SequentialTestCase):
         self.assertEqual(expected, result)
 
     def test_parse_URI_address(self):
-        self._do_test_parse_URI('civx:15mKKb2eos1hWa6tisdPwwDC1a5J1y9nma',
-                                {'address': '15mKKb2eos1hWa6tisdPwwDC1a5J1y9nma'})
+        self._do_test_parse_URI('civx:CaEnKKCdfRChUL7zLz6Ur1S4fYoT3pajmn',
+                                {'address': 'CaEnKKCdfRChUL7zLz6Ur1S4fYoT3pajmn'})
 
     def test_parse_URI_only_address(self):
-        self._do_test_parse_URI('15mKKb2eos1hWa6tisdPwwDC1a5J1y9nma',
-                                {'address': '15mKKb2eos1hWa6tisdPwwDC1a5J1y9nma'})
+        self._do_test_parse_URI('CaEnKKCdfRChUL7zLz6Ur1S4fYoT3pajmn',
+                                {'address': 'CaEnKKCdfRChUL7zLz6Ur1S4fYoT3pajmn'})
 
 
     def test_parse_URI_address_label(self):
-        self._do_test_parse_URI('civx:15mKKb2eos1hWa6tisdPwwDC1a5J1y9nma?label=electrum%20test',
-                                {'address': '15mKKb2eos1hWa6tisdPwwDC1a5J1y9nma', 'label': 'electrum-civx test'})
+        self._do_test_parse_URI('civx:CaEnKKCdfRChUL7zLz6Ur1S4fYoT3pajmn?label=electrum%20test',
+                                {'address': 'CaEnKKCdfRChUL7zLz6Ur1S4fYoT3pajmn', 'label': 'electrum-civx test'})
 
     def test_parse_URI_address_message(self):
-        self._do_test_parse_URI('civx:15mKKb2eos1hWa6tisdPwwDC1a5J1y9nma?message=electrum%20test',
-                                {'address': '15mKKb2eos1hWa6tisdPwwDC1a5J1y9nma', 'message': 'electrum-civx test', 'memo': 'electrum-civx test'})
+        self._do_test_parse_URI('civx:CaEnKKCdfRChUL7zLz6Ur1S4fYoT3pajmn?message=electrum%20test',
+                                {'address': 'CaEnKKCdfRChUL7zLz6Ur1S4fYoT3pajmn', 'message': 'electrum-civx test', 'memo': 'electrum-civx test'})
 
     def test_parse_URI_address_amount(self):
-        self._do_test_parse_URI('civx:15mKKb2eos1hWa6tisdPwwDC1a5J1y9nma?amount=0.0003',
-                                {'address': '15mKKb2eos1hWa6tisdPwwDC1a5J1y9nma', 'amount': 30000})
+        self._do_test_parse_URI('civx:CaEnKKCdfRChUL7zLz6Ur1S4fYoT3pajmn?amount=0.0003',
+                                {'address': 'CaEnKKCdfRChUL7zLz6Ur1S4fYoT3pajmn', 'amount': 30000})
 
     def test_parse_URI_address_request_url(self):
-        self._do_test_parse_URI('civx:15mKKb2eos1hWa6tisdPwwDC1a5J1y9nma?r=http://domain.tld/page?h%3D2a8628fc2fbe',
-                                {'address': '15mKKb2eos1hWa6tisdPwwDC1a5J1y9nma', 'r': 'http://domain.tld/page?h=2a8628fc2fbe'})
+        self._do_test_parse_URI('civx:CaEnKKCdfRChUL7zLz6Ur1S4fYoT3pajmn?r=http://domain.tld/page?h%3D2a8628fc2fbe',
+                                {'address': 'CaEnKKCdfRChUL7zLz6Ur1S4fYoT3pajmn', 'r': 'http://domain.tld/page?h=2a8628fc2fbe'})
 
     def test_parse_URI_ignore_args(self):
-        self._do_test_parse_URI('civx:15mKKb2eos1hWa6tisdPwwDC1a5J1y9nma?test=test',
-                                {'address': '15mKKb2eos1hWa6tisdPwwDC1a5J1y9nma', 'test': 'test'})
+        self._do_test_parse_URI('civx:CaEnKKCdfRChUL7zLz6Ur1S4fYoT3pajmn?test=test',
+                                {'address': 'CaEnKKCdfRChUL7zLz6Ur1S4fYoT3pajmn', 'test': 'test'})
 
     def test_parse_URI_multiple_args(self):
-        self._do_test_parse_URI('civx:15mKKb2eos1hWa6tisdPwwDC1a5J1y9nma?amount=0.00004&label=electrum-test&message=electrum%20test&test=none&r=http://domain.tld/page',
-                                {'address': '15mKKb2eos1hWa6tisdPwwDC1a5J1y9nma', 'amount': 4000, 'label': 'electrum-civx-test', 'message': u'electrum-civx test', 'memo': u'electrum-civx test', 'r': 'http://domain.tld/page', 'test': 'none'})
+        self._do_test_parse_URI('civx:CaEnKKCdfRChUL7zLz6Ur1S4fYoT3pajmn?amount=0.00004&label=electrum-test&message=electrum%20test&test=none&r=http://domain.tld/page',
+                                {'address': 'CaEnKKCdfRChUL7zLz6Ur1S4fYoT3pajmn', 'amount': 4000, 'label': 'electrum-civx-test', 'message': u'electrum-civx test', 'memo': u'electrum-civx test', 'r': 'http://domain.tld/page', 'test': 'none'})
 
     def test_parse_URI_no_address_request_url(self):
         self._do_test_parse_URI('civx:?r=http://domain.tld/page?h%3D2a8628fc2fbe',
@@ -103,7 +103,7 @@ class TestUtil(SequentialTestCase):
         self.assertRaises(BaseException, parse_URI, 'civx:invalidaddress')
 
     def test_parse_URI_invalid(self):
-        self.assertRaises(BaseException, parse_URI, 'notcivx:15mKKb2eos1hWa6tisdPwwDC1a5J1y9nma')
+        self.assertRaises(BaseException, parse_URI, 'notcivx:CaEnKKCdfRChUL7zLz6Ur1S4fYoT3pajmn')
 
     def test_parse_URI_parameter_polution(self):
-        self.assertRaises(Exception, parse_URI, 'civx:15mKKb2eos1hWa6tisdPwwDC1a5J1y9nma?amount=0.0003&label=test&amount=30.0')
+        self.assertRaises(Exception, parse_URI, 'civx:CaEnKKCdfRChUL7zLz6Ur1S4fYoT3pajmn?amount=0.0003&label=test&amount=30.0')
