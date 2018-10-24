@@ -5,7 +5,7 @@ Electrum-CIVX - Lightweight CivX client
 
   Licence: MIT Licence
   Original Author: Thomas Voegtlin
-  Port Maintainer: ExF Developers, Fluid Chains, turcol
+  Port Maintainer: ExOFoundation Developers, Fluid Chains, turcol
   Language: Python
   Homepage: https://civxeconomy.com/
 
