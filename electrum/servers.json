@@ -1,29 +1,71 @@
 {
-    "electrum1.civx.cloud": {
+    "electrum01.civx.cloud": {
         "pruning": "-",
         "s": "50002",
         "t": "50001",
         "version": "1.2"
     },
-    "electrum2.exponentialz.com": {
+    "electrum02.exponentialz.com": {
         "pruning": "-",
         "s": "50002",
         "t": "50001",
         "version": "1.2"
     },
-    "electrum3.civx.cloud": {
+    "electrum03.civx.cloud": {
         "pruning": "-",
         "s": "50002",
         "t": "50001",
         "version": "1.2"
     },
-    "electrum4.exponentialz.com": {
+    "electrum04.exponentialz.com": {
         "pruning": "-",
         "s": "50002",
         "t": "50001",
         "version": "1.2"
     },
-    "electrum5.civx.cloud": {
+    "electrum05.civx.cloud": {
+        "pruning": "-",
+        "s": "50002",
+        "t": "50001",
+        "version": "1.2"
+    },
+    "electrum06.exponentialz.com": {
+        "pruning": "-",
+        "s": "50002",
+        "t": "50001",
+        "version": "1.2"
+    },
+    "electrum07.civx.cloud": {
+        "pruning": "-",
+        "s": "50002",
+        "t": "50001",
+        "version": "1.2"
+    },
+    "electrum08.exponentialz.com": {
+        "pruning": "-",
+        "s": "50002",
+        "t": "50001",
+        "version": "1.2"
+    },
+    "electrum09.civx.cloud": {
+        "pruning": "-",
+        "s": "50002",
+        "t": "50001",
+        "version": "1.2"
+    },
+    "electrum10.exponentialz.com": {
+        "pruning": "-",
+        "s": "50002",
+        "t": "50001",
+        "version": "1.2"
+    },
+    "electrum11.civx.cloud": {
+        "pruning": "-",
+        "s": "50002",
+        "t": "50001",
+        "version": "1.2"
+    },
+    "electrum12.exponentialz.com": {
         "pruning": "-",
         "s": "50002",
         "t": "50001",
