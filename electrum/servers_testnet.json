@@ -1,11 +1,47 @@
 {
-    "electrum-test1.civx.cloud": {
+    "electrum01-testnet.civx.cloud": {
         "pruning": "-",
         "s": "51002",
         "t": "51001",
         "version": "1.2"
     },
-    "electrum-test2.exponentialz.com": {
+    "electrum02-testnet.exponentialz.com": {
+        "pruning": "-",
+        "s": "51002",
+        "t": "51001",
+        "version": "1.2"
+    },
+    "electrum03-testnet.civx.cloud": {
+        "pruning": "-",
+        "s": "51002",
+        "t": "51001",
+        "version": "1.2"
+    },
+    "electrum04-testnet.exponentialz.com": {
+        "pruning": "-",
+        "s": "51002",
+        "t": "51001",
+        "version": "1.2"
+    },
+    "electrum05-testnet.civx.cloud": {
+        "pruning": "-",
+        "s": "51002",
+        "t": "51001",
+        "version": "1.2"
+    },
+    "electrum06-testnet.exponentialz.com": {
+        "pruning": "-",
+        "s": "51002",
+        "t": "51001",
+        "version": "1.2"
+    },
+    "electrum07-testnet.civx.cloud": {
+        "pruning": "-",
+        "s": "51002",
+        "t": "51001",
+        "version": "1.2"
+    },
+    "electrum08-testnet.exponentialz.com": {
         "pruning": "-",
         "s": "51002",
         "t": "51001",
