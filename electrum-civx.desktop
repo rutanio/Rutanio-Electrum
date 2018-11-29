@@ -1,4 +1,4 @@
-# If you want Electrum to appear in a Linux app launcher ("start menu"), install this by doing:
+# If you want Electrum-CIVX to appear in a Linux app launcher ("start menu"), install this by doing:
 # sudo desktop-file-install electrum-civx.desktop
 
 [Desktop Entry]
