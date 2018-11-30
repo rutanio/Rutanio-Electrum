@@ -40,7 +40,7 @@ if platform.system() in ['Linux', 'FreeBSD', 'DragonFly']:
             usr_share = os.path.expanduser('~/.local/share')
     data_files += [
         (os.path.join(usr_share, 'applications/'), ['electrum-civx.desktop']),
-        (os.path.join(usr_share, icons_dirname), ['icons/electrum.png'])
+        (os.path.join(usr_share, icons_dirname), ['icons/electrum-civx.png'])
     ]
 
 extras_require = {
@@ -89,10 +89,10 @@ setup(
             'locale/*/LC_MESSAGES/electrum.mo',
         ],
     },
-    scripts=['electrum/electrum'],
+    scripts=['electrum/electrum-civx'],
     data_files=data_files,
     description="Lightweight CivX Wallet",
-    author="ExF Developers, Fluid Chains",
+    author="ExF Developers, Fluid Chains Devs",
     author_email="turcol@gmail.com",
     license="MIT Licence",
     url="https://civxeconomy.com",
