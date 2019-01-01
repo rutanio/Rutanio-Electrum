@@ -191,6 +191,7 @@ class Plugin(BasePlugin):
             task = lambda: server.put(_hash, message)
             msg = _('Sending transaction to cosigning pool...')
             WaitingDialog(window, msg, task, on_success, on_failure)
+            time.sleep(.5)
 
     def on_receive(self, keyhash, message):
         self.print_error("signal arrived for", keyhash)
