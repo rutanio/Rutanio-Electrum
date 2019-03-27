@@ -3,10 +3,10 @@ import curses, datetime, locale
 from decimal import Decimal
 import getpass
 
-import electrum_civx
-from electrum_civx.util import format_satoshis, set_verbosity
-from electrum_civx.bitcoin import is_address, COIN, TYPE_ADDRESS
-from electrum_civx.transaction import TxOutput
+import electrum_exos
+from electrum_exos.util import format_satoshis, set_verbosity
+from electrum_exos.bitcoin import is_address, COIN, TYPE_ADDRESS
+from electrum_exos.transaction import TxOutput
 from .. import Wallet, WalletStorage
 
 _ = lambda x:x
@@ -21,7 +21,7 @@ class ElectrumGui:
         self.network = daemon.network
         storage = WalletStorage(config.get_wallet_path())
         if not storage.file_exists():
-            print("Wallet not found. try 'electrum-civx create'")
+            print("Wallet not found. try 'exos-electrum create'")
             exit()
         if storage.is_encrypted():
             password = getpass.getpass('Password:', stream=None)
@@ -321,7 +321,7 @@ class ElectrumGui:
 
     def do_send(self):
         if not is_address(self.str_recipient):
-            self.show_message(_('Invalid CivX address'))
+            self.show_message(_('Invalid EXOS address'))
             return
         try:
             amount = int(Decimal(self.str_amount) * COIN)
@@ -394,7 +394,7 @@ class ElectrumGui:
                         self.show_message("Error:" + server + "\nIn doubt, type \"auto-connect\"")
                         return False
             if out.get('server') or out.get('proxy'):
-                proxy = electrum_civx.network.deserialize_proxy(out.get('proxy')) if out.get('proxy') else proxy_config
+                proxy = electrum_exos.network.deserialize_proxy(out.get('proxy')) if out.get('proxy') else proxy_config
                 self.network.set_parameters(host, port, protocol, proxy, auto_connect)
 
     def settings_dialog(self):

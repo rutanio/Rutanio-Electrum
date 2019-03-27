@@ -2,7 +2,7 @@ import base64
 import unittest
 import sys
 
-from electrum_civx.bitcoin import (
+from electrum_exos.bitcoin import (
     public_key_to_p2pkh,
     bip32_root, bip32_public_derivation, bip32_private_derivation,
     Hash, address_from_private_key,
@@ -12,14 +12,14 @@ from electrum_civx.bitcoin import (
     is_b58_address, address_to_scripthash, is_minikey, is_compressed, is_xpub,
     xpub_type, is_xprv, is_bip32_derivation, seed_type, EncodeBase58Check,
     script_num_to_hex, push_script, add_number_to_script, int_to_hex, convert_bip32_path_to_list_of_uint32)
-from electrum_civx import ecc, crypto, constants
-from electrum_civx.ecc import number_to_string, string_to_number
-from electrum_civx.transaction import opcodes
-from electrum_civx.util import bfh, bh2u
-from electrum_civx.storage import WalletStorage
-from electrum_civx.keystore import xtype_from_derivation
+from electrum_exos import ecc, crypto, constants
+from electrum_exos.ecc import number_to_string, string_to_number
+from electrum_exos.transaction import opcodes
+from electrum_exos.util import bfh, bh2u
+from electrum_exos.storage import WalletStorage
+from electrum_exos.keystore import xtype_from_derivation
 
-from electrum_civx import ecc_fast
+from electrum_exos import ecc_fast
 
 from . import SequentialTestCase
 from . import TestCaseForTestnet

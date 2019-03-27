@@ -39,20 +39,20 @@ import PyQt5.QtCore as QtCore
 from .exception_window import Exception_Hook
 from PyQt5.QtWidgets import *
 
-from electrum_civx import (keystore, simple_config, ecc, constants, util, bitcoin, commands,
+from electrum_exos import (keystore, simple_config, ecc, constants, util, bitcoin, commands,
                       coinchooser, paymentrequest)
-from electrum_civx.bitcoin import COIN, is_address, TYPE_ADDRESS
-from electrum_civx.plugin import run_hook
-from electrum_civx.i18n import _
-from electrum_civx.util import (format_time, format_satoshis, format_fee_satoshis,
+from electrum_exos.bitcoin import COIN, is_address, TYPE_ADDRESS
+from electrum_exos.plugin import run_hook
+from electrum_exos.i18n import _
+from electrum_exos.util import (format_time, format_satoshis, format_fee_satoshis,
                            format_satoshis_plain, NotEnoughFunds, PrintError,
                            UserCancelled, NoDynamicFeeEstimates, profiler,
                            export_meta, import_meta, bh2u, bfh, InvalidPassword,
                            base_units, base_units_list, base_unit_name_to_decimal_point,
                            decimal_point_to_base_unit_name, quantize_feerate)
-from electrum_civx.transaction import Transaction, TxOutput
-from electrum_civx.address_synchronizer import AddTransactionException
-from electrum_civx.wallet import Multisig_Wallet, CannotBumpFee
+from electrum_exos.transaction import Transaction, TxOutput
+from electrum_exos.address_synchronizer import AddTransactionException
+from electrum_exos.wallet import Multisig_Wallet, CannotBumpFee
 
 from .amountedit import AmountEdit, BTCAmountEdit, MyLineEdit, FeerateEdit
 from .qrcodewidget import QRCodeWidget, QRDialog
@@ -82,7 +82,7 @@ class StatusBarButton(QPushButton):
             self.func()
 
 
-from electrum_civx.paymentrequest import PR_PAID
+from electrum_exos.paymentrequest import PR_PAID
 
 
 class ElectrumWindow(QMainWindow, MessageBoxMixin, PrintError):
@@ -379,7 +379,7 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, PrintError):
             self.setGeometry(100, 100, 840, 400)
 
     def watching_only_changed(self):
-        name = "Electrum-CIVX Testnet" if constants.net.TESTNET else "Electrum-CIVX"
+        name = "EXOS-Electrum Testnet" if constants.net.TESTNET else "EXOS-Electrum"
         title = '%s %s  -  %s' % (name, self.wallet.electrum_version,
                                         self.wallet.basename())
         extra = [self.wallet.storage.get('wallet_type', '?')]
@@ -397,8 +397,8 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, PrintError):
         if self.wallet.is_watching_only():
             msg = ' '.join([
                 _("This wallet is watching-only."),
-                _("This means you will not be able to spend CivX with it."),
-                _("Make sure you own and securely store the seed phrase or the private keys, before you request CivX to be sent to this wallet.")
+                _("This means you will not be able to spend EXOS with it."),
+                _("Make sure you own and securely store the seed phrase or the private keys, before you request EXOS to be sent to this wallet.")
             ])
             self.show_warning(msg, title=_('Information'))
 
@@ -426,7 +426,7 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, PrintError):
                 shutil.copy2(path, new_path)
                 self.show_message(_("A copy of your wallet file was created in")+" '%s'" % str(new_path), title=_("Wallet backup created"))
             except BaseException as reason:
-                self.show_critical(_("Electrum-CIVX was unable to copy your wallet file to the specified location.") + "\n" + str(reason), title=_("Unable to create backup"))
+                self.show_critical(_("EXOS-Electrum was unable to copy your wallet file to the specified location.") + "\n" + str(reason), title=_("Unable to create backup"))
 
     def update_recently_visited(self, filename):
         recent = self.config.get('recently_open', [])
@@ -525,7 +525,7 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, PrintError):
         tools_menu = menubar.addMenu(_("&Tools"))
 
         # Settings / Preferences are all reserved keywords in macOS using this as work around
-        tools_menu.addAction(_("Electrum-CIVX preferences") if sys.platform == 'darwin' else _("Preferences"), self.settings_dialog)
+        tools_menu.addAction(_("EXOS-Electrum preferences") if sys.platform == 'darwin' else _("Preferences"), self.settings_dialog)
         tools_menu.addAction(_("&Network"), lambda: self.gui_object.show_network_dialog(self))
         tools_menu.addAction(_("&Plugins"), self.plugins_dialog)
         tools_menu.addSeparator()
@@ -545,9 +545,9 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, PrintError):
 
         help_menu = menubar.addMenu(_("&Help"))
         help_menu.addAction(_("&About"), self.show_about)
-        help_menu.addAction(_("&Official website"), lambda: webbrowser.open("https://civxeconomy.com"))
+        help_menu.addAction(_("&Official website"), lambda: webbrowser.open("https://economy.openexo.com"))
         help_menu.addSeparator()
-        help_menu.addAction(_("&Documentation"), lambda: webbrowser.open("https://docs.civxeconomy.com")).setShortcut(QKeySequence.HelpContents)
+        help_menu.addAction(_("&Documentation"), lambda: webbrowser.open("https://economy.openexo.com/docs")).setShortcut(QKeySequence.HelpContents)
         help_menu.addAction(_("&Report Bug"), self.show_report_bug)
         help_menu.addSeparator()
         help_menu.addAction(_("&Donate to server"), self.donate_to_server)
@@ -558,28 +558,28 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, PrintError):
         d = self.network.get_donation_address()
         if d:
             host = self.network.get_parameters()[0]
-            self.pay_to_URI('civx:%s?message=donation for %s'%(d, host))
+            self.pay_to_URI('exos:%s?message=donation for %s'%(d, host))
         else:
             self.show_error(_('No donation address for this server'))
 
     def show_about(self):
-        QMessageBox.about(self, "Electrum-CIVX",
+        QMessageBox.about(self, "EXOS-Electrum",
                           (_("Version")+" %s" % self.wallet.electrum_version + "\n\n" +
-                           _("Electrum-CIVX's focus is speed, low resource usage, and simplicity.") + " " +
+                           _("EXOS-Electrum's focus is speed, low resource usage, and simplicity.") + " " +
                            _("You do not need to perform regular backups, because your wallet can be "
                               "recovered from a secret phrase that you can memorize or write on paper.") + " " +
                            _("Startup times are fast because it operates in conjunction with high-performance "
-                              "servers that handle the many complicated parts of the CivX system.") + "\n\n" +
+                              "servers that handle the many complicated parts of the EXOS system.") + "\n\n" +
                            _("This software uses icons from the Icons8 icon pack (icons8.com).")))
 
     def show_report_bug(self):
         msg = ' '.join([
             _("Please report any bugs as issues on github:<br/>"),
-            "<a href=\"https://github.com/exofoundation/electrum-civx/issues\">https://github.com/exofoundation/electrum-civx/issues</a><br/><br/>",
-            _("Before reporting a bug, please upgrade to the most recent version of Electrum-CIVX (latest release or git HEAD), and include the version number in your report."),
+            "<a href=\"https://github.com/exoeconomy/exos-electrum/issues ">https://github.com/exoeconomy/exos-electrum/issues </a><br/><br/>",
+            _("Before reporting a bug, please upgrade to the most recent version of EXOS-Electrum (latest release or git HEAD), and include the version number in your report."),
             _("Try to explain not only what the bug is, but how it occurs. The more detail you provide, the better the team will be able to help.")
          ])
-        self.show_message(msg, title="Electrum-CIVX - " + _("Reporting Bugs"))
+        self.show_message(msg, title="EXOS-Electrum - " + _("Reporting Bugs"))
 
     def notify_transactions(self):
         if not self.network or not self.network.is_connected():
@@ -609,9 +609,9 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, PrintError):
         if self.tray:
             try:
                 # this requires Qt 5.9
-                self.tray.showMessage("Electrum-CIVX", message, QIcon(":icons/electrum_dark_icon"), 20000)
+                self.tray.showMessage("EXOS-Electrum", message, QIcon(":icons/electrum_dark_icon"), 20000)
             except TypeError:
-                self.tray.showMessage("Electrum-CIVX", message, QSystemTrayIcon.Information, 20000)
+                self.tray.showMessage("EXOS-Electrum", message, QSystemTrayIcon.Information, 20000)
 
 
 
@@ -793,7 +793,7 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, PrintError):
         self.receive_address_e = ButtonsLineEdit()
         self.receive_address_e.addCopyButton(self.app)
         self.receive_address_e.setReadOnly(True)
-        msg = _('CivX address where the payment should be received. Note that each payment request uses a different CivX address.')
+        msg = _('EXOS address where the payment should be received. Note that each payment request uses a different EXOS address.')
         self.receive_address_label = HelpLabel(_('Receiving address'), msg)
         self.receive_address_e.textChanged.connect(self.update_receive_qr)
         self.receive_address_e.setFocusPolicy(Qt.ClickFocus)
@@ -823,8 +823,8 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, PrintError):
         msg = ' '.join([
             _('Expiration date of your request.'),
             _('This information is seen by the recipient if you send them a signed payment request.'),
-            _('Expired requests have to be deleted manually from your list, in order to free the corresponding CivX addresses.'),
-            _('The CivX address never expires and will always be part of this Electrum-CivX wallet.'),
+            _('Expired requests have to be deleted manually from your list, in order to free the corresponding EXOS addresses.'),
+            _('The EXOS address never expires and will always be part of this EXOS-Electrum wallet.'),
         ])
         grid.addWidget(HelpLabel(_('Request expires'), msg), 3, 0)
         grid.addWidget(self.expires_combo, 3, 1)
@@ -1050,7 +1050,7 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, PrintError):
         self.amount_e = BTCAmountEdit(self.get_decimal_point)
         self.payto_e = PayToEdit(self)
         msg = _('Recipient of the funds.') + '\n\n'\
-              + _('You may enter a CivX address, a label from your list of contacts (a list of completions will be proposed), or an alias (email-like address that forwards to a CivX address)')
+              + _('You may enter a EXOS address, a label from your list of contacts (a list of completions will be proposed), or an alias (email-like address that forwards to a EXOS address)')
         payto_label = HelpLabel(_('Pay to'), msg)
         grid.addWidget(payto_label, 1, 0)
         grid.addWidget(self.payto_e, 1, 1, 1, -1)
@@ -1097,8 +1097,8 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, PrintError):
         hbox.addStretch(1)
         grid.addLayout(hbox, 4, 4)
 
-        msg = _('CivX transactions are not free. A transaction fee is paid by the sender of the funds. The fee is collected by the staker who forges the block containing the transaction.') + '\n\n'\
-              + _('The amount of fee can be decided freely by the sender. However, transactions with low fees take more time to be processed. Transactions with fees less that 0.0001 CivX will be rejected.') + '\n\n'\
+        msg = _('EXOS transactions are not free. A transaction fee is paid by the sender of the funds. The fee is collected by the staker who forges the block containing the transaction.') + '\n\n'\
+              + _('The amount of fee can be decided freely by the sender. However, transactions with low fees take more time to be processed. Transactions with fees less that 0.0001 EXOS will be rejected.') + '\n\n'\
               + _('A suggested fee is automatically added to this field. You may override it. The suggested fee increases with the size, in bytes, of the transaction.')
         self.fee_e_label = HelpLabel(_('Fee'), msg)
 
@@ -1159,7 +1159,7 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, PrintError):
 
         def feerounding_onclick():
             text = (self.feerounding_text + '\n\n' +
-                    _('To somewhat protect your privacy, Electrum-CIVX tries to create change with similar precision to other outputs.') + ' ' +
+                    _('To somewhat protect your privacy, EXOS-Electrum tries to create change with similar precision to other outputs.') + ' ' +
                     _('At most 100 exos might be lost due to this rounding.') + ' ' +
                     _("You can disable this setting in '{}'.").format(_('Preferences')) + '\n' +
                     _('Also, dust is not kept as change, but added to the fee.'))
@@ -1487,10 +1487,10 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, PrintError):
 
         for o in outputs:
             if o.address is None:
-                self.show_error(_('CivX Address is None'))
+                self.show_error(_('EXOS Address is None'))
                 return
             if o.type == TYPE_ADDRESS and not bitcoin.is_address(o.address):
-                self.show_error(_('Invalid CivX Address'))
+                self.show_error(_('Invalid EXOS Address'))
                 return
             if o.value is None:
                 self.show_error(_('Invalid Amount'))
@@ -1966,7 +1966,7 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, PrintError):
         self.send_button.setVisible(not self.wallet.is_watching_only())
 
     def change_password_dialog(self):
-        from electrum_civx.storage import STO_EV_XPUB_PW
+        from electrum_exos.storage import STO_EV_XPUB_PW
         if self.wallet.get_available_storage_encryption_version() == STO_EV_XPUB_PW:
             from .password_dialog import ChangePasswordDialogForHW
             d = ChangePasswordDialogForHW(self, self.wallet)
@@ -2149,14 +2149,14 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, PrintError):
                 "private key, and verifying with the corresponding public key. The "
                 "address you have entered does not have a unique public key, so these "
                 "operations cannot be performed.") + '\n\n' + \
-               _('The operation is undefined. Not just in Electrum-CivX, but in general.')
+               _('The operation is undefined. Not just in EXOS-Electrum, but in general.')
 
     @protected
     def do_sign(self, address, message, signature, password):
         address  = address.text().strip()
         message = message.toPlainText().strip()
         if not bitcoin.is_address(address):
-            self.show_message(_('Invalid CivX address.'))
+            self.show_message(_('Invalid EXOS address.'))
             return
         if self.wallet.is_watching_only():
             self.show_message(_('This is a watching-only wallet.'))
@@ -2184,7 +2184,7 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, PrintError):
         address  = address.text().strip()
         message = message.toPlainText().strip().encode('utf-8')
         if not bitcoin.is_address(address):
-            self.show_message(_('Invalid CivX address.'))
+            self.show_message(_('Invalid EXOS address.'))
             return
         try:
             # This can throw on invalid base64
@@ -2309,16 +2309,16 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, PrintError):
         return d.run()
 
     def tx_from_text(self, txt):
-        from electrum_civx.transaction import tx_from_str
+        from electrum_exos.transaction import tx_from_str
         try:
             tx = tx_from_str(txt)
             return Transaction(tx)
         except BaseException as e:
-            self.show_critical(_("Electrum-CIVX was unable to parse your transaction") + ":\n" + str(e))
+            self.show_critical(_("EXOS-Electrum was unable to parse your transaction") + ":\n" + str(e))
             return
 
     def read_tx_from_qrcode(self):
-        from electrum_civx import qrscanner
+        from electrum_exos import qrscanner
         try:
             data = qrscanner.scan_barcode(self.config.get_video_device())
         except BaseException as e:
@@ -2326,8 +2326,8 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, PrintError):
             return
         if not data:
             return
-        # if the user scanned a civx URI
-        if str(data).startswith("civx:"):
+        # if the user scanned a exos URI
+        if str(data).startswith("exos:"):
             self.pay_to_URI(data)
             return
         # else if the user scanned an offline signed tx
@@ -2349,7 +2349,7 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, PrintError):
             with open(fileName, "r") as f:
                 file_content = f.read()
         except (ValueError, IOError, os.error) as reason:
-            self.show_critical(_("Electrum-CIVX was unable to open your transaction file") + "\n" + str(reason), title=_("Unable to read file or no transaction found"))
+            self.show_critical(_("EXOS-Electrum was unable to open your transaction file") + "\n" + str(reason), title=_("Unable to read file or no transaction found"))
             return
         return self.tx_from_text(file_content)
 
@@ -2367,7 +2367,7 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, PrintError):
             self.show_transaction(tx)
 
     def do_process_from_txid(self):
-        from electrum_civx import transaction
+        from electrum_exos import transaction
         txid, ok = QInputDialog.getText(self, _('Lookup transaction'), _('Transaction ID') + ':')
         if ok and txid:
             txid = str(txid).strip()
@@ -2402,7 +2402,7 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, PrintError):
         e.setReadOnly(True)
         vbox.addWidget(e)
 
-        defaultname = 'electrum-civx-private-keys.csv'
+        defaultname = 'exos-electrum-private-keys.csv'
         select_msg = _('Select file and location to export your private keys to')
         hbox, filename_e, csv_button = filename_field(self, self.config, defaultname, select_msg)
         vbox.addLayout(hbox)
@@ -2460,7 +2460,7 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, PrintError):
             self.do_export_privkeys(filename, private_keys, csv_button.isChecked())
         except (IOError, os.error) as reason:
             txt = "\n".join([
-                _("Electrum-CIVX was unable to produce a private key-export."),
+                _("EXOS-Electrum was unable to produce a private key-export."),
                 str(reason)
             ])
             self.show_critical(txt, title=_("Unable to create csv"))
@@ -2546,7 +2546,7 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, PrintError):
         address_e.textChanged.connect(on_address)
         if not d.exec_():
             return
-        from electrum_civx.wallet import sweep_preparations
+        from electrum_exos.wallet import sweep_preparations
         try:
             self.do_clear()
             coins, keypairs = sweep_preparations(get_pk(), self.network)
@@ -2621,7 +2621,7 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, PrintError):
         lang_help = _('Select which language is used in the GUI (after restart).')
         lang_label = HelpLabel(_('Language') + ':', lang_help)
         lang_combo = QComboBox()
-        from electrum_civx.i18n import languages
+        from electrum_exos.i18n import languages
         lang_combo.addItems(list(languages.values()))
         lang_keys = list(languages.keys())
         lang_cur_setting = self.config.get("language", '')
@@ -2746,7 +2746,7 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, PrintError):
 
         units = base_units_list
         msg = (_('Base unit of your wallet.')
-               + '\n1 CIVX = 1000 mCIVX. \n1 mCIVX = 1000 µCIVX. \n1 µCIVX = 100 exo.\n\n'
+               + '\n1 EXOS = 1000 mEXOS. \n1 mEXOS = 1000 µEXOS. \n1 µEXOS = 100 exo.\n\n'
                + _('This setting affects the Send tab, and all balance related fields.'))
         unit_label = HelpLabel(_('Base unit') + ':', msg)
         unit_combo = QComboBox()
@@ -2782,7 +2782,7 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, PrintError):
         block_ex_combo.currentIndexChanged.connect(on_be)
         gui_widgets.append((block_ex_label, block_ex_combo))
 
-        from electrum_civx import qrscanner
+        from electrum_exos import qrscanner
         system_cameras = qrscanner._find_system_cameras()
         qr_combo = QComboBox()
         qr_combo.addItem("Default","default")
@@ -3015,7 +3015,7 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, PrintError):
 
         run_hook('close_settings_dialog')
         if self.need_restart:
-            self.show_warning(_('Please restart Electrum-CIVX to activate the new GUI settings'), title=_('Success'))
+            self.show_warning(_('Please restart EXOS-Electrum to activate the new GUI settings'), title=_('Success'))
 
 
     def closeEvent(self, event):
@@ -3042,7 +3042,7 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, PrintError):
         self.gui_object.close_window(self)
 
     def plugins_dialog(self):
-        self.pluginsdialog = d = WindowModalDialog(self, _('Electrum-CIVX Plugins'))
+        self.pluginsdialog = d = WindowModalDialog(self, _('EXOS-Electrum Plugins'))
 
         plugins = self.gui_object.plugins
 

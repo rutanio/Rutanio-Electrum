@@ -2,17 +2,17 @@ from binascii import hexlify, unhexlify
 import traceback
 import sys
 
-from electrum_civx.util import bfh, bh2u, UserCancelled
-from electrum_civx.bitcoin import (b58_address_to_hash160, xpub_from_pubkey,
+from electrum_exos.util import bfh, bh2u, UserCancelled
+from electrum_exos.bitcoin import (b58_address_to_hash160, xpub_from_pubkey,
                               TYPE_ADDRESS, TYPE_SCRIPT,
                               is_segwit_address)
-from electrum_civx import constants
-from electrum_civx.i18n import _
-from electrum_civx.plugin import BasePlugin
-from electrum_civx.transaction import deserialize, Transaction
-from electrum_civx.keystore import Hardware_KeyStore, is_xpubkey, parse_xpubkey
-from electrum_civx.wallet import Standard_Wallet
-from electrum_civx.base_wizard import ScriptTypeNotSupported
+from electrum_exos import constants
+from electrum_exos.i18n import _
+from electrum_exos.plugin import BasePlugin
+from electrum_exos.transaction import deserialize, Transaction
+from electrum_exos.keystore import Hardware_KeyStore, is_xpubkey, parse_xpubkey
+from electrum_exos.wallet import Standard_Wallet
+from electrum_exos.base_wizard import ScriptTypeNotSupported
 
 from ..hw_wallet import HW_PluginBase
 from ..hw_wallet.plugin import is_any_tx_output_on_change_branch, trezor_validate_op_return_output_and_get_data

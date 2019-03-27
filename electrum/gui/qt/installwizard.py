@@ -8,11 +8,11 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 
-from electrum_civx.wallet import Wallet
-from electrum_civx.storage import WalletStorage
-from electrum_civx.util import UserCancelled, InvalidPassword
-from electrum_civx.base_wizard import BaseWizard, HWD_SETUP_DECRYPT_WALLET, GoBack
-from electrum_civx.i18n import _
+from electrum_exos.wallet import Wallet
+from electrum_exos.storage import WalletStorage
+from electrum_exos.util import UserCancelled, InvalidPassword
+from electrum_exos.base_wizard import BaseWizard, HWD_SETUP_DECRYPT_WALLET, GoBack
+from electrum_exos.i18n import _
 
 from .seed_dialog import SeedLayout, KeysLayout
 from .network_dialog import NetworkChoiceLayout
@@ -106,7 +106,7 @@ class InstallWizard(QDialog, MessageBoxMixin, BaseWizard):
     def __init__(self, config, app, plugins, storage):
         BaseWizard.__init__(self, config, plugins, storage)
         QDialog.__init__(self, None)
-        self.setWindowTitle('Electrum CivX -  ' + _('Install Wizard'))
+        self.setWindowTitle('Electrum EXOS -  ' + _('Install Wizard'))
         self.app = app
         self.config = config
         # Set for base base class
@@ -177,7 +177,7 @@ class InstallWizard(QDialog, MessageBoxMixin, BaseWizard):
         hbox2.addWidget(self.pw_e)
         hbox2.addStretch()
         vbox.addLayout(hbox2)
-        self.set_layout(vbox, title=_('Electrum CivX wallet'))
+        self.set_layout(vbox, title=_('Electrum EXOS wallet'))
 
         wallet_folder = os.path.dirname(self.storage.path)
 
@@ -577,10 +577,10 @@ class InstallWizard(QDialog, MessageBoxMixin, BaseWizard):
         return None
 
     def init_network(self, network):
-        message = _("Electrum-CIVX communicates with remote servers to get "
+        message = _("EXOS-Electrum communicates with remote servers to get "
                   "information about your transactions and addresses. The "
                   "servers all fulfill the same purpose only differing in "
-                  "hardware. In most cases you simply want to let Electrum-CIVX "
+                  "hardware. In most cases you simply want to let EXOS-Electrum "
                   "pick one at random.  However if you prefer feel free to "
                   "select a server manually.")
         choices = [_("Auto connect"), _("Select server manually")]

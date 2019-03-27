@@ -300,7 +300,7 @@ class ECPubkey(object):
 def msg_magic(message: bytes) -> bytes:
     from .bitcoin import var_int
     length = bfh(var_int(len(message)))
-    return b"\x18CivX Signed Message:\n" + length + message
+    return b"\x18EXOS Signed Message:\n" + length + message
 
 
 def verify_message_with_address(address: str, sig65: bytes, message: bytes):

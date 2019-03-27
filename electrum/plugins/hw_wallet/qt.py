@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- mode: python -*-
 #
-# Electrum - lightweight CivX client
+# Electrum - lightweight EXOS client
 # Copyright (C) 2016  The Electrum developers
 #
 # Permission is hereby granted, free of charge, to any person
@@ -27,11 +27,11 @@
 import threading
 
 from PyQt5.Qt import QVBoxLayout, QLabel
-from electrum_civx.gui.qt.password_dialog import PasswordDialog, PW_PASSPHRASE
-from electrum_civx.gui.qt.util import *
+from electrum_exos.gui.qt.password_dialog import PasswordDialog, PW_PASSPHRASE
+from electrum_exos.gui.qt.util import *
 
-from electrum_civx.i18n import _
-from electrum_civx.util import PrintError
+from electrum_exos.i18n import _
+from electrum_exos.util import PrintError
 
 # The trickiest thing about this handler was getting windows properly
 # parented on macOS.
@@ -177,9 +177,9 @@ class QtHandlerBase(QObject, PrintError):
 
 
 
-from electrum_civx.plugin import hook
-from electrum_civx.util import UserCancelled
-from electrum_civx.gui.qt.main_window import StatusBarButton
+from electrum_exos.plugin import hook
+from electrum_exos.util import UserCancelled
+from electrum_exos.gui.qt.main_window import StatusBarButton
 
 class QtPluginBase(object):
 

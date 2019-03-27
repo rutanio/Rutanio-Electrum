@@ -2,14 +2,14 @@
 
 import sys
 import time
-from electrum_civx import bitcoin
+from electrum_exos import bitcoin
 from .. import SimpleConfig, Network
-from electrum_civx.util import print_msg, json_encode
+from electrum_exos.util import print_msg, json_encode
 
 try:
     addr = sys.argv[1]
 except Exception:
-    print("usage: watch_address <civx_address>")
+    print("usage: watch_address <exos_address>")
     sys.exit(1)
 
 sh = bitcoin.address_to_scripthash(addr)

@@ -3,17 +3,17 @@ import hashlib
 import sys
 import traceback
 
-from electrum_civx import bitcoin
-from electrum_civx.bitcoin import TYPE_ADDRESS, int_to_hex, var_int
-from electrum_civx.i18n import _
-from electrum_civx.plugin import BasePlugin
-from electrum_civx.keystore import Hardware_KeyStore
-from electrum_civx.transaction import Transaction
-from electrum_civx.wallet import Standard_Wallet
+from electrum_exos import bitcoin
+from electrum_exos.bitcoin import TYPE_ADDRESS, int_to_hex, var_int
+from electrum_exos.i18n import _
+from electrum_exos.plugin import BasePlugin
+from electrum_exos.keystore import Hardware_KeyStore
+from electrum_exos.transaction import Transaction
+from electrum_exos.wallet import Standard_Wallet
 from ..hw_wallet import HW_PluginBase
 from ..hw_wallet.plugin import is_any_tx_output_on_change_branch
-from electrum_civx.util import print_error, bfh, bh2u, versiontuple
-from electrum_civx.base_wizard import ScriptTypeNotSupported
+from electrum_exos.util import print_error, bfh, bh2u, versiontuple
+from electrum_exos.base_wizard import ScriptTypeNotSupported
 
 try:
     import hid
@@ -30,7 +30,7 @@ except ImportError:
 
 MSG_NEEDS_FW_UPDATE_GENERIC = _('Firmware version too old. Please update at') + \
                       ' https://www.ledgerwallet.com'
-MSG_NEEDS_FW_UPDATE_SEGWIT = _('Firmware version (or "CivX" app) too old for Segwit support. Please update at') + \
+MSG_NEEDS_FW_UPDATE_SEGWIT = _('Firmware version (or "EXOS" app) too old for Segwit support. Please update at') + \
                       ' https://www.ledgerwallet.com'
 MULTI_OUTPUT_SUPPORT = '1.1.4'
 SEGWIT_SUPPORT = '1.1.10'
@@ -192,7 +192,7 @@ class Ledger_Client():
                 self.perform_hw1_preflight()
             except BTChipException as e:
                 if (e.sw == 0x6d00 or e.sw == 0x6700):
-                    raise Exception(_("Device not in CivX mode")) from e
+                    raise Exception(_("Device not in EXOS mode")) from e
                 raise e
             self.preflightDone = True
 

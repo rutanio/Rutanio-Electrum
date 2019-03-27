@@ -5,10 +5,10 @@ from io import BytesIO
 import sys
 import platform
 
-from electrum_civx.plugin import BasePlugin, hook
-from electrum_civx.gui.qt.util import WaitingDialog, EnterButton, WindowModalDialog
-from electrum_civx.util import print_msg, print_error
-from electrum_civx.i18n import _
+from electrum_exos.plugin import BasePlugin, hook
+from electrum_exos.gui.qt.util import WaitingDialog, EnterButton, WindowModalDialog
+from electrum_exos.util import print_msg, print_error
+from electrum_exos.i18n import _
 
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *

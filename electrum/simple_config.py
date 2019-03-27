@@ -118,7 +118,7 @@ class SimpleConfig(PrintError):
             path = os.path.join(path, 'simnet')
             make_dir(path, allow_symlink=False)
 
-        self.print_error("electrum-civx directory", path)
+        self.print_error("exos-electrum directory", path)
         return path
 
     def rename_config_keys(self, config, keypairs, deprecation_warning=False):
@@ -195,7 +195,7 @@ class SimpleConfig(PrintError):
         base_unit = self.user_config.get('base_unit')
         if isinstance(base_unit, str):
             self._set_key_in_user_config('base_unit', None)
-            map_ = {'civx':8, 'mcivx':5, 'ucivx':2, 'ucivx':2, 'exo':0}
+            map_ = {'exos':8, 'mexos':5, 'uexos':2, 'uexos':2, 'exo':0}
             decimal_point = map_.get(base_unit.lower())
             self._set_key_in_user_config('decimal_point', decimal_point)
 
@@ -555,7 +555,7 @@ class SimpleConfig(PrintError):
 
 
 def read_user_config(path):
-    """Parse and store the user config settings in electrum-civx.conf into user_config[]."""
+    """Parse and store the user config settings in exos-electrum.conf into user_config[]."""
     if not path:
         return {}
     config_path = os.path.join(path, "config")

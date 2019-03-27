@@ -3,17 +3,17 @@ from kivy.factory import Factory
 from kivy.properties import ObjectProperty
 from kivy.lang import Builder
 
-from electrum_civx.util import base_units_list
-from electrum_civx.i18n import languages
-from electrum_civx.gui.kivy.i18n import _
-from electrum_civx.plugin import run_hook
-from electrum_civx import coinchooser
+from electrum_exos.util import base_units_list
+from electrum_exos.i18n import languages
+from electrum_exos.gui.kivy.i18n import _
+from electrum_exos.plugin import run_hook
+from electrum_exos import coinchooser
 
 from .choice_dialog import ChoiceDialog
 
 Builder.load_string('''
 #:import partial functools.partial
-#:import _ electrum_civx.gui.kivy.i18n._
+#:import _ electrum_exos.gui.kivy.i18n._
 
 <SettingsDialog@Popup>
     id: settings
@@ -44,7 +44,7 @@ Builder.load_string('''
                 SettingsItem:
                     bu: app.base_unit
                     title: _('Denomination') + ': ' + self.bu
-                    description: _("Base unit for CivX amounts.")
+                    description: _("Base unit for EXOS amounts.")
                     action: partial(root.unit_dialog, self)
                 CardSeparator
                 SettingsItem:

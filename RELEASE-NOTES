@@ -187,7 +187,7 @@
    on mainnet. For the mainnet prefixes {x,y,Y,z,Z}|{pub,prv}, the
    corresponding testnet prefixes are   {t,u,U,v,V}|{pub,prv}.
    More details and exact version bytes are specified at:
-   https://github.com/exofoundation/electrum-civx-docs/blob/master/xpub_version_bytes.rst
+   https://github.com/exofoundation/exos-electrum-docs/blob/master/xpub_version_bytes.rst
    Note that due to this change, testnet wallet files created with previous
    versions of Electrum must be considered broken, and they need to be
    recreated from seed words.

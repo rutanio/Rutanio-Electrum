@@ -45,13 +45,13 @@ def inv_dict(d):
     return {v: k for k, v in d.items()}
 
 
-base_units = {'CIVX':8, 'mCIVX':5, 'uCIVX':2, 'exo':0}
+base_units = {'EXOS':8, 'mEXOS':5, 'uEXOS':2, 'exo':0}
 base_units_inverse = inv_dict(base_units)
-base_units_list = ['CIVX', 'mCIVX', 'uCIVX', 'exo']  # list(dict) does not guarantee order
+base_units_list = ['EXOS', 'mEXOS', 'uEXOS', 'exo']  # list(dict) does not guarantee order
 
 
 def decimal_point_to_base_unit_name(dp: int) -> str:
-    # e.g. 8 -> "CIVX"
+    # e.g. 8 -> "EXOS"
     try:
         return base_units_inverse[dp]
     except KeyError:
@@ -59,7 +59,7 @@ def decimal_point_to_base_unit_name(dp: int) -> str:
 
 
 def base_unit_name_to_decimal_point(unit_name: str) -> int:
-    # e.g. "CIVX" -> 8
+    # e.g. "EXOS" -> 8
     try:
         return base_units[unit_name]
     except KeyError:
@@ -132,7 +132,7 @@ class Satoshis(object):
         return 'Satoshis(%d)'%self.value
 
     def __str__(self):
-        return format_satoshis(self.value) + " CIVX"
+        return format_satoshis(self.value) + " EXOS"
 
 class Fiat(object):
     __slots__ = ('value', 'ccy')
@@ -347,7 +347,7 @@ def android_data_dir():
     return PythonActivity.mActivity.getFilesDir().getPath() + '/data'
 
 def android_headers_dir():
-    d = android_ext_dir() + '/com.civxeconomy.electrumcivx'
+    d = android_ext_dir() + '/com.exoseconomy.electrumexos'
     if not os.path.exists(d):
         try:
             os.mkdir(d)
@@ -382,7 +382,7 @@ def assert_datadir_available(config_path):
         return
     else:
         raise FileNotFoundError(
-            'Electrum-CIVX datadir does not exist. Was it deleted while running?' + '\n' +
+            'EXOS-Electrum datadir does not exist. Was it deleted while running?' + '\n' +
             'Should be at {}'.format(path))
 
 
@@ -461,11 +461,11 @@ def user_dir():
     if 'ANDROID_DATA' in os.environ:
         return android_check_data_dir()
     elif os.name == 'posix':
-        return os.path.join(os.environ["HOME"], ".electrum-civx")
+        return os.path.join(os.environ["HOME"], ".exos-electrum")
     elif "APPDATA" in os.environ:
-        return os.path.join(os.environ["APPDATA"], "Electrum-civx")
+        return os.path.join(os.environ["APPDATA"], "EXOS-Electrum")
     elif "LOCALAPPDATA" in os.environ:
-        return os.path.join(os.environ["LOCALAPPDATA"], "Electrum-civx")
+        return os.path.join(os.environ["LOCALAPPDATA"], "EXOS-Electrum")
     else:
         #raise Exception("No home directory found in environment variables.")
         return
@@ -584,16 +584,16 @@ def time_difference(distance_in_time, include_seconds):
         return "over %d years" % (round(distance_in_minutes / 525600))
 
 mainnet_block_explorers = {
-    'BlockCIVX': ('http://blockexplorer.civxeconomy.com/#/civx/',
+    'BlockEXOS': ('http://blockexplorer.exos.to',
                         {'tx': 'transactions/', 'addr': 'addresses/'}),
-    'cryptoID.info': ('https://chainz.cryptoid.info/civx/',
+    'cryptoID.info': ('https://chainz.cryptoid.info/exos/',
                         {'tx': 'tx.dws?', 'addr': 'address.dws?'}),
     'system default': ('blockchain:/',
                         {'tx': 'tx/', 'addr': 'address/'}),
 }
 
 testnet_block_explorers = {
-    'BlockCIVX': ('http://blockexplorer.civxeconomy.com/#/tcivx/',
+    'BlockEXOS': ('http://blockexplorer.exoseconomy.com/#/texos/',
                         {'tx': 'transactions/', 'addr': 'addresses/'}),
     'system default': ('blockchain://0000059bb2c2048493efcb0f1a034972b3ce4089d54c93b69aaab212fb369887/',
                        {'tx': 'tx/', 'addr': 'address/'}),
@@ -604,7 +604,7 @@ def block_explorer_info():
     return testnet_block_explorers if constants.net.TESTNET else mainnet_block_explorers
 
 def block_explorer(config):
-    return config.get('block_explorer', 'BlockCIVX')
+    return config.get('block_explorer', 'BlockEXOS')
 
 def block_explorer_tuple(config):
     return block_explorer_info().get(block_explorer(config))
@@ -629,12 +629,12 @@ def parse_URI(uri, on_pr=None):
 
     if ':' not in uri:
         if not bitcoin.is_address(uri):
-            raise Exception("Not a civx address")
+            raise Exception("Not a exos address")
         return {'address': uri}
 
     u = urllib.parse.urlparse(uri)
-    if u.scheme != 'civx':
-        raise Exception("Not a civx URI")
+    if u.scheme != 'exos':
+        raise Exception("Not a exos URI")
     address = u.path
 
     # python for android fails to parse query
@@ -651,7 +651,7 @@ def parse_URI(uri, on_pr=None):
     out = {k: v[0] for k, v in pq.items()}
     if address:
         if not bitcoin.is_address(address):
-            raise Exception("Invalid civx address:" + address)
+            raise Exception("Invalid exos address:" + address)
         out['address'] = address
     if 'amount' in out:
         am = out['amount']
@@ -701,7 +701,7 @@ def create_URI(addr, amount, message):
         query.append('amount=%s'%format_satoshis_plain(amount))
     if message:
         query.append('message=%s'%urllib.parse.quote(message))
-    p = urllib.parse.ParseResult(scheme='civx', netloc='', path=addr, params='', query='&'.join(query), fragment='')
+    p = urllib.parse.ParseResult(scheme='exos', netloc='', path=addr, params='', query='&'.join(query), fragment='')
     return urllib.parse.urlunparse(p)
 
 

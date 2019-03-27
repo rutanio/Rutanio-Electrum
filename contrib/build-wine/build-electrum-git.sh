@@ -1,6 +1,6 @@
 #!/bin/bash
 
-NAME_ROOT=electrum-civx
+NAME_ROOT=exos-electrum
 PYTHON_VERSION=3.6.6
 
 # These settings probably don't need any change
@@ -16,29 +16,29 @@ PYTHON="wine $PYHOME/python.exe -OO -B"
 cd `dirname $0`
 set -e
 
-mkdir -p $WINEPREFIX/drive_c/electrum-civx
+mkdir -p $WINEPREFIX/drive_c/exos-electrum
 
 pushd ../..
-cp -r electrum* .git* icons* pubkeys* setup* run_electrum LICENCE Info.plist $WINEPREFIX/drive_c/electrum-civx/
-cp --parents contrib/requirements/* $WINEPREFIX/drive_c/electrum-civx/
+cp -r electrum* .git* icons* pubkeys* setup* run_electrum LICENCE Info.plist $WINEPREFIX/drive_c/exos-electrum/
+cp --parents contrib/requirements/* $WINEPREFIX/drive_c/exos-electrum/
 popd
 
-pushd $WINEPREFIX/drive_c/electrum-civx
+pushd $WINEPREFIX/drive_c/exos-electrum
 
-# Load electrum-civx-icons and electrum-civx-locale for this release
+# Load electrum-exo-icons and electrum-exo-locale for this release
 git submodule init
 git submodule update
 
 VERSION=`git describe --tags || printf 'custom'`
 echo "Last commit: $VERSION"
 
-pushd ./contrib/deterministic-build/electrum-civx-locale
+pushd ./contrib/deterministic-build/electrum-exo-locale
 if ! which msgfmt > /dev/null 2>&1; then
     echo "Please install gettext"
     exit 1
 fi
 for i in ./locale/*; do
-    dir=$WINEPREFIX/drive_c/electrum-civx/electrum/$i/LC_MESSAGES
+    dir=$WINEPREFIX/drive_c/electrum-exo/electrum/$i/LC_MESSAGES
     mkdir -p $dir
     msgfmt --output-file=$dir/electrum.mo $i/electrum.po || true
 done
@@ -52,7 +52,7 @@ $PYTHON -m pip install -r ../deterministic-build/requirements.txt
 
 $PYTHON -m pip install -r ../deterministic-build/requirements-hw.txt
 
-pushd $WINEPREFIX/drive_c/electrum-civx
+pushd $WINEPREFIX/drive_c/electrum-exo
 $PYTHON setup.py install
 popd
 
@@ -71,8 +71,8 @@ popd
 wine "$WINEPREFIX/drive_c/Program Files (x86)/NSIS/makensis.exe" /DPRODUCT_VERSION=$VERSION electrum.nsi
 
 cd dist
-mv electrum-civx-setup.exe $NAME_ROOT-$VERSION-setup.exe
+mv electrum-exo-setup.exe $NAME_ROOT-$VERSION-setup.exe
 cd ..
 
 echo "Done."
-md5sum dist/electrum-civx*exe
+md5sum dist/electrum-exo*exe

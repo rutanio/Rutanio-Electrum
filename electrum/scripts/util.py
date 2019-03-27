@@ -2,7 +2,7 @@ import select, time, queue
 # import electrum
 from .. import Connection, Interface, SimpleConfig
 
-from electrum_civx.network import parse_servers
+from electrum_exos.network import parse_servers
 from collections import defaultdict
 
 # electrum_cix.util.set_verbosity(1)

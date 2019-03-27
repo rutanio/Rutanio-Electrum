@@ -1,10 +1,10 @@
 # Configuration file for the Electrum client
 # Settings defined here are shared across wallets
 #
-# copy this file to /etc/electrum-civx.conf if you want read-only settings
+# copy this file to /etc/exos-electrum.conf if you want read-only settings
 
 [client]
-server = electrum-bos.civx.cloud:50002:s
+server = electrum-bos.exos.cloud:50002:s
 proxy = None
 gap_limit = 5
 # booleans use python syntax

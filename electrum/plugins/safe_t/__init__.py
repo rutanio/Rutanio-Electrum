@@ -1,4 +1,4 @@
-from electrum_civx.i18n import _
+from electrum_exos.i18n import _
 
 fullname = 'Safe-T mini Wallet'
 description = _('Provides support for Safe-T mini hardware wallet')

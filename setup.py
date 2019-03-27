@@ -21,7 +21,7 @@ with open('contrib/requirements/requirements-hw.txt') as f:
 version = imp.load_source('version', 'electrum/version.py')
 
 if sys.version_info[:3] < (3, 4, 0):
-    sys.exit("Error: Electrum-CIVX requires Python version >= 3.4.0...")
+    sys.exit("Error: EXOS-Electrum requires Python version >= 3.4.0...")
 
 data_files = []
 
@@ -39,8 +39,8 @@ if platform.system() in ['Linux', 'FreeBSD', 'DragonFly']:
         else:
             usr_share = os.path.expanduser('~/.local/share')
     data_files += [
-        (os.path.join(usr_share, 'applications/'), ['electrum-civx.desktop']),
-        (os.path.join(usr_share, icons_dirname), ['icons/electrum-civx.png'])
+        (os.path.join(usr_share, 'applications/'), ['exos-electrum.desktop']),
+        (os.path.join(usr_share, icons_dirname), ['icons/exos-electrum.png'])
     ]
 
 extras_require = {
@@ -69,34 +69,34 @@ class CustomInstallCommand(install):
 
 
 setup(
-    name="Electrum-civx",
+    name="EXOS-Electrum",
     version=version.ELECTRUM_VERSION,
     install_requires=requirements,
     extras_require=extras_require,
     packages=[
-        'electrum_civx',
-        'electrum_civx.gui',
-        'electrum_civx.gui.qt',
-        'electrum_civx.plugins',
-    ] + [('electrum_civx.plugins.'+pkg) for pkg in find_packages('electrum_civx/plugins')],
+        'electrum_exos',
+        'electrum_exos.gui',
+        'electrum_exos.gui.qt',
+        'electrum_exos.plugins',
+    ] + [('electrum_exos.plugins.'+pkg) for pkg in find_packages('electrum_exos/plugins')],
     package_dir={
-        'electrum_civx': 'electrum'
+        'electrum_exos': 'electrum'
     },
     package_data={
         '': ['*.txt', '*.json', '*.ttf', '*.otf'],
-        'electrum_civx': [
+        'electrum_exos': [
             'wordlist/*.txt',
             'locale/*/LC_MESSAGES/electrum.mo',
         ],
     },
-    scripts=['electrum/electrum-civx'],
+    scripts=['electrum/exos-electrum'],
     data_files=data_files,
-    description="Lightweight CivX Wallet",
+    description="Lightweight EXOS Wallet",
     author="ExF Developers, Fluid Chains Devs",
     author_email="turcol@gmail.com",
     license="MIT Licence",
-    url="https://civxeconomy.com",
-    long_description="""Lightweight CivX Wallet""",
+    url="https://exoseconomy.com",
+    long_description="""Lightweight EXOS Wallet""",
     cmdclass={
         'install': CustomInstallCommand,
     },

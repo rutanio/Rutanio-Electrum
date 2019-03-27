@@ -30,8 +30,8 @@ from decimal import Decimal
 
 from kivy.clock import Clock
 
-from electrum_civx.i18n import _
-from electrum_civx.plugin import hook
+from electrum_exos.i18n import _
+from electrum_exos.plugin import hook
 from .trustedcoin import TrustedCoinPlugin, server, KIVY_DISCLAIMER, TrustedCoinException, ErrorConnectingServer
 
 

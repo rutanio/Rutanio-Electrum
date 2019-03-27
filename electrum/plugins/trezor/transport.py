@@ -1,4 +1,4 @@
-from electrum_civx.util import PrintError
+from electrum_exos.util import PrintError
 
 
 class TrezorTransport(PrintError):

@@ -6,10 +6,10 @@
   <array>
     <dict>
       <key>CFBundleURLName</key>
-      <string>civx</string>
+      <string>exos</string>
       <key>CFBundleURLSchemes</key>
       <array>
-        <string>civx</string>
+        <string>exos</string>
       </array>
     </dict>
   </array>

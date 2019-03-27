@@ -1,6 +1,6 @@
 
-from electrum_civx.i18n import _
-from electrum_civx.plugin import run_hook
+from electrum_exos.i18n import _
+from electrum_exos.plugin import run_hook
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import QFileDialog
@@ -55,7 +55,7 @@ class ScanQRTextEdit(ButtonsTextEdit, MessageBoxMixin):
             self.setText(data)
 
     def qr_input(self):
-        from electrum_civx import qrscanner, get_config
+        from electrum_exos import qrscanner, get_config
         try:
             data = qrscanner.scan_barcode(get_config().get_video_device())
         except BaseException as e:

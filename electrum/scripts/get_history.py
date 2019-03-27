@@ -2,13 +2,13 @@
 
 import sys
 from .. import Network
-from electrum_civx.util import json_encode, print_msg
-from electrum_civx import bitcoin
+from electrum_exos.util import json_encode, print_msg
+from electrum_exos import bitcoin
 
 try:
     addr = sys.argv[1]
 except Exception:
-    print("usage: get_history <civx_address>")
+    print("usage: get_history <exos_address>")
     sys.exit(1)
 
 n = Network()

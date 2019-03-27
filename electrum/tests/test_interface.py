@@ -1,6 +1,6 @@
 import unittest
 
-from electrum_civx import interface
+from electrum_exos import interface
 
 from . import SequentialTestCase
 

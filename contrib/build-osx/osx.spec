@@ -5,17 +5,17 @@ from PyInstaller.utils.hooks import collect_data_files, collect_submodules, coll
 import sys
 import os
 
-PACKAGE='Electrum-CIVX'
+PACKAGE='EXOS-Electrum'
 PYPKG='electrum'
-ALIASPKGPATH='electrum_civx'
+ALIASPKGPATH='electrum_exos'
 MAIN_SCRIPT='run_electrum'
-ICONS_FILE='electrum-civx.icns'
+ICONS_FILE='exos-electrum.icns'
 
 for i, x in enumerate(sys.argv):
     if x == '--name':
         VERSION = sys.argv[i+1]
         break
-else:
+else: 
     raise Exception('no version')
 
 electrum = os.path.abspath(".") + "/"

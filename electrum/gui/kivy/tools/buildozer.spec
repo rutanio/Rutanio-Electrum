@@ -1,13 +1,13 @@
 [app]
 
 # (str) Title of your application
-title = Electrum-CIVX
+title = EXOS-Electrum
 
 # (str) Package name
-package.name = ElectrumCIVX
+package.name = ElectrumEXOS
 
 # (str) Package domain (needed for android/ios packaging)
-package.domain = com.civxeconomy
+package.domain = com.exoseconomy
 
 # (str) Source code where the main.py live
 source.dir = .

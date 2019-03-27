@@ -91,7 +91,7 @@ wine 'wineboot'
 #rm -f /opt/wine-stable/lib/wine/fakedlls/api-ms-win-core-path-l1-1-0.dll
 #rm -f /opt/wine-stable/lib/wine/api-ms-win-core-path-l1-1-0.dll.so
 
-cd /tmp/electrum-civx-build
+cd /tmp/exos-electrum-build
 
 # Install Python
 # note: you might need "sudo apt-get install dirmngr" for the following
@@ -132,7 +132,7 @@ download_if_not_exist $ZBAR_FILENAME "$ZBAR_URL"
 verify_hash $ZBAR_FILENAME "$ZBAR_SHA256"
 wine "$PWD/$ZBAR_FILENAME" /S
 
-# Upgrade setuptools (so Electrum-CIVX can be installed later)
+# Upgrade setuptools (so EXOS-Electrum can be installed later)
 $PYTHON -m pip install setuptools --upgrade
 
 # Install NSIS installer

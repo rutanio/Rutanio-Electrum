@@ -1,7 +1,7 @@
 import unittest
 from decimal import Decimal
 
-from electrum_civx.commands import Commands
+from electrum_exos.commands import Commands
 
 
 class TestCommands(unittest.TestCase):

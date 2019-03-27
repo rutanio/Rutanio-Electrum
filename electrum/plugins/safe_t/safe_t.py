@@ -2,15 +2,15 @@ from binascii import hexlify, unhexlify
 import traceback
 import sys
 
-from electrum_civx.util import bfh, bh2u, versiontuple, UserCancelled
-from electrum_civx.bitcoin import (b58_address_to_hash160, xpub_from_pubkey, deserialize_xpub,
+from electrum_exos.util import bfh, bh2u, versiontuple, UserCancelled
+from electrum_exos.bitcoin import (b58_address_to_hash160, xpub_from_pubkey, deserialize_xpub,
                               TYPE_ADDRESS, TYPE_SCRIPT, is_address)
-from electrum_civx import constants
-from electrum_civx.i18n import _
-from electrum_civx.plugin import BasePlugin, Device
-from electrum_civx.transaction import deserialize, Transaction
-from electrum_civx.keystore import Hardware_KeyStore, is_xpubkey, parse_xpubkey
-from electrum_civx.base_wizard import ScriptTypeNotSupported
+from electrum_exos import constants
+from electrum_exos.i18n import _
+from electrum_exos.plugin import BasePlugin, Device
+from electrum_exos.transaction import deserialize, Transaction
+from electrum_exos.keystore import Hardware_KeyStore, is_xpubkey, parse_xpubkey
+from electrum_exos.base_wizard import ScriptTypeNotSupported
 
 from ..hw_wallet import HW_PluginBase
 from ..hw_wallet.plugin import is_any_tx_output_on_change_branch, trezor_validate_op_return_output_and_get_data
@@ -153,7 +153,7 @@ class SafeTPlugin(HW_PluginBase):
         return client
 
     def get_coin_name(self):
-        return "CivX Testnet" if constants.net.TESTNET else "CivX"
+        return "EXOS Testnet" if constants.net.TESTNET else "EXOS"
 
     def initialize_device(self, device_id, wizard, handler):
         # Initialization method

@@ -1,6 +1,6 @@
-from electrum_civx.plugin import hook
+from electrum_exos.plugin import hook
 from .coldcard import ColdcardPlugin
-from electrum_civx.util import print_msg, print_error, raw_input, print_stderr
+from electrum_exos.util import print_msg, print_error, raw_input, print_stderr
 
 class ColdcardCmdLineHandler:
 

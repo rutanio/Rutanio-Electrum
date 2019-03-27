@@ -60,7 +60,7 @@ class Plugins(DaemonThread):
 
     def load_plugins(self):
         for loader, name, ispkg in pkgutil.iter_modules([self.pkgpath]):
-            mod = pkgutil.find_loader('electrum_civx.plugins.' + name)
+            mod = pkgutil.find_loader('electrum_exos.plugins.' + name)
             m = mod.load_module()
             d = m.__dict__
             gui_good = self.gui_name in d.get('available_for', [])
@@ -89,7 +89,7 @@ class Plugins(DaemonThread):
     def load_plugin(self, name):
         if name in self.plugins:
             return self.plugins[name]
-        full_name = 'electrum_civx.plugins.' + name + '.' + self.gui_name
+        full_name = 'electrum_exos.plugins.' + name + '.' + self.gui_name
         loader = pkgutil.find_loader(full_name)
         if not loader:
             raise RuntimeError("%s implementation for %s plugin not found"
@@ -447,10 +447,10 @@ class DeviceMgr(ThreadJob, PrintError):
         # The user input has wrong PIN or passphrase, or cancelled input,
         # or it is not pairable
         raise DeviceUnpairableError(
-            _('Electrum-CIVX cannot pair with your {}.\n\n'
-              'Before you request civx to be sent to addresses in this '
+            _('EXOS-Electrum cannot pair with your {}.\n\n'
+              'Before you request exos to be sent to addresses in this '
               'wallet, ensure you can pair with your device, or that you have '
-              'its seed (and passphrase, if any).  Otherwise all civx you '
+              'its seed (and passphrase, if any).  Otherwise all exos you '
               'receive will be unspendable.').format(plugin.device))
 
     def unpaired_device_infos(self, handler, plugin, devices=None):

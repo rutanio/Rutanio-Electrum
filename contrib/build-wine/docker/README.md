@@ -31,9 +31,9 @@ folder.
     $ git checkout $REV
     $ sudo docker run \
         --name electrum-wine-builder-cont \
-        -v $PWD:/opt/wine64/drive_c/electrum-civx \
+        -v $PWD:/opt/wine64/drive_c/exos-electrum \
         --rm \
-        --workdir /opt/wine64/drive_c/electrum-civx/contrib/build-wine \
+        --workdir /opt/wine64/drive_c/exos-electrum/contrib/build-wine \
         electrum-wine-builder-img \
         ./build.sh
     ```

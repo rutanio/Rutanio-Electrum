@@ -38,16 +38,16 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 import PyQt5.QtCore as QtCore
 
-from electrum_civx.i18n import _, set_language
-from electrum_civx.plugin import run_hook
-from electrum_civx.storage import WalletStorage
-from electrum_civx.base_wizard import GoBack
-# from electrum_civx.synchronizer import Synchronizer
-# from electrum_civx.verifier import SPV
-# from electrum_civx.util import DebugMem
-from electrum_civx.util import (UserCancelled, print_error,
+from electrum_exos.i18n import _, set_language
+from electrum_exos.plugin import run_hook
+from electrum_exos.storage import WalletStorage
+from electrum_exos.base_wizard import GoBack
+# from electrum_exos.synchronizer import Synchronizer
+# from electrum_exos.verifier import SPV
+# from electrum_exos.util import DebugMem
+from electrum_exos.util import (UserCancelled, print_error,
                            WalletFileException, BitcoinException)
-# from electrum_civx.wallet import Abstract_Wallet
+# from electrum_exos.wallet import Abstract_Wallet
 
 from .installwizard import InstallWizard
 
@@ -98,7 +98,7 @@ class ElectrumGui:
         if hasattr(QtCore.Qt, "AA_ShareOpenGLContexts"):
             QtCore.QCoreApplication.setAttribute(QtCore.Qt.AA_ShareOpenGLContexts)
         if hasattr(QGuiApplication, 'setDesktopFileName'):
-            QGuiApplication.setDesktopFileName('electrum-civx.desktop')
+            QGuiApplication.setDesktopFileName('exos-electrum.desktop')
         self.config = config
         self.daemon = daemon
         self.plugins = plugins

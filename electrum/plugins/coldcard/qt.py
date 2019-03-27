@@ -1,9 +1,9 @@
 import time
 
-from electrum_civx.i18n import _
-from electrum_civx.plugin import hook
-from electrum_civx.wallet import Standard_Wallet
-from electrum_civx.gui.qt.util import *
+from electrum_exos.i18n import _
+from electrum_exos.plugin import hook
+from electrum_exos.wallet import Standard_Wallet
+from electrum_exos.gui.qt.util import *
 
 from .coldcard import ColdcardPlugin
 from ..hw_wallet.qt import QtHandlerBase, QtPluginBase

@@ -100,7 +100,7 @@ class BaseWizard(object):
             ('standard',  _("Standard wallet")),
             ('2fa', _("Wallet with two-factor authentication")),
             ('multisig',  _("Multi-signature wallet")),
-            ('imported',  _("Import CivX addresses or private keys")),
+            ('imported',  _("Import EXOS addresses or private keys")),
         ]
         choices = [pair for pair in wallet_kinds if pair[0] in wallet_types]
         self.choice_dialog(title=title, message=message, choices=choices, run_next=self.on_wallet_type)
@@ -173,8 +173,8 @@ class BaseWizard(object):
 
     def import_addresses_or_keys(self):
         v = lambda x: keystore.is_address_list(x) or keystore.is_private_key_list(x)
-        title = _("Import CivX Addresses")
-        message = _("Enter a list of CivX addresses (this will create a watching-only wallet), or a list of private keys.")
+        title = _("Import EXOS Addresses")
+        message = _("Enter a list of EXOS addresses (this will create a watching-only wallet), or a list of private keys.")
         self.add_xpub_dialog(title=title, message=message, run_next=self.on_import,
                              is_valid=v, allow_multi=True, show_wif_help=True)
 
@@ -521,7 +521,7 @@ class BaseWizard(object):
             _("The type of addresses used by your wallet will depend on your seed."),
             _("Segwit wallets use bech32 addresses, defined in BIP173."),
             _("Please note that websites and other wallets may not support these addresses yet."),
-            _("Thus, you might want to keep using a non-segwit wallet in order to be able to receive civx during the transition period.")
+            _("Thus, you might want to keep using a non-segwit wallet in order to be able to receive exos during the transition period.")
         ])
         choices = [
             ('create_standard_seed', _('Standard')),
@@ -568,5 +568,5 @@ class BaseWizard(object):
             self.wallet.synchronize()
             self.wallet.storage.write()
             self.terminate()
-        msg = _("Electrum-CIVX is generating your addresses, please wait...")
+        msg = _("EXOS-Electrum is generating your addresses, please wait...")
         self.waiting_dialog(task, msg)

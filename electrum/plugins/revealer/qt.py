@@ -26,11 +26,11 @@ import binascii
 
 from PyQt5.QtPrintSupport import QPrinter
 
-from electrum_civx.plugin import BasePlugin, hook
-from electrum_civx.i18n import _
-from electrum_civx.util import to_bytes, make_dir
-from electrum_civx.gui.qt.util import *
-from electrum_civx.gui.qt.qrtextedit import ScanQRTextEdit
+from electrum_exos.plugin import BasePlugin, hook
+from electrum_exos.i18n import _
+from electrum_exos.util import to_bytes, make_dir
+from electrum_exos.gui.qt.util import *
+from electrum_exos.gui.qt.qrtextedit import ScanQRTextEdit
 
 from .hmac_drbg import DRBG
 

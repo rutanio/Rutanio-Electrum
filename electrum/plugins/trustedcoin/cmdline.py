@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Electrum - Lightweight CivX Client
+# Electrum - Lightweight EXOS Client
 # Copyright (C) 2015 Thomas Voegtlin
 #
 # Permission is hereby granted, free of charge, to any person
@@ -23,8 +23,8 @@
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-from electrum_civx.i18n import _
-from electrum_civx.plugin import hook
+from electrum_exos.i18n import _
+from electrum_exos.plugin import hook
 from .trustedcoin import TrustedCoinPlugin
 
 

@@ -1,8 +1,8 @@
 name: electrum
 version: master
-summary: CivX thin client
+summary: EXOS thin client
 description: |
-  Lightweight CivX client
+  Lightweight EXOS client
 
 grade: devel # must be 'stable' to release into candidate/stable channels
 confinement: strict

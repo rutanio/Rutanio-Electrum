@@ -1,0 +1,21 @@
+# If you want EXOS-Electrum to appear in a Linux app launcher ("start menu"), install this by doing:
+# sudo desktop-file-install exos-electrum.desktop
+
+[Desktop Entry]
+Comment=Lightweight EXOS Client
+Exec=sh -c "PATH=\"\\$HOME/.local/bin:\\$PATH\" exos-electrum %u"
+GenericName[en_US]=EXOS Wallet
+GenericName=EXOS Wallet
+Icon=exos-electrum
+Name[en_US]=Electrum EXOS Wallet
+Name=Electrum EXOS Wallet
+Categories=Finance;Network;
+StartupNotify=false
+Terminal=false
+Type=Application
+MimeType=x-scheme-handler/exos;
+Actions=Testnet;
+
+[Desktop Action Testnet]
+Exec=sh -c "PATH=\"\\$HOME/.local/bin:\\$PATH\" exos-electrum --testnet %u"
+Name=Testnet mode

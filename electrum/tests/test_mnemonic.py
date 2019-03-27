@@ -1,8 +1,8 @@
 import unittest
-from electrum_civx import keystore
-from electrum_civx import mnemonic
-from electrum_civx import old_mnemonic
-from electrum_civx.util import bh2u
+from electrum_exos import keystore
+from electrum_exos import mnemonic
+from electrum_exos import old_mnemonic
+from electrum_exos.util import bh2u
 
 from . import SequentialTestCase
 

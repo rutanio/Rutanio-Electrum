@@ -23,7 +23,7 @@ The usual way to distribute macOS applications is to use image files containing 
 application. Although these images can be created on a Mac with the built-in `hdiutil`,
 they are not deterministic.
 
-Instead, we use the toolchain that CivX uses: genisoimage and libdmg-hfsplus.
+Instead, we use the toolchain that EXOS uses: genisoimage and libdmg-hfsplus.
 These tools do not work on macOS, so you need a separate Linux machine (or VM).
 
 Copy the Electrum.app directory over and install the dependencies, e.g.:
@@ -33,4 +33,4 @@ Copy the Electrum.app directory over and install the dependencies, e.g.:
 Then you can just invoke `package.sh` with the path to the app:
 
     cd electrum
-    ./contrib/build-osx/package.sh ~/Electrum-CIVX.app/
+    ./contrib/build-osx/package.sh ~/EXOS-Electrum.app/

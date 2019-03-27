@@ -1,47 +1,47 @@
 {
-    "electrum01-testnet.civx.cloud": {
+    "electrum01-testnet.oexo.cloud": {
         "pruning": "-",
         "s": "51002",
         "t": "51001",
         "version": "1.2"
     },
-    "electrum02-testnet.exponentialz.com": {
+    "electrum02-testnet.oexo.net": {
         "pruning": "-",
         "s": "51002",
         "t": "51001",
         "version": "1.2"
     },
-    "electrum03-testnet.civx.cloud": {
+    "electrum03-testnet.oexo.cloud": {
         "pruning": "-",
         "s": "51002",
         "t": "51001",
         "version": "1.2"
     },
-    "electrum04-testnet.exponentialz.com": {
+    "electrum04-testnet.oexo.net": {
         "pruning": "-",
         "s": "51002",
         "t": "51001",
         "version": "1.2"
     },
-    "electrum05-testnet.civx.cloud": {
+    "electrum05-testnet.oexo.cloud": {
         "pruning": "-",
         "s": "51002",
         "t": "51001",
         "version": "1.2"
     },
-    "electrum06-testnet.exponentialz.com": {
+    "electrum06-testnet.oexo.net": {
         "pruning": "-",
         "s": "51002",
         "t": "51001",
         "version": "1.2"
     },
-    "electrum07-testnet.civx.cloud": {
+    "electrum07-testnet.oexo.cloud": {
         "pruning": "-",
         "s": "51002",
         "t": "51001",
         "version": "1.2"
     },
-    "electrum08-testnet.exponentialz.com": {
+    "electrum08-testnet.oexo.net": {
         "pruning": "-",
         "s": "51002",
         "t": "51001",
