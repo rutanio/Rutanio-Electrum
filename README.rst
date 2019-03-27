@@ -5,7 +5,7 @@ EXOS-Electrum - Lightweight EXOS client
 
   Licence: MIT Licence
   Original Author: Thomas Voegtlin
-  Port Maintainer: ExOFoundation Developers, Fluid Chains, turcol
+  Port Maintainer: OpenExO and ExO Economy Developers, Fluid Chains
   Language: Python
   Homepage: https://exos.to
 

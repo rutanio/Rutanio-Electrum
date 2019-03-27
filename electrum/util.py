@@ -347,7 +347,7 @@ def android_data_dir():
     return PythonActivity.mActivity.getFilesDir().getPath() + '/data'
 
 def android_headers_dir():
-    d = android_ext_dir() + '/com.exoseconomy.electrumexos'
+    d = android_ext_dir() + '/com.openexo.economy.electrumexos'
     if not os.path.exists(d):
         try:
             os.mkdir(d)
@@ -593,7 +593,7 @@ mainnet_block_explorers = {
 }
 
 testnet_block_explorers = {
-    'BlockEXOS': ('http://blockexplorer.exoseconomy.com/#/texos/',
+    'BlockEXOS': ('http://blockexplorer.exos.to/#/texos/',
                         {'tx': 'transactions/', 'addr': 'addresses/'}),
     'system default': ('blockchain://0000059bb2c2048493efcb0f1a034972b3ce4089d54c93b69aaab212fb369887/',
                        {'tx': 'tx/', 'addr': 'address/'}),

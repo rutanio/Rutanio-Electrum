@@ -92,10 +92,10 @@ setup(
     scripts=['electrum/exos-electrum'],
     data_files=data_files,
     description="Lightweight EXOS Wallet",
-    author="ExF Developers, Fluid Chains Devs",
+    author="OpenExO and ExO Economy Developers, Fluid Chains Devs",
     author_email="turcol@gmail.com",
     license="MIT Licence",
-    url="https://exoseconomy.com",
+    url="https://economy.openexo.com",
     long_description="""Lightweight EXOS Wallet""",
     cmdclass={
         'install': CustomInstallCommand,

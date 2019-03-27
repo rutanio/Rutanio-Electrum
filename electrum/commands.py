@@ -763,10 +763,10 @@ config_variables = {
         'requests_dir': 'directory where a bip70 file will be written.',
         'ssl_privkey': 'Path to your SSL private key, needed to sign the request.',
         'ssl_chain': 'Chain of SSL certificates, needed for signed requests. Put your certificate at the top and the root CA at the end',
-        'url_rewrite': 'Parameters passed to str.replace(), in order to create the r= part of exos: URIs. Example: \"(\'file:///var/www/\',\'https://exoseconomy.com/\')\"',
+        'url_rewrite': 'Parameters passed to str.replace(), in order to create the r= part of exos: URIs. Example: \"(\'file:///var/www/\',\'https://economy.openexo.com/\')\"',
     },
     'listrequests':{
-        'url_rewrite': 'Parameters passed to str.replace(), in order to create the r= part of exos: URIs. Example: \"(\'file:///var/www/\',\'https://exoseconomy.com/\')\"',
+        'url_rewrite': 'Parameters passed to str.replace(), in order to create the r= part of exos: URIs. Example: \"(\'file:///var/www/\',\'https://economy.openexo.com/\')\"',
     }
 }
 

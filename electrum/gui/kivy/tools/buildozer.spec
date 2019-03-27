@@ -7,7 +7,7 @@ title = EXOS-Electrum
 package.name = ElectrumEXOS
 
 # (str) Package domain (needed for android/ios packaging)
-package.domain = com.exoseconomy
+package.domain = com.openexo.economy
 
 # (str) Source code where the main.py live
 source.dir = .

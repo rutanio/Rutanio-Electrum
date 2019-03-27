@@ -21,8 +21,8 @@ echo "Found $(ls dist/*.exe | wc -w) files to verify."
 for mine in $(ls dist/*.exe); do
     echo "---------------"
     f=$(basename $mine)
-    echo "Downloading https://download.exoseconomy.com/$version/$f"
-    wget -q https://download.exoseconomy.com/$version/$f -O signed/$f
+    echo "Downloading https://download.economy.openexo.com/$version/$f"
+    wget -q https://download.economy.openexo.com/$version/$f -O signed/$f
     out="signed/stripped/$f"
     size=$( wc -c < $mine )
     # Step 1: Remove PE signature from signed binary
