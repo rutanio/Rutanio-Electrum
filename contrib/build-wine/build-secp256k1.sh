@@ -26,6 +26,7 @@ if [ ! -d secp256k1 ]; then
     cd secp256k1;
 else
     cd secp256k1
+    git reset --hard
     git pull
 fi
 
