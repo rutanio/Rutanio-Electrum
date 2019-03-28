@@ -32,13 +32,13 @@ git submodule update
 VERSION=`git describe --tags || printf 'custom'`
 echo "Last commit: $VERSION"
 
-pushd ./contrib/deterministic-build/electrum-exo-locale
+pushd ./contrib/deterministic-build/exos-electrum-locale
 if ! which msgfmt > /dev/null 2>&1; then
     echo "Please install gettext"
     exit 1
 fi
 for i in ./locale/*; do
-    dir=$WINEPREFIX/drive_c/electrum-exo/electrum/$i/LC_MESSAGES
+    dir=$WINEPREFIX/drive_c/exos-electrum/electrum/$i/LC_MESSAGES
     mkdir -p $dir
     msgfmt --output-file=$dir/electrum.mo $i/electrum.po || true
 done
@@ -52,7 +52,7 @@ $PYTHON -m pip install -r ../deterministic-build/requirements.txt
 
 $PYTHON -m pip install -r ../deterministic-build/requirements-hw.txt
 
-pushd $WINEPREFIX/drive_c/electrum-exo
+pushd $WINEPREFIX/drive_c/exos-electrum
 $PYTHON setup.py install
 popd
 
@@ -71,8 +71,8 @@ popd
 wine "$WINEPREFIX/drive_c/Program Files (x86)/NSIS/makensis.exe" /DPRODUCT_VERSION=$VERSION electrum.nsi
 
 cd dist
-mv electrum-exo-setup.exe $NAME_ROOT-$VERSION-setup.exe
+mv exos-electrum.exe $NAME_ROOT-$VERSION-setup.exe
 cd ..
 
 echo "Done."
-md5sum dist/electrum-exo*exe
+md5sum dist/exos-electrum*exe

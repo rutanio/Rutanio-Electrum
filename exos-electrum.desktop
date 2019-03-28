@@ -2,13 +2,13 @@
 # sudo desktop-file-install exos-electrum.desktop
 
 [Desktop Entry]
-Comment=Lightweight EXOS Client
+Comment=EXOS Lightweight Client
 Exec=sh -c "PATH=\"\\$HOME/.local/bin:\\$PATH\" exos-electrum %u"
 GenericName[en_US]=EXOS Wallet
 GenericName=EXOS Wallet
 Icon=exos-electrum
-Name[en_US]=Electrum EXOS Wallet
-Name=Electrum EXOS Wallet
+Name[en_US]=EXOS Electrum Wallet
+Name=EXOS Electrum Wallet
 Categories=Finance;Network;
 StartupNotify=false
 Terminal=false
