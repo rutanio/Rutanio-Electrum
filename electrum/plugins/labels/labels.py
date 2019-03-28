@@ -16,7 +16,7 @@ class LabelsPlugin(BasePlugin):
 
     def __init__(self, parent, config, name):
         BasePlugin.__init__(self, parent, config, name)
-        self.target_host = 'labels.electrum.org'
+        self.target_host = 'labels.exos.to'
         self.wallets = {}
 
     def encode(self, wallet, msg):

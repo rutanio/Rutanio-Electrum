@@ -1,6 +1,6 @@
-[submodule "contrib/deterministic-build/exos-electrum-locale"]
-	path = contrib/deterministic-build/exos-electrum-locale
-	url = https://github.com/exofoundation/exos-electrum-locale
 [submodule "contrib/deterministic-build/exos-electrum-icons"]
 	path = contrib/deterministic-build/exos-electrum-icons
-	url = https://github.com/exofoundation/exos-electrum-icons
+	url = https://github.com/exoeconomy/exos-electrum-icons
+[submodule "contrib/deterministic-build/exos-electrum-locale"]
+	path = contrib/deterministic-build/exos-electrum-locale
+	url = https://github.com/exoeconomy/exos-electrum-locale
