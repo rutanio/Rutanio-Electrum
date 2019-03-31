@@ -584,7 +584,7 @@ def time_difference(distance_in_time, include_seconds):
         return "over %d years" % (round(distance_in_minutes / 525600))
 
 mainnet_block_explorers = {
-    'BlockEXOS': ('http://blockexplorer.exos.to',
+    'BlockEXOS': ('https://blockexplorer.exos.to/#exos/',
                         {'tx': 'transactions/', 'addr': 'addresses/'}),
     'cryptoID.info': ('https://chainz.cryptoid.info/exos/',
                         {'tx': 'tx.dws?', 'addr': 'address.dws?'}),
@@ -593,7 +593,7 @@ mainnet_block_explorers = {
 }
 
 testnet_block_explorers = {
-    'BlockEXOS': ('http://blockexplorer.exos.to/#/texos/',
+    'BlockEXOS': ('https://blockexplorer.exos.to/#/texos/',
                         {'tx': 'transactions/', 'addr': 'addresses/'}),
     'system default': ('blockchain://0000059bb2c2048493efcb0f1a034972b3ce4089d54c93b69aaab212fb369887/',
                        {'tx': 'tx/', 'addr': 'address/'}),
@@ -629,12 +629,12 @@ def parse_URI(uri, on_pr=None):
 
     if ':' not in uri:
         if not bitcoin.is_address(uri):
-            raise Exception("Not a exos address")
+            raise Exception("Not an EXOS address")
         return {'address': uri}
 
     u = urllib.parse.urlparse(uri)
     if u.scheme != 'exos':
-        raise Exception("Not a exos URI")
+        raise Exception("Not an EXOS URI")
     address = u.path
 
     # python for android fails to parse query
@@ -651,7 +651,7 @@ def parse_URI(uri, on_pr=None):
     out = {k: v[0] for k, v in pq.items()}
     if address:
         if not bitcoin.is_address(address):
-            raise Exception("Invalid exos address:" + address)
+            raise Exception("Invalid EXOS address:" + address)
         out['address'] = address
     if 'amount' in out:
         am = out['amount']

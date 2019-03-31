@@ -7,7 +7,7 @@ EXOS-Electrum - Lightweight EXOS client
   Original Author: Thomas Voegtlin
   Port Maintainer: OpenExO and ExO Economy Developers, Fluid Chains
   Language: Python
-  Homepage: https://exos.to
+  Homepage: https://economy.openexo.com
 
 .. image:: https://travis-ci.org/exoeconomy/exos-electrum.svg?branch=master
     :target: https://travis-ci.org/exoeconomy/exos-electrum

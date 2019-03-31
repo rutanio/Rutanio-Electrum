@@ -222,7 +222,7 @@ class Abstract_Wallet(AddressSynchronizer):
         addrs = self.get_receiving_addresses()
         if len(addrs) > 0:
             if not bitcoin.is_address(addrs[0]):
-                raise WalletFileException('The addresses in this wallet are not exos addresses.')
+                raise WalletFileException('The addresses in this wallet are not EXOS addresses.')
 
     def synchronize(self):
         pass
@@ -549,7 +549,7 @@ class Abstract_Wallet(AddressSynchronizer):
         for i, o in enumerate(outputs):
             if o.type == TYPE_ADDRESS:
                 if not is_address(o.address):
-                    raise Exception("Invalid exos address: {}".format(o.address))
+                    raise Exception("Invalid EXOS address: {}".format(o.address))
             if o.value == '!':
                 if i_max is not None:
                     raise Exception("More than one output set to spend max")
@@ -1094,7 +1094,7 @@ class Abstract_Wallet(AddressSynchronizer):
         return None
 
     def price_at_timestamp(self, txid, price_func):
-        """Returns fiat price of exos at the time tx got confirmed."""
+        """Returns fiat price of EXOS at the time tx got confirmed."""
         timestamp = self.get_tx_height(txid).timestamp
         return price_func(timestamp if timestamp else time.time())
 
