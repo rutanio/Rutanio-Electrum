@@ -25,7 +25,7 @@ popd
 
 pushd $WINEPREFIX/drive_c/exos-electrum
 
-# Load electrum-exo-icons and electrum-exo-locale for this release
+# Load exos-electrum-icons and exos-electrum-locale for this release
 git submodule init
 git submodule update
 
@@ -71,7 +71,7 @@ popd
 wine "$WINEPREFIX/drive_c/Program Files (x86)/NSIS/makensis.exe" /DPRODUCT_VERSION=$VERSION electrum.nsi
 
 cd dist
-mv exos-electrum.exe $NAME_ROOT-$VERSION-setup.exe
+mv exos-electrum-setup.exe $NAME_ROOT-$VERSION-setup.exe
 cd ..
 
 echo "Done."
