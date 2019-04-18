@@ -7,23 +7,22 @@ dist/
 contrib/pyinstaller/
 Electrum.egg-info/
 electrum/gui/qt/icons_rc.py
-locale/
+electrum/locale/
 .devlocaltmp/
 *_trial_temp
 packages
 env/
-.tox/
 .buildozer/
 bin/
 /app.fil
-*Cache*
-logs/
-Local Storage/
-Cookies*
-User/
-Backups/
-.DS_Store
+.idea
 
-# tox files
+# icons
+electrum/gui/kivy/theming/light-0.png
+electrum/gui/kivy/theming/light.atlas
+
+# tests/tox
+.tox/
 .cache/
 .coverage
+.pytest_cache

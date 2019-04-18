@@ -1,21 +1,27 @@
 import time
+from functools import partial
+
+from PyQt5.QtCore import Qt, pyqtSignal
+from PyQt5.QtWidgets import QPushButton, QLabel, QVBoxLayout, QWidget, QGridLayout
 
 from electrum_exos.i18n import _
 from electrum_exos.plugin import hook
 from electrum_exos.wallet import Standard_Wallet
-from electrum_exos.gui.qt.util import *
+from electrum_exos.gui.qt.util import WindowModalDialog, CloseButton, get_parent_main_window
 
 from .coldcard import ColdcardPlugin
 from ..hw_wallet.qt import QtHandlerBase, QtPluginBase
+from ..hw_wallet.plugin import only_hook_if_libraries_available
 
 
 class Plugin(ColdcardPlugin, QtPluginBase):
-    icon_unpaired = ":icons/coldcard_unpaired.png"
-    icon_paired = ":icons/coldcard.png"
+    icon_unpaired = "coldcard_unpaired.png"
+    icon_paired = "coldcard.png"
 
     def create_handler(self, window):
         return Coldcard_Handler(window)
 
+    @only_hook_if_libraries_available
     @hook
     def receive_menu(self, menu, addrs, wallet):
         if type(wallet) is not Standard_Wallet:
@@ -26,6 +32,7 @@ class Plugin(ColdcardPlugin, QtPluginBase):
                 keystore.thread.add(partial(self.show_address, wallet, addrs[0]))
             menu.addAction(_("Show on Coldcard"), show_address)
 
+    @only_hook_if_libraries_available
     @hook
     def transaction_dialog(self, dia):
         # see gui/qt/transaction_dialog.py
@@ -101,7 +108,7 @@ class Coldcard_Handler(QtHandlerBase):
         return 
         
     def setup_dialog(self):
-        self.show_error(_('Please initialization your Coldcard while disconnected.'))
+        self.show_error(_('Please initialize your Coldcard while disconnected.'))
         return
 
 class CKCCSettingsDialog(WindowModalDialog):
@@ -239,4 +246,3 @@ class CKCCSettingsDialog(WindowModalDialog):
 
         self.thread.add(doit)
         self.close()
-# EOF

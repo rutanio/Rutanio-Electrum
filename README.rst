@@ -41,7 +41,7 @@ directory. To run EXOS-Electrum from its root directory, just do::
 You can also install EXOS-Electrum on your system, by running this command::
 
     sudo apt-get install python3-setuptools
-    pip3 install .[fast]
+    python3 -m pip install .[fast]
 
 This will download and install the Python dependencies used by
 EXOS-Electrum, instead of using the 'packages' directory.
@@ -64,16 +64,8 @@ Check out the code from GitHub::
 
 Run install (this should install dependencies)::
 
-    pip3 install .[fast]
+    python3 -m pip install .[fast]
 
-Render the SVG icons to PNGs (optional)::
-
-    for i in lock unlock confirmed status_lagging status_disconnected status_connected_proxy status_connected status_waiting preferences; do convert -background none icons/$i.svg icons/$i.png; done
-
-Compile the icons file for Qt::
-
-    sudo apt-get install pyqt5-dev-tools
-    pyrcc5 icons.qrc -o electrum/gui/qt/icons_rc.py
 
 Compile the protobuf description file::
 
@@ -91,25 +83,25 @@ Create translations (optional)::
 Creating Binaries
 =================
 
+Linux
+-----
 
-To create binaries, create the 'packages' directory::
+See :code:`contrib/build-linux/README.md`.
 
-    ./contrib/make_packages
-
-This directory contains the python dependencies used by EXOS-Electrum.
 
 Mac OS X / macOS
---------
+----------------
 
-See `contrib/build-osx/`.
+See :code:`contrib/osx/README.md`.
+
 
 Windows
 -------
 
-See `contrib/build-wine/`.
+See :code:`contrib/build-wine/docker/README.md`.
 
 
 Android
 -------
 
-See `electrum/gui/kivy/Readme.md` file.
+See :code:`electrum/gui/kivy/Readme.md`.

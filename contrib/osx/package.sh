@@ -85,4 +85,4 @@ dmg dmg EXOS-Electrum_uncompressed.dmg exos-electrum-$VERSION.dmg || fail "Unabl
 rm EXOS-Electrum_uncompressed.dmg
 
 echo "Done."
-md5sum exos-electrum-$VERSION.dmg
+sha256sum exos-electrum-$VERSION.dmg

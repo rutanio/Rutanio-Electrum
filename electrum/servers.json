@@ -3,6 +3,8 @@
         "pruning": "-",
         "s": "50002",
         "t": "50001",
+        "version": "1.4"
+    },
         "version": "1.2"
     },
     "electrum02.oexo.net": {
@@ -15,60 +17,60 @@
         "pruning": "-",
         "s": "50002",
         "t": "50001",
-        "version": "1.2"
+        "version": "1.4"
     },
     "electrum04.oexo.net": {
         "pruning": "-",
         "s": "50002",
         "t": "50001",
-        "version": "1.2"
+        "version": "1.4"
     },
     "electrum05.oexo.cloud": {
         "pruning": "-",
         "s": "50002",
         "t": "50001",
-        "version": "1.2"
+        "version": "1.4"
     },
     "electrum06.oexo.net": {
         "pruning": "-",
         "s": "50002",
         "t": "50001",
-        "version": "1.2"
+        "version": "1.4"
     },
     "electrum07.oexo.cloud": {
         "pruning": "-",
         "s": "50002",
         "t": "50001",
-        "version": "1.2"
+        "version": "1.4"
     },
     "electrum08.oexo.net": {
         "pruning": "-",
         "s": "50002",
         "t": "50001",
-        "version": "1.2"
+        "version": "1.4"
     },
     "electrum09.oexo.cloud": {
         "pruning": "-",
         "s": "50002",
         "t": "50001",
-        "version": "1.2"
+        "version": "1.4"
     },
     "electrum10.oexo.net": {
         "pruning": "-",
         "s": "50002",
         "t": "50001",
-        "version": "1.2"
+        "version": "1.4"
     },
     "electrum11.oexo.cloud": {
         "pruning": "-",
         "s": "50002",
         "t": "50001",
-        "version": "1.2"
+        "version": "1.4"
     },
     "electrum12.oexo.net": {
         "pruning": "-",
         "s": "50002",
         "t": "50001",
-        "version": "1.2"
+        "version": "1.4"
     }
 }

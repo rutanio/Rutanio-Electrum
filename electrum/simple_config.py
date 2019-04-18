@@ -139,6 +139,12 @@ class SimpleConfig(PrintError):
         if not self.is_modifiable(key):
             self.print_stderr("Warning: not changing config key '%s' set on the command line" % key)
             return
+        try:
+            json.dumps(key)
+            json.dumps(value)
+        except:
+            self.print_error(f"json error: cannot save {repr(key)} ({repr(value)})")
+            return
         self._set_key_in_user_config(key, value, save)
 
     def _set_key_in_user_config(self, key, value, save=True):
@@ -443,7 +449,7 @@ class SimpleConfig(PrintError):
         else:
             fee_rate = self.fee_per_kb(dyn=False)
             pos = self.static_fee_index(fee_rate)
-            maxp = 9
+            maxp = len(FEERATE_STATIC_VALUES) - 1
         return maxp, pos, fee_rate
 
     def static_fee(self, i):

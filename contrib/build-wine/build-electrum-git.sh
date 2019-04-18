@@ -1,7 +1,6 @@
 #!/bin/bash
 
 NAME_ROOT=exos-electrum
-PYTHON_VERSION=3.6.6
 
 # These settings probably don't need any change
 export WINEPREFIX=/opt/wine64
@@ -75,4 +74,4 @@ mv exos-electrum-setup.exe $NAME_ROOT-$VERSION-setup.exe
 cd ..
 
 echo "Done."
-md5sum dist/exos-electrum*exe
+sha256sum dist/exos-electrum*exe
