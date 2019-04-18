@@ -63,7 +63,7 @@ base_units = {'EXOS':8, 'mEXOS':5, 'uEXOS':2, 'exo':0}
 base_units_inverse = inv_dict(base_units)
 base_units_list = ['EXOS', 'mEXOS', 'uEXOS', 'exo']  # list(dict) does not guarantee order
 
-DECIMAL_POINT_DEFAULT = 5  # mBTC
+DECIMAL_POINT_DEFAULT = 8  # EXOS
 
 
 class UnknownBaseUnit(Exception): pass
