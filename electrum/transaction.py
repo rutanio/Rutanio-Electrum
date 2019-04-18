@@ -30,6 +30,7 @@
 import struct
 import traceback
 import sys
+import time
 from typing import (Sequence, Union, NamedTuple, Tuple, Optional, Iterable,
                     Callable, List, Dict)
 
@@ -680,7 +681,8 @@ class Transaction:
         self._inputs = None
         self._outputs = None  # type: List[TxOutput]
         self.locktime = 0
-        self.version = 2
+        self.version = 1
+        self.time = int(time.time())
         # by default we assume this is a partial txn;
         # this value will get properly set when deserializing
         self.is_partial_originally = True
