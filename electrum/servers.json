@@ -5,8 +5,7 @@
         "t": "50001",
         "version": "1.4"
     },
-        "version": "1.2"
-    },
+       
     "electrum02.oexo.net": {
         "pruning": "-",
         "s": "50002",

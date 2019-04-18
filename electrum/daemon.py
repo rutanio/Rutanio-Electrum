@@ -224,10 +224,10 @@ class Daemon(DaemonThread):
         config = SimpleConfig(config_options)
         if self.gui:
             if hasattr(self.gui, 'new_window'):
-                config.open_last_wallet()
-                path = config.get_wallet_path()
-                self.gui.new_window(path, config.get('url'))
-                response = "ok"
+               config.open_last_wallet()
+               path = config.get_wallet_path()
+               self.gui.new_window(path, config.get('url'))
+               response = "ok"
             else:
                 response = "error: EXOS-Electrum current GUI does not support multiple windows"
         else:
