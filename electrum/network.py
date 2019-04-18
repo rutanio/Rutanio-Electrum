@@ -395,8 +395,8 @@ class Network(PrintError):
             await group.spawn(get_banner)
             await group.spawn(get_donation_address)
             await group.spawn(get_server_peers)
-            await group.spawn(get_relay_fee)
-            await group.spawn(self._request_fee_estimates(interface))
+            #await group.spawn(get_relay_fee)
+            #await group.spawn(self._request_fee_estimates(interface))
 
     async def _request_fee_estimates(self, interface):
         session = interface.session
@@ -1132,9 +1132,9 @@ class Network(PrintError):
                 self.nodes_retry_time = now
         async def maintain_main_interface():
             await self._ensure_there_is_a_main_interface()
-            if self.is_connected():
-                if self.config.is_fee_estimates_update_required():
-                    await self.interface.group.spawn(self._request_fee_estimates, self.interface)
+           # if self.is_connected():
+           # if self.config.is_fee_estimates_update_required():
+           # await self.interface.group.spawn(self._request_fee_estimates, self.interface)
 
         while True:
             try:
