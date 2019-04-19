@@ -34,11 +34,6 @@ is_android = 'ANDROID_DATA' in os.environ
 # move this back to gui/kivy/__init.py once plugins are moved
 os.environ['KIVY_DATA_DIR'] = os.path.abspath(os.path.dirname(__file__)) + '/electrum/gui/kivy/data/'
 
-if is_local or is_android:
-    sys.path.insert(0, os.path.join(script_dir, 'packages'))
-    import imp
-    imp.load_module('electrum_exos', *imp.find_module('electrum'))
-
 
 def check_imports():
     # pure-python dependencies need to be imported here for pyinstaller
@@ -66,6 +61,10 @@ def check_imports():
 if not is_android:
     check_imports()
     
+if is_local or is_android:
+    sys.path.insert(0, os.path.join(script_dir, 'packages'))
+    import imp
+    imp.load_module('electrum_exos', *imp.find_module('electrum'))
 
 
 from electrum_exos import util

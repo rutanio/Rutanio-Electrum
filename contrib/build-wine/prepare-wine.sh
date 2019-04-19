@@ -17,8 +17,6 @@ PYTHON_VERSION=3.6.8
 
 ## These settings probably don't need change
 export WINEPREFIX=/opt/wine64
-#export WINEARCH='win32'
-
 PYTHON_FOLDER="python3"
 PYHOME="c:/$PYTHON_FOLDER"
 PYTHON="wine $PYHOME/python.exe -OO -B"
@@ -35,13 +33,7 @@ echo "done cleaning $WINEPREFIX"
 
 . $here/../build_tools_util.sh
 
-
 wine 'wineboot'
-
-# HACK to work around https://bugs.winehq.org/show_bug.cgi?id=42474#c22
-# needed for python 3.6+
-#rm -f /opt/wine-stable/lib/wine/fakedlls/api-ms-win-core-path-l1-1-0.dll
-#rm -f /opt/wine-stable/lib/wine/api-ms-win-core-path-l1-1-0.dll.so
 
 cd /tmp/exos-electrum-build
 

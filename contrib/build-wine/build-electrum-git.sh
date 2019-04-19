@@ -7,7 +7,8 @@ export WINEPREFIX=/opt/wine64
 export PYTHONDONTWRITEBYTECODE=1
 export PYTHONHASHSEED=22
 
-PYHOME=c:/python$PYTHON_VERSION
+PYTHON_FOLDER="python3"
+PYHOME="c:/$PYTHON_FOLDER" 
 PYTHON="wine $PYHOME/python.exe -OO -B"
 
 
@@ -18,13 +19,13 @@ set -e
 mkdir -p $WINEPREFIX/drive_c/exos-electrum
 
 pushd ../..
-cp -r electrum* .git* icons* pubkeys* setup* run_electrum LICENCE Info.plist $WINEPREFIX/drive_c/exos-electrum/
+cp -r electrum* .git* pubkeys* setup* run_electrum LICENCE $WINEPREFIX/drive_c/exos-electrum/
 cp --parents contrib/requirements/* $WINEPREFIX/drive_c/exos-electrum/
 popd
 
 pushd $WINEPREFIX/drive_c/exos-electrum
 
-# Load exos-electrum-icons and exos-electrum-locale for this release
+# Load exos-electrum-locale for this release
 git submodule init
 git submodule update
 
@@ -48,7 +49,6 @@ popd
 
 # Install frozen dependencies
 $PYTHON -m pip install -r ../deterministic-build/requirements.txt
-
 $PYTHON -m pip install -r ../deterministic-build/requirements-hw.txt
 
 pushd $WINEPREFIX/drive_c/exos-electrum
@@ -58,7 +58,7 @@ popd
 rm -rf dist/
 
 # build standalone and portable versions
-wine "C:/python$PYTHON_VERSION/scripts/pyinstaller.exe" --noconfirm --ascii --clean --name $NAME_ROOT-$VERSION -w deterministic.spec
+wine "$PYHOME/scripts/pyinstaller.exe" --noconfirm --ascii --clean --name $NAME_ROOT-$VERSION -w deterministic.spec
 
 # set timestamps in dist, in order to make the installer reproducible
 pushd dist
@@ -69,9 +69,7 @@ popd
 # $VERSION could be passed to the electrum.nsi script, but this would require some rewriting in the script itself.
 wine "$WINEPREFIX/drive_c/Program Files (x86)/NSIS/makensis.exe" /DPRODUCT_VERSION=$VERSION electrum.nsi
 
-cd dist
-mv exos-electrum-setup.exe $NAME_ROOT-$VERSION-setup.exe
-cd ..
+mv dist/$NAME_ROOT-setup.exe dist/$NAME_ROOT-$VERSION-setup.exe
 
 echo "Done."
 sha256sum dist/exos-electrum*exe
