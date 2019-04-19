@@ -1,6 +1,6 @@
 [submodule "contrib/deterministic-build/exos-electrum-locale"]
 	path = contrib/deterministic-build/exos-electrum-locale
-	url = https://github.com/spesmilo/exos-electrum-locale
+	url = https://github.com/exoeconomy/exos-electrum-locale
 [submodule "contrib/CalinsQRReader"]
 	path = contrib/osx/CalinsQRReader
 	url = https://github.com/spesmilo/CalinsQRReader

@@ -6,7 +6,6 @@ dist/
 *.egg/
 contrib/pyinstaller/
 Electrum.egg-info/
-electrum/gui/qt/icons_rc.py
 electrum/locale/
 .devlocaltmp/
 *_trial_temp
