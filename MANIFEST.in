@@ -1,12 +1,13 @@
 include LICENCE RELEASE-NOTES AUTHORS
 include README.rst
-include electrum_exos.desktop
+include exos-electrum.desktop
 include *.py
 include run_electrum
 include contrib/requirements/requirements.txt
 include contrib/requirements/requirements-hw.txt
 recursive-include packages *.py
 recursive-include packages cacert.pem
+graft icons
 
 graft electrum
 prune electrum/tests

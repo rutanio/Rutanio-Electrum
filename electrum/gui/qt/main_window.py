@@ -2445,7 +2445,7 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, PrintError):
             return
         if not data:
             return
-        # if the user scanned a exos URI
+        # if the user scanned a EXOS URI
         if str(data).startswith("exos:"):
             self.pay_to_URI(data)
             return

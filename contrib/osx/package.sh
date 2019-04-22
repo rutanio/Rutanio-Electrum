@@ -81,8 +81,8 @@ ${genisoimage} \
     -o EXOS-Electrum_uncompressed.dmg \
     /tmp/exos-electrum-macos/image || fail "Unable to create uncompressed dmg"
 
-dmg dmg EXOS-Electrum_uncompressed.dmg exos-electrum-$VERSION.dmg || fail "Unable to create compressed dmg"
+dmg dmg EXOS-Electrum_uncompressed.dmg EXOS-Electrum-$VERSION.dmg || fail "Unable to create compressed dmg"
 rm EXOS-Electrum_uncompressed.dmg
 
 echo "Done."
-sha256sum exos-electrum-$VERSION.dmg
+sha256sum EXOS-Electrum-$VERSION.dmg
