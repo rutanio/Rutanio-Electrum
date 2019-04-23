@@ -47,8 +47,8 @@ from PyQt5.QtWidgets import (QMessageBox, QComboBox, QSystemTrayIcon, QTabWidget
                              QShortcut, QMainWindow, QCompleter, QInputDialog,
                              QWidget, QMenu, QSizePolicy, QStatusBar)
 
-import electrum
-from electrum import (keystore, simple_config, ecc, constants, util, bitcoin, commands,
+import electrum_exos
+from electrum_exos import (keystore, simple_config, ecc, constants, util, bitcoin, commands,
                       coinchooser, paymentrequest)
 from electrum_exos.bitcoin import COIN, is_address, TYPE_ADDRESS
 from electrum_exos.plugin import run_hook
@@ -2014,10 +2014,10 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, PrintError):
             'plugins': self.gui_object.plugins,
             'window': self,
             'config': self.config,
-            'exos-electrum': electrum,
+            'electrum': electrum_exos,
             'daemon': self.gui_object.daemon,
             'util': util,
-            'exos': bitcoin,
+            'bitcoin': bitcoin,
         })
 
         c = commands.Commands(self.config, self.wallet, self.network, lambda: self.console.set_json(True))
