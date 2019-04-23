@@ -8,7 +8,7 @@ PACKAGE='EXOS-Electrum'
 PYPKG='electrum'
 ALIASPKGPATH='electrum_exos'
 MAIN_SCRIPT='run_electrum'
-ICONS_FILE=PYPKG + '/gui/icons/electrum.icns'
+ICONS_FILE=PYPKG + '/gui/icons/exos-electrum.icns'
 APP_SIGN = os.environ.get('APP_SIGN', '')
 
 def fail(*msg):
@@ -77,6 +77,7 @@ datas = [
     (electrum + PYPKG + '/wordlist/english.txt', ALIASPKGPATH + '/wordlist'),
     (electrum + PYPKG + '/locale', ALIASPKGPATH + '/locale'),
     (electrum + PYPKG + '/plugins', ALIASPKGPATH + '/plugins'),
+    (electrum + PYPKG + '/gui/icons', ALIASPKGPATH + '/gui/icons'),
 ]
 datas += collect_data_files('trezorlib')
 datas += collect_data_files('safetlib')
