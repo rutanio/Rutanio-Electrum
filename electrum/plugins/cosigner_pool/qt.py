@@ -68,7 +68,7 @@ class Listener(util.DaemonThread):
                 time.sleep(2)
                 continue
             for keyhash in self.keyhashes:
-                if server.get(keyhash+'_pick') == False:
+                if server.get(keyhash+'_pick') == "False":
                     continue
                 try:
                     message = server.get(keyhash)
@@ -77,7 +77,7 @@ class Listener(util.DaemonThread):
                     time.sleep(30)
                     continue
                 if message:
-                    server.put(keyhash+'_pick', False)
+                    server.put(keyhash+'_pick', "False")
                     self.received.add(keyhash)
                     self.print_error("received message for", keyhash)
                     self.parent.obj.cosigner_receive_signal.emit(
