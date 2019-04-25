@@ -68,7 +68,7 @@ class Listener(util.DaemonThread):
                 time.sleep(2)
                 continue
             for keyhash in self.keyhashes:
-                if keyhash in self.received:
+                if server.get(keyhash+'_pick') == False:
                     continue
                 try:
                     message = server.get(keyhash)
