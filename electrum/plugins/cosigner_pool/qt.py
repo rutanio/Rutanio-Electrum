@@ -68,7 +68,14 @@ class Listener(util.DaemonThread):
                 time.sleep(2)
                 continue
             for keyhash in self.keyhashes:
-                if server.get(keyhash+'_pick') == "False":
+
+                pick = server.get(keyhash+'_pick')
+                signed = server.get(keyhash+'_signed')
+
+                #server.message('karim', "pick: {}".format(pick))
+                #server.message('karim', "signed: {}".format(signed))
+
+                if pick == 'False' or pick == None or signed == 'True':
                     continue
                 try:
                     message = server.get(keyhash)
@@ -188,10 +195,14 @@ class Plugin(BasePlugin):
             public_key = ecc.ECPubkey(K)
             message = public_key.encrypt_message(raw_tx_bytes).decode('ascii')
             # send message
-            task = lambda: server.put(_hash, message)
+            def put_to_server():
+                server.put(_hash, message)
+                server.put(_hash+'_pick', 'True')
+            task = lambda: put_to_server()
             msg = _('Sending transaction to cosigning pool...')
             WaitingDialog(window, msg, task, on_success, on_failure)
             time.sleep(.5)
+        [server.put(t[1]+'_signed', 'True') for t in self.keys]
 
     def on_receive(self, keyhash, message):
         self.print_error("signal arrived for", keyhash)
