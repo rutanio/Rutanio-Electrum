@@ -45,6 +45,7 @@ from electrum_exos.plugin import run_hook
 from electrum_exos import simple_config
 from electrum_exos.util import bfh, bh2u
 from electrum_exos.transaction import SerializationError, Transaction
+from electrum_exos.wallet import Multisig_Wallet
 
 from .util import (MessageBoxMixin, read_QIcon, Buttons, CopyButton,
                    MONOSPACE_FONT, ColorScheme, ButtonsLineEdit)
@@ -172,13 +173,14 @@ class TxDialog(QDialog, MessageBoxMixin):
             self.main_window.broadcast_transaction(self.tx, self.desc)
         finally:
             self.main_window.pop_top_level_window(self)
-            for key, keystore in self.wallet.keystores.items():
-                xpub = keystore.get_master_public_key()
-                K = bip32.deserialize_xpub(xpub)[-1]
-                _hash = bh2u(crypto.sha256d(K))
-                server.delete(_hash)
-                server.delete(_hash+'_pick')
-                server.delete(_hash+'_signed')
+            if type(self.wallet) == Multisig_Wallet:
+                for key, keystore in self.wallet.keystores.items():
+                    xpub = keystore.get_master_public_key()
+                    K = bip32.deserialize_xpub(xpub)[-1]
+                    _hash = bh2u(crypto.sha256d(K))
+                    server.delete(_hash)
+                    server.delete(_hash+'_pick')
+                    server.delete(_hash+'_signed')
         self.saved = True
         self.update()
 
