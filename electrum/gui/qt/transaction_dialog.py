@@ -29,6 +29,8 @@ import datetime
 import json
 import traceback
 
+from xmlrpc.client import ServerProxy
+
 from PyQt5.QtCore import QSize
 from PyQt5.QtGui import QTextCharFormat, QBrush, QFont
 from PyQt5.QtWidgets import (QDialog, QLabel, QPushButton, QHBoxLayout, QVBoxLayout,
@@ -36,11 +38,12 @@ from PyQt5.QtWidgets import (QDialog, QLabel, QPushButton, QHBoxLayout, QVBoxLay
 import qrcode
 from qrcode import exceptions
 
+from electrum_exos import util, keystore, ecc, bip32, crypto
 from electrum_exos.bitcoin import base_encode
 from electrum_exos.i18n import _
 from electrum_exos.plugin import run_hook
 from electrum_exos import simple_config
-from electrum_exos.util import bfh
+from electrum_exos.util import bfh, bh2u
 from electrum_exos.transaction import SerializationError, Transaction
 
 from .util import (MessageBoxMixin, read_QIcon, Buttons, CopyButton,
@@ -50,6 +53,7 @@ from .util import (MessageBoxMixin, read_QIcon, Buttons, CopyButton,
 SAVE_BUTTON_ENABLED_TOOLTIP = _("Save transaction offline")
 SAVE_BUTTON_DISABLED_TOOLTIP = _("Please sign this transaction in order to save it")
 
+server = ServerProxy('https://cosigner.exos.to/', allow_none=True)
 
 dialogs = []  # Otherwise python randomly garbage collects the dialogs...
 
@@ -168,6 +172,13 @@ class TxDialog(QDialog, MessageBoxMixin):
             self.main_window.broadcast_transaction(self.tx, self.desc)
         finally:
             self.main_window.pop_top_level_window(self)
+            for key, keystore in self.wallet.keystores.items():
+                xpub = keystore.get_master_public_key()
+                K = bip32.deserialize_xpub(xpub)[-1]
+                _hash = bh2u(crypto.sha256d(K))
+                server.delete(_hash)
+                server.delete(_hash+'_pick')
+                server.delete(_hash+'_signed')
         self.saved = True
         self.update()
 
@@ -205,6 +216,7 @@ class TxDialog(QDialog, MessageBoxMixin):
                 self.saved = False
                 self.save_button.setDisabled(False)
                 self.save_button.setToolTip(SAVE_BUTTON_ENABLED_TOOLTIP)
+
             self.update()
             self.main_window.pop_top_level_window(self)
 
