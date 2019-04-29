@@ -72,9 +72,6 @@ class Listener(util.DaemonThread):
                 pick = server.get(keyhash+'_pick')
                 signed = server.get(keyhash+'_signed')
 
-                #server.message('karim', "pick: {}".format(pick))
-                #server.message('karim', "signed: {}".format(signed))
-
                 if pick == 'False' or signed == 'True':
                     continue
                 try:
