@@ -38,6 +38,8 @@ from electrum_exos.util import bh2u, bfh
 from electrum_exos.gui.qt.transaction_dialog import show_transaction
 from electrum_exos.gui.qt.util import WaitingDialog
 
+from . import server
+
 import sys
 import traceback
 

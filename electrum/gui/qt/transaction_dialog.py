@@ -55,7 +55,6 @@ from .util import (MessageBoxMixin, read_QIcon, Buttons, CopyButton,
 SAVE_BUTTON_ENABLED_TOOLTIP = _("Save transaction offline")
 SAVE_BUTTON_DISABLED_TOOLTIP = _("Please sign this transaction in order to save it")
 
-
 dialogs = []  # Otherwise python randomly garbage collects the dialogs...
 
 
