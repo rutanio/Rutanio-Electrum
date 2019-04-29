@@ -185,14 +185,21 @@ class TxDialog(QDialog, MessageBoxMixin):
             self.main_window.broadcast_transaction(self.tx, self.desc)
         finally:
             self.main_window.pop_top_level_window(self)
+
+            # on broadcast garbage collect 'all' keys
             if type(self.wallet) == Multisig_Wallet:
-                for key, keystore in self.wallet.keystores.items():
-                    xpub = keystore.get_master_public_key()
-                    K = bip32.deserialize_xpub(xpub)[-1]
-                    _hash = bh2u(crypto.sha256d(K))
-                    server.delete(_hash)
-                    server.delete(_hash+'_pick')
-                    server.delete(_hash+'_signed')
+                for keyhash in self.keyhashes:
+                    server.delete(keyhash)
+                    server.delete(keyhash+'_pick')
+                    server.delete(keyhash+'_signed')
+                    server.delete(keyhash+'_lock')
+                for keyhash in self.cosigner_list:
+                    server.delete(keyhash)
+                    server.delete(keyhash+'_pick')
+                    server.delete(keyhash+'_signed')
+                    server.delete(keyhash+'_lock')
+
+                    
         self.saved = True
         self.update()
 
