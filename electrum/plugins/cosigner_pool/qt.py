@@ -259,6 +259,8 @@ class Plugin(BasePlugin):
             window.show_error(_('Error decrypting message') + ':\n' + str(e))
             return
 
-        self.listener.clear(keyhash)
         tx = transaction.Transaction(message)
         show_transaction(tx, window, prompt_if_unsaved=True)
+
+
+
