@@ -24,7 +24,6 @@
 # SOFTWARE.
 
 import time
-from xmlrpc.client import ServerProxy
 
 from PyQt5.QtCore import QObject, pyqtSignal
 from PyQt5.QtWidgets import QPushButton
@@ -41,9 +40,6 @@ from electrum_exos.gui.qt.util import WaitingDialog
 
 import sys
 import traceback
-
-
-server = ServerProxy('https://cosigner.exos.to/', allow_none=True)
 
 
 class Listener(util.DaemonThread):
@@ -258,6 +254,3 @@ class Plugin(BasePlugin):
 
         tx = transaction.Transaction(message)
         show_transaction(tx, window, prompt_if_unsaved=True)
-
-
-
