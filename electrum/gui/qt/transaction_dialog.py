@@ -91,6 +91,18 @@ class TxDialog(QDialog, MessageBoxMixin):
         self.prompt_if_unsaved = prompt_if_unsaved
         self.saved = False
         self.desc = desc
+        
+        # store the keyhash and cosigners for current wallet
+        self.keyhashes = set()
+        self.cosigner_list = set()
+        for key, keystore in self.wallet.keystores.items():
+            xpub = keystore.get_master_public_key()
+            K = bip32.deserialize_xpub(xpub)[-1]
+            _hash = bh2u(crypto.sha256d(K))
+            if not keystore.is_watching_only():
+                self.keyhashes.add(_hash)
+            else:
+                self.cosigner_list.add(_hash)
 
         # if the wallet can populate the inputs with more info, do it now.
         # as a result, e.g. we might learn an imported address tx is segwit,
