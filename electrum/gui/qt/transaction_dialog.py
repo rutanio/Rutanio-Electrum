@@ -46,6 +46,7 @@ from electrum_exos import simple_config
 from electrum_exos.util import bfh, bh2u
 from electrum_exos.transaction import SerializationError, Transaction
 from electrum_exos.wallet import Multisig_Wallet
+from electrum_exos.plugins.cosigner_pool import server
 
 from .util import (MessageBoxMixin, read_QIcon, Buttons, CopyButton,
                    MONOSPACE_FONT, ColorScheme, ButtonsLineEdit)
@@ -53,8 +54,6 @@ from .util import (MessageBoxMixin, read_QIcon, Buttons, CopyButton,
 
 SAVE_BUTTON_ENABLED_TOOLTIP = _("Save transaction offline")
 SAVE_BUTTON_DISABLED_TOOLTIP = _("Please sign this transaction in order to save it")
-
-server = ServerProxy('https://cosigner.exos.to/', allow_none=True)
 
 dialogs = []  # Otherwise python randomly garbage collects the dialogs...
 
