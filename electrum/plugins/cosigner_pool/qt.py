@@ -84,7 +84,6 @@ class Listener(util.DaemonThread):
                     time.sleep(30)
                     continue
                 if message:
-                    server.put(keyhash+'_pick', "False")
                     self.received.add(keyhash)
                     self.print_error("received message for", keyhash)
                     self.parent.obj.cosigner_receive_signal.emit(
@@ -220,9 +219,13 @@ class Plugin(BasePlugin):
                                   'which makes them not compatible with the current design of cosigner pool.'))
             return
         elif wallet.has_keystore_encryption():
+            # set pick to false when opening password dialog
+            server.put(keyhash+'_pick', 'False')
             password = window.password_dialog(_('An encrypted transaction was retrieved from cosigning pool.') + '\n' +
                                               _('Please enter your password to decrypt it.'))
             if not password:
+                # set pick back to true if password incorrect or omitted
+                server.put(keyhash+'_pick', 'True')
                 return
         else:
             password = None
