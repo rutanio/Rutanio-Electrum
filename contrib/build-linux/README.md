@@ -7,7 +7,7 @@ Source tarballs
     contrib/make_locale
     ```
 
-2. Prepare python dependencies used by Electrum.
+2. Prepare python dependencies used by EXOS-Electrum.
 
     ```
     contrib/make_packages

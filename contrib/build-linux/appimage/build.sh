@@ -6,7 +6,7 @@ PROJECT_ROOT="$(dirname "$(readlink -e "$0")")/../../.."
 CONTRIB="$PROJECT_ROOT/contrib"
 DISTDIR="$PROJECT_ROOT/dist"
 BUILDDIR="$CONTRIB/build-linux/appimage/build/appimage"
-APPDIR="$BUILDDIR/electrum.AppDir"
+APPDIR="$BUILDDIR/exos-electrum.AppDir"
 CACHEDIR="$CONTRIB/build-linux/appimage/.cache/appimage"
 
 # pinned versions
@@ -15,10 +15,10 @@ PKG2APPIMAGE_COMMIT="83483c2971fcaa1cb0c1253acd6c731ef8404381"
 LIBSECP_VERSION="b408c6a8b287003d1ade5709e6f7bc3c7f1d5be7"
 
 
-VERSION=`git describe --tags --dirty --always`
-APPIMAGE="$DISTDIR/electrum-$VERSION-x86_64.AppImage"
+VERSION=`git describe --tags`
+APPIMAGE="$DISTDIR/EXOS-Electrum-$VERSION-x86_64.AppImage"
 
-rm -rf "$BUILDDIR"
+rm -rf "$BUILDDIR" "$CACHEDIR" "$DISTDIR"
 mkdir -p "$APPDIR" "$CACHEDIR" "$DISTDIR"
 
 
@@ -89,12 +89,12 @@ info "installing pip."
 "$python" -m ensurepip
 
 
-info "preparing electrum-locale."
+info "preparing exos-electrum-locale."
 (
     cd "$PROJECT_ROOT"
     git submodule update --init
 
-    pushd "$CONTRIB"/deterministic-build/electrum-locale
+    pushd "$CONTRIB"/deterministic-build/exos-electrum-locale
     if ! which msgfmt > /dev/null 2>&1; then
         echo "Please install gettext"
         exit 1
@@ -108,7 +108,7 @@ info "preparing electrum-locale."
 )
 
 
-info "installing electrum and its dependencies."
+info "installing EXOS-Electrum and its dependencies."
 mkdir -p "$CACHEDIR/pip_cache"
 "$python" -m pip install --cache-dir "$CACHEDIR/pip_cache" -r "$CONTRIB/deterministic-build/requirements.txt"
 "$python" -m pip install --cache-dir "$CACHEDIR/pip_cache" -r "$CONTRIB/deterministic-build/requirements-binaries.txt"
@@ -121,8 +121,8 @@ cp "/usr/lib/libzbar.so.0" "$APPDIR/usr/lib/libzbar.so.0"
 
 
 info "desktop integration."
-cp "$PROJECT_ROOT/electrum.desktop" "$APPDIR/electrum.desktop"
-cp "$PROJECT_ROOT/electrum/gui/icons/electrum.png" "$APPDIR/electrum.png"
+cp "$PROJECT_ROOT/exos-electrum.desktop" "$APPDIR/exos-electrum.desktop"
+cp "$PROJECT_ROOT/electrum/gui/icons/exos-electrum.png" "$APPDIR/exos-electrum.png"
 
 
 # add launcher
