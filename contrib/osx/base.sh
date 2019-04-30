@@ -34,8 +34,8 @@ function CreateDMG() {   # ARGS: PACKAGE_NAME VERSION DMG_BACKGROUND
     PACKAGE_NAME="$1"
     VERSION="$2"
     DMG_BACKGROUND="$3"
-    imgWidth=`sips -g pixelWidth contrib/osx/$DMG_BACKGROUND | grep -Eo '[0-9]+'`
-    imgHeight=`sips -g pixelHeight contrib/osx/$DMG_BACKGROUND | grep -Eo '[0-9]+'`
+    imgWidth=`sips -g pixelWidth contrib/osx/$DMG_BACKGROUND | tail -n1 | cut -d ":" -f2 | xargs`
+    imgHeight=`sips -g pixelHeight contrib/osx/$DMG_BACKGROUND | tail -n1 | cut -d ":" -f2 | xargs`
     rightX=$(($windowX + $imgWidth))
     rightY=$(($windowY + $imgHeight + 20))
 
