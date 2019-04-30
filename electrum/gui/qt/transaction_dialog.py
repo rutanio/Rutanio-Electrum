@@ -29,6 +29,8 @@ import datetime
 import json
 import traceback
 
+from xmlrpc.client import ServerProxy
+
 from PyQt5.QtCore import QSize
 from PyQt5.QtGui import QTextCharFormat, QBrush, QFont
 from PyQt5.QtWidgets import (QDialog, QLabel, QPushButton, QHBoxLayout, QVBoxLayout,
@@ -36,12 +38,15 @@ from PyQt5.QtWidgets import (QDialog, QLabel, QPushButton, QHBoxLayout, QVBoxLay
 import qrcode
 from qrcode import exceptions
 
+from electrum_exos import util, keystore, ecc, bip32, crypto
 from electrum_exos.bitcoin import base_encode
 from electrum_exos.i18n import _
 from electrum_exos.plugin import run_hook
 from electrum_exos import simple_config
-from electrum_exos.util import bfh
+from electrum_exos.util import bfh, bh2u
 from electrum_exos.transaction import SerializationError, Transaction
+from electrum_exos.wallet import Multisig_Wallet
+from electrum_exos.plugins.cosigner_pool import server
 
 from .util import (MessageBoxMixin, read_QIcon, Buttons, CopyButton,
                    MONOSPACE_FONT, ColorScheme, ButtonsLineEdit)
@@ -49,7 +54,6 @@ from .util import (MessageBoxMixin, read_QIcon, Buttons, CopyButton,
 
 SAVE_BUTTON_ENABLED_TOOLTIP = _("Save transaction offline")
 SAVE_BUTTON_DISABLED_TOOLTIP = _("Please sign this transaction in order to save it")
-
 
 dialogs = []  # Otherwise python randomly garbage collects the dialogs...
 
@@ -86,6 +90,18 @@ class TxDialog(QDialog, MessageBoxMixin):
         self.prompt_if_unsaved = prompt_if_unsaved
         self.saved = False
         self.desc = desc
+        
+        # store the keyhash and cosigners for current wallet
+        self.keyhashes = set()
+        self.cosigner_list = set()
+        for key, keystore in self.wallet.keystores.items():
+            xpub = keystore.get_master_public_key()
+            K = bip32.deserialize_xpub(xpub)[-1]
+            _hash = bh2u(crypto.sha256d(K))
+            if not keystore.is_watching_only():
+                self.keyhashes.add(_hash)
+            else:
+                self.cosigner_list.add(_hash)
 
         # if the wallet can populate the inputs with more info, do it now.
         # as a result, e.g. we might learn an imported address tx is segwit,
@@ -168,6 +184,21 @@ class TxDialog(QDialog, MessageBoxMixin):
             self.main_window.broadcast_transaction(self.tx, self.desc)
         finally:
             self.main_window.pop_top_level_window(self)
+
+            # on broadcast garbage collect 'all' keys
+            if type(self.wallet) == Multisig_Wallet:
+                for keyhash in self.keyhashes:
+                    server.delete(keyhash)
+                    server.delete(keyhash+'_pick')
+                    server.delete(keyhash+'_signed')
+                    server.delete(keyhash+'_lock')
+                for keyhash in self.cosigner_list:
+                    server.delete(keyhash)
+                    server.delete(keyhash+'_pick')
+                    server.delete(keyhash+'_signed')
+                    server.delete(keyhash+'_lock')
+
+                    
         self.saved = True
         self.update()
 
@@ -179,6 +210,16 @@ class TxDialog(QDialog, MessageBoxMixin):
             event.accept()
             try:
                 dialogs.remove(self)
+
+                # delete lock blocking other wallets from opening TX dialog
+                for keyhash in self.cosigner_list:
+                    lock = server.get(keyhash+'_lock')
+                    if lock:
+                        server.delete(keyhash+'_lock')
+                # set pick flag to true
+                for keyhash in self.keyhashes:
+                    server.put(keyhash+'_pick', 'True')
+
             except ValueError:
                 pass  # was not in list already
 
@@ -205,6 +246,7 @@ class TxDialog(QDialog, MessageBoxMixin):
                 self.saved = False
                 self.save_button.setDisabled(False)
                 self.save_button.setToolTip(SAVE_BUTTON_ENABLED_TOOLTIP)
+
             self.update()
             self.main_window.pop_top_level_window(self)
 

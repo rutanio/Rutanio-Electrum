@@ -24,7 +24,6 @@
 # SOFTWARE.
 
 import time
-from xmlrpc.client import ServerProxy
 
 from PyQt5.QtCore import QObject, pyqtSignal
 from PyQt5.QtWidgets import QPushButton
@@ -39,11 +38,10 @@ from electrum_exos.util import bh2u, bfh
 from electrum_exos.gui.qt.transaction_dialog import show_transaction
 from electrum_exos.gui.qt.util import WaitingDialog
 
+from . import server
+
 import sys
 import traceback
-
-
-server = ServerProxy('https://cosigner.exos.to/', allow_none=True)
 
 
 class Listener(util.DaemonThread):
@@ -68,7 +66,11 @@ class Listener(util.DaemonThread):
                 time.sleep(2)
                 continue
             for keyhash in self.keyhashes:
-                if keyhash in self.received:
+
+                pick = server.get(keyhash+'_pick')
+                signed = server.get(keyhash+'_signed')
+
+                if pick == 'False' or signed == 'True':
                     continue
                 try:
                     message = server.get(keyhash)
@@ -187,10 +189,14 @@ class Plugin(BasePlugin):
             public_key = ecc.ECPubkey(K)
             message = public_key.encrypt_message(raw_tx_bytes).decode('ascii')
             # send message
-            task = lambda: server.put(_hash, message)
+            def put_to_server():
+                server.put(_hash, message)
+                server.put(_hash+'_pick', 'True')
+            task = lambda: put_to_server()
             msg = _('Sending transaction to cosigning pool...')
             WaitingDialog(window, msg, task, on_success, on_failure)
             time.sleep(.5)
+        [server.put(t[1]+'_signed', 'True') for t in self.keys]
 
     def on_receive(self, keyhash, message):
         self.print_error("signal arrived for", keyhash)
@@ -208,15 +214,33 @@ class Plugin(BasePlugin):
                                   'which makes them not compatible with the current design of cosigner pool.'))
             return
         elif wallet.has_keystore_encryption():
+            # set pick to false when opening password dialog
+            server.put(keyhash+'_pick', 'False')
             password = window.password_dialog(_('An encrypted transaction was retrieved from cosigning pool.') + '\n' +
                                               _('Please enter your password to decrypt it.'))
             if not password:
+                # set pick back to true if password incorrect or omitted
+                server.put(keyhash+'_pick', 'True')
                 return
         else:
             password = None
             if not window.question(_("An encrypted transaction was retrieved from cosigning pool.") + '\n' +
                                    _("Do you want to open it now?")):
                 return
+        
+        # check if lock has been placed for current wallet
+        server_lock = server.get(keyhash+'_lock')
+        if server_lock == 'locked':
+            # set pick back to true if user lock is present
+            server.put(keyhash+'_pick', 'True')
+            # display pop up
+            window.show_warning(_("A cosigner is currently siging the transaction.") + '\n' +
+                                _("Please wait until the signing has concluded."))
+            return
+
+        # lock all cosigners, if no lock has been placed
+        for window, xpub, K, _hash in self.cosigner_list:
+            server.put(_hash+'_lock', 'locked')
 
         xprv = wallet.keystore.get_master_private_key(password)
         if not xprv:
@@ -230,6 +254,5 @@ class Plugin(BasePlugin):
             window.show_error(_('Error decrypting message') + ':\n' + str(e))
             return
 
-        self.listener.clear(keyhash)
         tx = transaction.Transaction(message)
         show_transaction(tx, window, prompt_if_unsaved=True)
