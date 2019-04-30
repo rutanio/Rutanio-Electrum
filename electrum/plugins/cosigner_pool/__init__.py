@@ -1,4 +1,7 @@
 from electrum_exos.i18n import _
+
+from xmlrpc.client import ServerProxy
+
 fullname = _('Cosigner Pool')
 description = ' '.join([
     _("This plugin facilitates the use of multi-signatures wallets."),
@@ -7,3 +10,5 @@ description = ' '.join([
 ])
 #requires_wallet_type = ['2of2', '2of3']
 available_for = ['qt']
+
+server = ServerProxy('https://cosigner.exos.to/', allow_none=True)
