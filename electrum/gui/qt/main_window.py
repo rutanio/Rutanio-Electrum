@@ -240,8 +240,8 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, PrintError):
         if config.get('check_updates') is None:
             choice = QMessageBox.question(self,
                                  "EXOS-Electrum - " + _("Enable update check"),
-                                 _("For security reasons we advise that you always use the latest version of Electrum.") + " " +
-                                 _("Would you like to be notified when there is a newer version of Electrum available?"),
+                                 _("For security reasons we advise that you always use the latest version of EXOS-Electrum.") + " " +
+                                 _("Would you like to be notified when there is a newer version of EXOS-Electrum available?"),
                                  QMessageBox.Yes,
                                  QMessageBox.No)
             config.set_key('check_updates', choice == QMessageBox.Yes, save=True)
@@ -251,7 +251,7 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, PrintError):
             # to prevent GC from getting in our way.
             def on_version_received(v):
                 if UpdateCheck.is_newer(v):
-                    self.update_check_button.setText(_("Update to Electrum {} is available").format(v))
+                    self.update_check_button.setText(_("Update to EXOS-Electrum {} is available").format(v))
                     self.update_check_button.clicked.connect(lambda: self.show_update_check(v))
                     self.update_check_button.show()
             self._update_check_thread = UpdateCheckThread(self)
