@@ -91,17 +91,19 @@ class TxDialog(QDialog, MessageBoxMixin):
         self.saved = False
         self.desc = desc
         
+
         # store the keyhash and cosigners for current wallet
         self.keyhashes = set()
         self.cosigner_list = set()
-        for key, keystore in self.wallet.keystores.items():
-            xpub = keystore.get_master_public_key()
-            K = bip32.deserialize_xpub(xpub)[-1]
-            _hash = bh2u(crypto.sha256d(K))
-            if not keystore.is_watching_only():
-                self.keyhashes.add(_hash)
-            else:
-                self.cosigner_list.add(_hash)
+        if type(self.wallet) == Multisig_Wallet:
+            for key, keystore in self.wallet.keystores.items():
+                xpub = keystore.get_master_public_key()
+                K = bip32.deserialize_xpub(xpub)[-1]
+                _hash = bh2u(crypto.sha256d(K))
+                if not keystore.is_watching_only():
+                    self.keyhashes.add(_hash)
+                else:
+                    self.cosigner_list.add(_hash)
 
         # if the wallet can populate the inputs with more info, do it now.
         # as a result, e.g. we might learn an imported address tx is segwit,
@@ -211,14 +213,15 @@ class TxDialog(QDialog, MessageBoxMixin):
             try:
                 dialogs.remove(self)
 
-                # delete lock blocking other wallets from opening TX dialog
-                for keyhash in self.cosigner_list:
-                    lock = server.get(keyhash+'_lock')
-                    if lock:
-                        server.delete(keyhash+'_lock')
-                # set pick flag to true
-                for keyhash in self.keyhashes:
-                    server.put(keyhash+'_pick', 'True')
+                if type(self.wallet) == Multisig_Wallet:
+                    # delete lock blocking other wallets from opening TX dialog
+                    for keyhash in self.cosigner_list:
+                        lock = server.get(keyhash+'_lock')
+                        if lock:
+                            server.delete(keyhash+'_lock')
+                    # set pick flag to true
+                    for keyhash in self.keyhashes:
+                        server.put(keyhash+'_pick', 'True')
 
             except ValueError:
                 pass  # was not in list already
