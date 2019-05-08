@@ -199,7 +199,6 @@ class Plugin(BasePlugin):
         msg = _('Sending transaction to cosigning pool...')
         WaitingDialog(self.window, msg, task, on_success, on_failure)
         time.sleep(.5)
-        
 
     def on_receive(self, keyhash, message):
         self.print_error("signal arrived for", keyhash)
