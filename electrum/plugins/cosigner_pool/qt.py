@@ -96,6 +96,7 @@ class Plugin(BasePlugin):
     def __init__(self, parent, config, name):
         BasePlugin.__init__(self, parent, config, name)
         self.listener = None
+        self.window = None
         self.obj = QReceiveSignalObject()
         self.obj.cosigner_receive_signal.connect(self.on_receive)
         self.keys = []
@@ -119,6 +120,7 @@ class Plugin(BasePlugin):
 
     def update(self, window):
         wallet = window.wallet
+        self.window = window
         if type(wallet) != Multisig_Wallet:
             return
         if self.listener is None:
@@ -173,30 +175,30 @@ class Plugin(BasePlugin):
 
     def do_send(self, tx):
         def on_success(result):
-            window.show_message(_("Your transaction was sent to the cosigning pool.") + '\n' +
+            [server.put(t[1]+'_signed', 'True') for t in self.keys]
+            self.window.show_message(_("Your transaction was sent to the cosigning pool.") + '\n' +
                                 _("Open your cosigner wallet to retrieve it."))
         def on_failure(exc_info):
             e = exc_info[1]
             try: traceback.print_exception(*exc_info)
             except OSError: pass
-            window.show_error(_("Failed to send transaction to cosigning pool") + ':\n' + str(e))
+            self.window.show_error(_("Failed to send transaction to cosigning pool. Please resend") + ':\n' + str(e))
 
-        for window, xpub, K, _hash in self.cosigner_list:
-            if not self.cosigner_can_sign(tx, xpub):
-                continue
-            # construct message
-            raw_tx_bytes = bfh(str(tx))
-            public_key = ecc.ECPubkey(K)
-            message = public_key.encrypt_message(raw_tx_bytes).decode('ascii')
-            # send message
-            def put_to_server():
+        def send_to_cosigner():
+            for window, xpub, K, _hash in self.cosigner_list:
+                if not self.cosigner_can_sign(tx, xpub):
+                    continue
+                # construct message
+                raw_tx_bytes = bfh(str(tx))
+                public_key = ecc.ECPubkey(K)
+                message = public_key.encrypt_message(raw_tx_bytes).decode('ascii')
+                # send message
                 server.put(_hash, message)
                 server.put(_hash+'_pick', 'True')
-            task = lambda: put_to_server()
-            msg = _('Sending transaction to cosigning pool...')
-            WaitingDialog(window, msg, task, on_success, on_failure)
-            time.sleep(.5)
-        [server.put(t[1]+'_signed', 'True') for t in self.keys]
+        task = lambda: send_to_cosigner()
+        msg = _('Sending transaction to cosigning pool...')
+        WaitingDialog(self.window, msg, task, on_success, on_failure)
+        time.sleep(.5)
 
     def on_receive(self, keyhash, message):
         self.print_error("signal arrived for", keyhash)
