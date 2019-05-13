@@ -91,3 +91,4 @@ class Plugin(LabelsPlugin):
         if not self.wallets:
             wallet = window.wallet
             self.load_wallet(wallet, window)
+            self.pull(wallet, True)
