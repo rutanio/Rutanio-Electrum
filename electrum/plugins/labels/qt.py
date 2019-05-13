@@ -77,3 +77,17 @@ class Plugin(LabelsPlugin):
         except TypeError:
             pass  # 'method' object is not connected
         self.stop_wallet(window.wallet)
+
+    @hook
+    def init_qt(self, gui):
+        for window in gui.windows:
+            self.on_new_window(window)
+
+    @hook
+    def on_new_window(self, window):
+        self.update(window)
+
+    def update(self, window):
+        if not self.wallets:
+            wallet = window.wallet
+            self.load_wallet(wallet, window)
