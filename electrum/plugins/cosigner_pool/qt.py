@@ -229,6 +229,9 @@ class Plugin(BasePlugin):
             if not window.question(_("An encrypted transaction was retrieved from cosigning pool.") + '\n' +
                                    _("Do you want to open it now?")):
                 return
+            else 
+                window.show_warning(_("You have 10 minutes to conlude signing after which the dialog will") + '\n' +
+                                    _("automatically close."))
         
         # check if lock has been placed for current wallet
         server_lock = server.get(keyhash+'_lock')
