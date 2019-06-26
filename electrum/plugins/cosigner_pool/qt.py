@@ -226,7 +226,7 @@ class Plugin(BasePlugin):
                 server.put(keyhash+'_pick', 'True')
                 return
             else:
-                window.show_warning(_("You have 10 minutes to conlude signing after which the dialog will") + '\n' +
+                window.show_warning(_("You have 10 minutes to conclude signing after which the dialog will") + '\n' +
                                     _("automatically close."))
         else:
             password = None
@@ -234,7 +234,7 @@ class Plugin(BasePlugin):
                                    _("Do you want to open it now?")):
                 return
             else:
-                window.show_warning(_("You have 10 minutes to conlude signing after which the dialog will") + '\n' +
+                window.show_warning(_("You have 10 minutes to conclude signing after which the dialog will") + '\n' +
                                     _("automatically close."))
         
         # check if lock has been placed for current wallet
