@@ -54,7 +54,7 @@ from .util import (MessageBoxMixin, read_QIcon, Buttons, CopyButton,
 
 SAVE_BUTTON_ENABLED_TOOLTIP = _("Save transaction offline")
 SAVE_BUTTON_DISABLED_TOOLTIP = _("Please sign this transaction in order to save it")
-DURATION_INT = 60 * 10
+DURATION_INT = 60 * 10 
 
 dialogs = []  # Otherwise python randomly garbage collects the dialogs...
 
@@ -415,7 +415,7 @@ class TxDialogTimeout(TxDialog):
         self.desc = desc
 
         # Set timeout flag 
-        self.timedout = False
+        self.timed_out = False
 
         # store the keyhash and cosigners for current wallet
         self.keyhashes = set()
@@ -527,32 +527,42 @@ class TxDialogTimeout(TxDialog):
         self.time_left_int -= 1
 
         if self.time_left_int == 0 and self.isVisible():
-            self.timedout = True
+            self.timed_out = True
             self.close()
 
         self.update()
 
+    def release_locks(self):
+        if type(self.wallet) == Multisig_Wallet:
+            # delete lock blocking other wallets from opening TX dialog
+            for keyhash in self.cosigner_list:
+                lock = server.get(keyhash+'_lock')
+                if lock:
+                    server.delete(keyhash+'_lock')
+            # set pick flag to true
+            for keyhash in self.keyhashes:
+                server.put(keyhash+'_pick', 'True')
+
     def closeEvent(self, event):
-        if (self.timedout or (self.prompt_if_unsaved and not self.saved
-                and self.question(_('This transaction is not saved. Close anyway?'), title=_("Warning")))):
+        if (self.timed_out):
             event.accept()
             try:
                 dialogs.remove(self)
-
-                if type(self.wallet) == Multisig_Wallet:
-                    # delete lock blocking other wallets from opening TX dialog
-                    for keyhash in self.cosigner_list:
-                        lock = server.get(keyhash+'_lock')
-                        if lock:
-                            server.delete(keyhash+'_lock')
-                    # set pick flag to true
-                    for keyhash in self.keyhashes:
-                        server.put(keyhash+'_pick', 'True')
-
+                self.release_locks()
+                return
             except ValueError:
                 pass  # was not in list already
-        else:
+
+        if (self.prompt_if_unsaved and not self.saved
+                and not self.question(_('This transaction is not saved. Close anyway?'), title=_("Warning"))):
             event.ignore()
+        else:
+            event.accept()
+            try:
+                dialogs.remove(self)
+                self.release_locks()
+            except ValueError:
+                pass  # was not in list already
 
     def update(self):
         desc = self.desc
