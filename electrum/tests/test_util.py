@@ -59,11 +59,11 @@ class TestUtil(SequentialTestCase):
 
 
     def test_parse_URI_address_label(self):
-        self._do_test_parse_URI('exos:CaEnKKCdfRChUL7zLz6Ur1S4fYoT3pajmn?label=electrum%20test',
+        self._do_test_parse_URI('exos:CaEnKKCdfRChUL7zLz6Ur1S4fYoT3pajmn?label=exos-electrum%20test',
                                 {'address': 'CaEnKKCdfRChUL7zLz6Ur1S4fYoT3pajmn', 'label': 'exos-electrum test'})
 
     def test_parse_URI_address_message(self):
-        self._do_test_parse_URI('exos:CaEnKKCdfRChUL7zLz6Ur1S4fYoT3pajmn?message=electrum%20test',
+        self._do_test_parse_URI('exos:CaEnKKCdfRChUL7zLz6Ur1S4fYoT3pajmn?message=exos-electrum%20test',
                                 {'address': 'CaEnKKCdfRChUL7zLz6Ur1S4fYoT3pajmn', 'message': 'exos-electrum test', 'memo': 'exos-electrum test'})
 
     def test_parse_URI_address_amount(self):
@@ -79,7 +79,7 @@ class TestUtil(SequentialTestCase):
                                 {'address': 'CaEnKKCdfRChUL7zLz6Ur1S4fYoT3pajmn', 'test': 'test'})
 
     def test_parse_URI_multiple_args(self):
-        self._do_test_parse_URI('exos:CaEnKKCdfRChUL7zLz6Ur1S4fYoT3pajmn?amount=0.00004&label=electrum-test&message=electrum%20test&test=none&r=http://domain.tld/page',
+        self._do_test_parse_URI('exos:CaEnKKCdfRChUL7zLz6Ur1S4fYoT3pajmn?amount=0.00004&label=exos-electrum-test&message=exos-electrum%20test&test=none&r=http://domain.tld/page',
                                 {'address': 'CaEnKKCdfRChUL7zLz6Ur1S4fYoT3pajmn', 'amount': 4000, 'label': 'exos-electrum-test', 'message': u'exos-electrum test', 'memo': u'exos-electrum test', 'r': 'http://domain.tld/page', 'test': 'none'})
 
     def test_parse_URI_no_address_request_url(self):
