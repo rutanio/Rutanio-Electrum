@@ -357,13 +357,7 @@ class Test_bitcoin(SequentialTestCase):
         self.assertEqual(add_number_to_script(2147483647), bfh('04ffffff7f'))
 
     def test_address_to_script(self):
-        # bech32 native segwit
-        # test vectors from BIP-0173
-      # self.assertEqual(address_to_script('BC1QW508D6QEJXTDG4Y5R3ZARVARY0C5XW7KV8F3T4'), '0014751e76e8199196d454941c45d1b3a323f1433bd6')
-      # self.assertEqual(address_to_script('bc1pw508d6qejxtdg4y5r3zarvary0c5xw7kw508d6qejxtdg4y5r3zarvary0c5xw7k7grplx'), '5128751e76e8199196d454941c45d1b3a323f1433bd6751e76e8199196d454941c45d1b3a323f1433bd6')
-      # self.assertEqual(address_to_script('BC1SW50QA3JX3S'), '6002751e')
-      # self.assertEqual(address_to_script('bc1zw508d6qejxtdg4y5r3zarvaryvg6kdaj'), '5210751e76e8199196d454941c45d1b3a323')
-
+        
         # base58 P2PKH
         self.assertEqual(address_to_script('CKuxk2HAuNHGxBbTn12ETygXPmXEBXiPZS'), '76a91425d6accffd6b661f1bd407352cfc3c9155ad8f4788ac')
         self.assertEqual(address_to_script('CME757rWrGxLVYNQVCAHBB7i9dQZjF62G8'), '76a914343d3db5405eb19e583624f43be5f4ba1622b56e88ac')
@@ -371,23 +365,6 @@ class Test_bitcoin(SequentialTestCase):
         # base58 P2SH
         self.assertEqual(address_to_script('c1gtz1jXtfJWTNNnjncHkCZKKz1HeR9WqM'), 'a914031af4efa98d818c3e81ab4e5955d4c2bf9b23c987')
         self.assertEqual(address_to_script('c7UD6aU9AgCE2g6BB4yE8tqShWKLGKfn1b'), 'a91442856c91f09189d8902c47de36b95ccb580a70cf87')
-
-
-#class Test_bitcoin_testnet(TestCaseForTestnet):
-
-#  def test_address_to_script(self):
-        # bech32 native segwit
-        # test vectors from BIP-0173
-    #   self.assertEqual(address_to_script('tb1qrp33g0q5c5txsp9arysrx4k6zdkfs4nce4xj0gdcccefvpysxf3q0sl5k7'), '00201863143c14c5166804bd19203356da136c985678cd4d27a1b8c6329604903262')
-    #   self.assertEqual(address_to_script('tb1qqqqqp399et2xygdj5xreqhjjvcmzhxw4aywxecjdzew6hylgvsesrxh6hy'), '0020000000c4a5cad46221b2a187905e5266362b99d5e91c6ce24d165dab93e86433')
-
-        # base58 P2PKH
-    #   self.assertEqual(address_to_script('mutXcGt1CJdkRvXuN2xoz2quAAQYQ59bRX'), '76a9149da64e300c5e4eb4aaffc9c2fd465348d5618ad488ac')
-    #   self.assertEqual(address_to_script('miqtaRTkU3U8rzwKbEHx3g8FSz8GJtPS3K'), '76a914247d2d5b6334bdfa2038e85b20fc15264f8e5d2788ac')
-
-        # base58 P2SH
-    #   self.assertEqual(address_to_script('2N3LSvr3hv5EVdfcrxg2Yzecf3SRvqyBE4p'), 'a9146eae23d8c4a941316017946fc761a7a6c85561fb87')
-    #   self.assertEqual(address_to_script('2NE4ZdmxFmUgwu5wtfoN2gVniyMgRDYq1kk'), 'a914e4567743d378957cd2ee7072da74b1203c1a7a0b87')
 
 
 class Test_xprv_xpub(SequentialTestCase):
