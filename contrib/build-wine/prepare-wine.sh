@@ -26,11 +26,6 @@ PYTHON="wine $PYHOME/python.exe -OO -B"
 here="$(dirname "$(readlink -e "$0")")"
 set -e
 
-# Clean up Wine environment
-echo "Cleaning $WINEPREFIX"
-rm -rf $WINEPREFIX
-echo "done cleaning $WINEPREFIX"
-
 . $here/../build_tools_util.sh
 
 wine 'wineboot'
