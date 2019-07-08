@@ -24,6 +24,7 @@
 # SOFTWARE.
 
 import time
+import signal
 
 from PyQt5.QtCore import QObject, pyqtSignal
 from PyQt5.QtWidgets import QPushButton
@@ -35,7 +36,7 @@ from electrum_exos.i18n import _
 from electrum_exos.wallet import Multisig_Wallet
 from electrum_exos.util import bh2u, bfh
 
-from electrum_exos.gui.qt.transaction_dialog import show_transaction
+from electrum_exos.gui.qt.transaction_dialog import show_transaction_timeout, TxDialogTimeout
 from electrum_exos.gui.qt.util import WaitingDialog
 
 from . import server
@@ -224,11 +225,17 @@ class Plugin(BasePlugin):
                 # set pick back to true if password incorrect or omitted
                 server.put(keyhash+'_pick', 'True')
                 return
+            else:
+                window.show_warning(_("You have 10 minutes to conclude signing after which the dialog will") + '\n' +
+                                    _("automatically close."))
         else:
             password = None
             if not window.question(_("An encrypted transaction was retrieved from cosigning pool.") + '\n' +
                                    _("Do you want to open it now?")):
                 return
+            else:
+                window.show_warning(_("You have 10 minutes to conclude signing after which the dialog will") + '\n' +
+                                    _("automatically close."))
         
         # check if lock has been placed for current wallet
         server_lock = server.get(keyhash+'_lock')
@@ -255,6 +262,6 @@ class Plugin(BasePlugin):
             traceback.print_exc(file=sys.stdout)
             window.show_error(_('Error decrypting message') + ':\n' + str(e))
             return
-
+            
         tx = transaction.Transaction(message)
-        show_transaction(tx, window, prompt_if_unsaved=True)
+        show_transaction_timeout(tx, window, prompt_if_unsaved=True)
