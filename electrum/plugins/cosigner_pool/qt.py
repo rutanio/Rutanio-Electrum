@@ -240,7 +240,6 @@ class Plugin(BasePlugin):
         # check if lock has been placed for current wallet
         for window, xpub, K, _hash in self.cosigner_list:
             server_lock = server.get(_hash+'_lock')
-            print(server_lock)
             if server_lock == 'locked':
                 # set pick back to true if user lock is present
                 server.put(keyhash+'_pick', 'True')
