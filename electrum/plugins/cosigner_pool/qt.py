@@ -238,18 +238,18 @@ class Plugin(BasePlugin):
                                     _("automatically close."))
         
         # check if lock has been placed for current wallet
-        server_lock = server.get(keyhash+'_lock')
-        if server_lock == 'locked':
-            # set pick back to true if user lock is present
-            server.put(keyhash+'_pick', 'True')
-            # display pop up
-            window.show_warning(_("A cosigner is currently siging the transaction.") + '\n' +
-                                _("Please wait until the signing has concluded."))
-            return
-
-        # lock all cosigners, if no lock has been placed
         for window, xpub, K, _hash in self.cosigner_list:
-            server.put(_hash+'_lock', 'locked')
+            server_lock = server.get(_hash+'_lock')
+            if server_lock == 'locked':
+                # set pick back to true if user lock is present
+                server.put(keyhash+'_pick', 'True')
+                # display pop up
+                window.show_warning(_("A cosigner is currently signing the transaction.") + '\n' +
+                                    _("Please wait until the signing has concluded."))
+                return
+
+        # lock transaction dialog, if no lock has been placed
+        server.put(keyhash+'_lock', 'locked')
 
         xprv = wallet.keystore.get_master_private_key(password)
         if not xprv:

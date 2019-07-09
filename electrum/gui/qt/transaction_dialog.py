@@ -91,7 +91,8 @@ class TxDialog(QDialog, MessageBoxMixin):
         # Take a copy; it might get updated in the main window by
         # e.g. the FX plugin.  If this happens during or after a long
         # sign operation the signatures are lost.
-        self.tx = tx = copy.deepcopy(tx)  # type: Transaction
+        self.tx = tx = copy.deepcopy(tx)  # type: Transaction 
+        
         try:
             self.tx.deserialize()
         except BaseException as e:
@@ -226,7 +227,7 @@ class TxDialog(QDialog, MessageBoxMixin):
 
                 if type(self.wallet) == Multisig_Wallet:
                     # delete lock blocking other wallets from opening TX dialog
-                    for keyhash in self.cosigner_list:
+                    for keyhash in self.keyhashes:
                         lock = server.get(keyhash+'_lock')
                         if lock:
                             server.delete(keyhash+'_lock')
@@ -535,7 +536,7 @@ class TxDialogTimeout(TxDialog):
     def release_locks(self):
         if type(self.wallet) == Multisig_Wallet:
             # delete lock blocking other wallets from opening TX dialog
-            for keyhash in self.cosigner_list:
+            for keyhash in self.keyhashes:
                 lock = server.get(keyhash+'_lock')
                 if lock:
                     server.delete(keyhash+'_lock')
