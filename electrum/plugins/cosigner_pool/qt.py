@@ -244,7 +244,7 @@ class Plugin(BasePlugin):
                 # set pick back to true if user lock is present
                 server.put(keyhash+'_pick', 'True')
                 # display pop up
-                window.show_warning(_("A cosigner is currently siging the transaction.") + '\n' +
+                window.show_warning(_("A cosigner is currently signing the transaction.") + '\n' +
                                     _("Please wait until the signing has concluded."))
                 return
 
