@@ -229,6 +229,8 @@ class Plugin(BasePlugin):
             else:
                 window.show_warning(_("You have 10 minutes to conclude signing after which the dialog will") + '\n' +
                                     _("automatically close."))
+                window.show_warning(_("Please close the transaction dialog after signing to allow") + '\n' +
+                                    _("other cosigners to sign."))
         else:
             password = None
             if not window.question(_("An encrypted transaction was retrieved from cosigning pool.") + '\n' +
