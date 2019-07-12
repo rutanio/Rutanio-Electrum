@@ -34,7 +34,7 @@ from .util import make_aiohttp_session
 
 
 class BaseCrashReporter:
-    report_server = "https://crashhub.electrum.org"
+    report_server = "https://crashhub.exos.to"
     config_key = "show_crash_reporter"
     issue_template = """<h2>Traceback</h2>
 <pre>

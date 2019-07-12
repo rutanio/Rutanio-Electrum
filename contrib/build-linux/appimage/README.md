@@ -1,4 +1,4 @@
-AppImage binary for Electrum
+AppImage binary for EXOS-Electrum
 ============================
 
 This assumes an Ubuntu host, but it should not be too hard to adapt to another
@@ -17,18 +17,18 @@ folder.
 2. Build image
 
     ```
-    $ sudo docker build --no-cache -t electrum-appimage-builder-img contrib/build-linux/appimage
+    $ sudo docker build --no-cache -t exos-electrum-appimage-builder-img contrib/build-linux/appimage
     ```
 
 3. Build binary
 
     ```
     $ sudo docker run -it \
-        --name electrum-appimage-builder-cont \
-        -v $PWD:/opt/electrum \
+        --name exos-electrum-appimage-builder-cont \
+        -v $PWD:/opt/exos-electrum \
         --rm \
-        --workdir /opt/electrum/contrib/build-linux/appimage \
-        electrum-appimage-builder-img \
+        --workdir /opt/exos-electrum/contrib/build-linux/appimage \
+        exos-electrum-appimage-builder-img \
         ./build.sh
     ```
 
@@ -38,4 +38,4 @@ folder.
 ## FAQ
 
 ### How can I see what is included in the AppImage?
-Execute the binary as follows: `./electrum*.AppImage --appimage-extract`
+Execute the binary as follows: `./EXOS-Electrum*.AppImage --appimage-extract`

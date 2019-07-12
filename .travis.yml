@@ -72,7 +72,7 @@ jobs:
       install:
         - git fetch --all --tags
       script: ./contrib/osx/make_osx
-      after_script: ls -lah dist && md5 dist/*
+      after_script: ls -lah dist && shasum -a 256 dist/*
       after_success: true
     - name: "AppImage build"
       sudo: true

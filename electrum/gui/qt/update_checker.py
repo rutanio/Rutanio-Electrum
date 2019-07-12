@@ -18,17 +18,17 @@ from electrum_exos.util import PrintError, make_aiohttp_session
 
 
 class UpdateCheck(QWidget, PrintError):
-    url = "https://electrum.org/version"
-    download_url = "https://electrum.org/#download"
+    url = "https://github.com/exoeconomy/EXOS-Electrum-version/raw/master/version"
+    download_url = "https://github.com/exoeconomy/EXOS-Electrum-version/releases/"
 
     VERSION_ANNOUNCEMENT_SIGNING_KEYS = (
-        "13xjmVAB1EATPP8RshTE8S8sNwwSUM9p1P",
+        "CPvQvHN6e9mZyUSxZtmaX1E17wj9MbjKET",
     )
 
     def __init__(self, main_window, latest_version=None):
         self.main_window = main_window
         QWidget.__init__(self)
-        self.setWindowTitle('Electrum - ' + _('Update Check'))
+        self.setWindowTitle('EXOS-Electrum - ' + _('Update Check'))
         self.content = QVBoxLayout()
         self.content.setContentsMargins(*[10]*4)
 
@@ -86,10 +86,10 @@ class UpdateCheck(QWidget, PrintError):
                 self.detail_label.setText(_("You can download the new version from {}.").format(url))
             else:
                 self.heading_label.setText('<h2>' + _("Already up to date") + '</h2>')
-                self.detail_label.setText(_("You are already on the latest version of Electrum."))
+                self.detail_label.setText(_("You are already on the latest version of EXOS-Electrum."))
         else:
             self.heading_label.setText('<h2>' + _("Checking for updates...") + '</h2>')
-            self.detail_label.setText(_("Please wait while Electrum checks for available updates."))
+            self.detail_label.setText(_("Please wait while EXOS-Electrum checks for available updates."))
 
 
 class UpdateCheckThread(QThread, PrintError):

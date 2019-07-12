@@ -154,8 +154,8 @@ class Test_bitcoin(SequentialTestCase):
 
     @needs_test_with_all_ecc_implementations
     def test_msg_signing(self):
-        msg1 = b'Chancellor on brink of second bailout for banks'
-        msg2 = b'Electrum'
+        msg1 = b'The Global Transformation Economy'
+        msg2 = b'EXOS-Electrum'
 
         def sign_message_with_wif_privkey(wif_privkey, msg):
             txin_type, privkey, compressed = deserialize_privkey(wif_privkey)
@@ -163,17 +163,17 @@ class Test_bitcoin(SequentialTestCase):
             return key.sign_message(msg, compressed)
 
         sig1 = sign_message_with_wif_privkey(
-            'Q82zH9WJSeBobRGuGtXdxFBcQsVbL5quFo7LkwsphRqk8wFfXG92', msg1)
-        addr1 = 'CSLAj6hRe6qF9uPcHEMccr5Rqa8fgXQh2c'
+            'Q6Zy4dzcmsg1ccZn2ePzr2s6hg66aJhN1xzbZPnrXqXXnCq11wQH', msg1)
+        addr1 = 'Cay3Y2srEdtmkVFMcpFx7P7qsFtXGifaVu'
         sig2 = sign_message_with_wif_privkey(
-            'QAUPVWtQxuCSQG2kL7TEQf3ssHoirLYpV3Fz3uUebiwCCe4PK95R', msg2)
-        addr2 = 'CevgaGqH8DwgcjNGfuVLZHJuohJWW7wcXz'
+            'Q8XuxafABwDAepRedvKdcjrFeb2ABh1vSYeLzbEUTXRgKLQP9ucF', msg2)
+        addr2 = 'CTtXQNSJp5Z7JNj9YdbS7G4nm2AacLfdSB'
 
         sig1_b64 = base64.b64encode(sig1)
         sig2_b64 = base64.b64encode(sig2)
 
-        self.assertEqual(sig1_b64, b'H/9jMOnj4MFbH3d7t4yCQ9i7DgZU/VZ278w3+ySv2F4yIsdqjsc5ng3kmN8OZAThgyfCZOQxZCWza9V5XzlVY0Y=')
-        self.assertEqual(sig2_b64, b'G84dmJ8TKIDKMT9qBRhpX2sNmR0y5t+POcYnFFJCs66lJmAs3T8A6Sbpx7KA6yTQ9djQMabwQXRrDomOkIKGn18=')
+        self.assertEqual(sig1_b64, b'H3FOwhsdsIsY5b+sHT/amctgFIncthPJwVgJhgKkTvJ/XytTdvG6+F2CrLRw9er+kYsUb53CifM+oxZEvptcZCA=')
+        self.assertEqual(sig2_b64, b'IACu9z3VKenEswVsI5ld9bMk+BeW8TbbG5h2SFdUZuX2RWiJ50FN8Py1l40j5NampfXBNUgzoCL57ljWTduzJ+8=')
 
         self.assertTrue(ecc.verify_message_with_address(addr1, sig1, msg1))
         self.assertTrue(ecc.verify_message_with_address(addr2, sig2, msg2))
@@ -357,52 +357,26 @@ class Test_bitcoin(SequentialTestCase):
         self.assertEqual(add_number_to_script(2147483647), bfh('04ffffff7f'))
 
     def test_address_to_script(self):
-        # bech32 native segwit
-        # test vectors from BIP-0173
-        self.assertEqual(address_to_script('BC1QW508D6QEJXTDG4Y5R3ZARVARY0C5XW7KV8F3T4'), '0014751e76e8199196d454941c45d1b3a323f1433bd6')
-        self.assertEqual(address_to_script('bc1pw508d6qejxtdg4y5r3zarvary0c5xw7kw508d6qejxtdg4y5r3zarvary0c5xw7k7grplx'), '5128751e76e8199196d454941c45d1b3a323f1433bd6751e76e8199196d454941c45d1b3a323f1433bd6')
-        self.assertEqual(address_to_script('BC1SW50QA3JX3S'), '6002751e')
-        self.assertEqual(address_to_script('bc1zw508d6qejxtdg4y5r3zarvaryvg6kdaj'), '5210751e76e8199196d454941c45d1b3a323')
-
+        
         # base58 P2PKH
-        self.assertEqual(address_to_script('14gcRovpkCoGkCNBivQBvw7eso7eiNAbxG'), '76a91428662c67561b95c79d2257d2a93d9d151c977e9188ac')
-        self.assertEqual(address_to_script('1BEqfzh4Y3zzLosfGhw1AsqbEKVW6e1qHv'), '76a914704f4b81cadb7bf7e68c08cd3657220f680f863c88ac')
+        self.assertEqual(address_to_script('CKuxk2HAuNHGxBbTn12ETygXPmXEBXiPZS'), '76a91425d6accffd6b661f1bd407352cfc3c9155ad8f4788ac')
+        self.assertEqual(address_to_script('CME757rWrGxLVYNQVCAHBB7i9dQZjF62G8'), '76a914343d3db5405eb19e583624f43be5f4ba1622b56e88ac')
 
         # base58 P2SH
-        self.assertEqual(address_to_script('35ZqQJcBQMZ1rsv8aSuJ2wkC7ohUCQMJbT'), 'a9142a84cf00d47f699ee7bbc1dea5ec1bdecb4ac15487')
-        self.assertEqual(address_to_script('3PyjzJ3im7f7bcV724GR57edKDqoZvH7Ji'), 'a914f47c8954e421031ad04ecd8e7752c9479206b9d387')
-
-
-class Test_bitcoin_testnet(TestCaseForTestnet):
-
-    def test_address_to_script(self):
-        # bech32 native segwit
-        # test vectors from BIP-0173
-        self.assertEqual(address_to_script('tb1qrp33g0q5c5txsp9arysrx4k6zdkfs4nce4xj0gdcccefvpysxf3q0sl5k7'), '00201863143c14c5166804bd19203356da136c985678cd4d27a1b8c6329604903262')
-        self.assertEqual(address_to_script('tb1qqqqqp399et2xygdj5xreqhjjvcmzhxw4aywxecjdzew6hylgvsesrxh6hy'), '0020000000c4a5cad46221b2a187905e5266362b99d5e91c6ce24d165dab93e86433')
-
-        # base58 P2PKH
-        self.assertEqual(address_to_script('mutXcGt1CJdkRvXuN2xoz2quAAQYQ59bRX'), '76a9149da64e300c5e4eb4aaffc9c2fd465348d5618ad488ac')
-        self.assertEqual(address_to_script('miqtaRTkU3U8rzwKbEHx3g8FSz8GJtPS3K'), '76a914247d2d5b6334bdfa2038e85b20fc15264f8e5d2788ac')
-
-        # base58 P2SH
-        self.assertEqual(address_to_script('2N3LSvr3hv5EVdfcrxg2Yzecf3SRvqyBE4p'), 'a9146eae23d8c4a941316017946fc761a7a6c85561fb87')
-        self.assertEqual(address_to_script('2NE4ZdmxFmUgwu5wtfoN2gVniyMgRDYq1kk'), 'a914e4567743d378957cd2ee7072da74b1203c1a7a0b87')
+        self.assertEqual(address_to_script('c1gtz1jXtfJWTNNnjncHkCZKKz1HeR9WqM'), 'a914031af4efa98d818c3e81ab4e5955d4c2bf9b23c987')
+        self.assertEqual(address_to_script('c7UD6aU9AgCE2g6BB4yE8tqShWKLGKfn1b'), 'a91442856c91f09189d8902c47de36b95ccb580a70cf87')
 
 
 class Test_xprv_xpub(SequentialTestCase):
 
     xprv_xpub = (
         # Taken from test vectors in https://en.bitcoin.it/wiki/BIP_0032_TestVectors
-        {'xprv': 'xprvA41z7zogVVwxVSgdKUHDy1SKmdb533PjDz7J6N6mV6uS3ze1ai8FHa8kmHScGpWmj4WggLyQjgPie1rFSruoUihUZREPSL39UNdE3BBDu76',
-         'xpub': 'xpub6H1LXWLaKsWFhvm6RVpEL9P4KfRZSW7abD2ttkWP3SSQvnyA8FSVqNTEcYFgJS2UaFcxupHiYkro49S8yGasTvXEYBVPamhGW6cFJodrTHy',
+        {'xprv': 'xprvA1P1rFAjuKpnqrNWGyfpQXghxyz6JxhwbkdVMKwkX9ZVyWETGYBmmVZTMRUaHNByQtJpTbqhMiBMvFTeMVUchtiTNEVYz7KYZGDJ98tpkmJ',
+         'xpub': 'xpub6ENNFkhdjhP64LSyP1CpmfdSX1paiRRnxyZ69iMN5V6UrJZbp5W2KHswCgaWcmANPruj4FRRre29XmgmA5YD9umqZ78jcKxFqmtJQuKpR84',
          'xtype': 'standard'},
-        {'xprv': 'yprvAJEYHeNEPcyBoQYM7sGCxDiNCTX65u4ANgZuSGTrKN5YCC9MP84SBayrgaMyZV7zvkHrr3HVPTK853s2SPk4EttPazBZBmz6QfDkXeE8Zr7',
-         'xpub': 'ypub6XDth9u8DzXV1tcpDtoDKMf6kVMaVMn1juVWEesTshcX4zUVvfNgjPJLXrD9N7AdTLnbHFL64KmBn3SNaTe69iZYbYCqLCCNPZKbLz9niQ4',
+        {'xprv': 'yprvALT322d83WE7rw9KHtqY3US9xZZJgAZVtoywb4D2ErkTAxPqHBN9gerMoQSQkG9usgh8uPvRU9eBtEAyThw6zLZNGX2m3uvRdFEejuKHi7i',
+         'xpub': 'ypub6ZSPRYA1ssnR5RDnPvNYQcNtWbPo5dHMG2uYPScdoCHS3kiypigQETAqee5wusBEkiCqhLbj4r1BYsK5KGDhoYmYb5FgdJPRSwqNkqRWEQe',
          'xtype': 'p2wpkh-p2sh'},
-        {'xprv': 'zprvAWgYBBk7JR8GkraNZJeEodAp2UR1VRWJTXyV1ywuUVs1awUgTiBS1ZTDtLA5F3MFDn1LZzu8dUpSKdT7ToDpvEG6PQu4bJs7zQY47Sd3sEZ',
-         'xpub': 'zpub6jftahH18ngZyLeqfLBFAm7YaWFVttE9pku5pNMX2qPzTjoq1FVgZMmhjecyB2nqFb31gHE9vNvbaggU6vvWpNZbXEWLLUjYjFqG95LNyT8',
-         'xtype': 'p2wpkh'},
     )
 
     def _do_test_bip32(self, seed, sequence):
@@ -424,14 +398,11 @@ class Test_xprv_xpub(SequentialTestCase):
     @needs_test_with_all_ecc_implementations
     def test_bip32(self):
         # see https://en.bitcoin.it/wiki/BIP_0032_TestVectors
-        xpub, xprv = self._do_test_bip32("000102030405060708090a0b0c0d0e0f", "m/0'/1/2'/2/1000000000")
-        self.assertEqual("xpub6H1LXWLaKsWFhvm6RVpEL9P4KfRZSW7abD2ttkWP3SSQvnyA8FSVqNTEcYFgJS2UaFcxupHiYkro49S8yGasTvXEYBVPamhGW6cFJodrTHy", xpub)
-        self.assertEqual("xprvA41z7zogVVwxVSgdKUHDy1SKmdb533PjDz7J6N6mV6uS3ze1ai8FHa8kmHScGpWmj4WggLyQjgPie1rFSruoUihUZREPSL39UNdE3BBDu76", xprv)
+        xpub, xprv = self._do_test_bip32("d6202f003719d42973bbb3a2b77563e8b1d6456cee5d7c9658247f591c0e1bb019308c2ad1a0b3d7d8a5f8c884e7964a6cbfa6464a1ff8e3d74047766532665b", "m/44'/248/2'/2/1000000000")
+        self.assertEqual("xpub6FwkbPaGorstHSUMDWsEspiAv3GgkkHTBGHC7kabegoatUAvgFXy4VZ2Hw3bAGTNvi5cT3Xw93G7Jv3qtsgLmEp93DzXUpBqfpzRn6pDMst", xpub)
+        self.assertEqual("xprvA2xQBt3NyVKb4xPt7VLEWgmSN1SCMHZbp3MbKNAz6MGc1fqn8iDiWhEYSgWwbBLBfhFVz5WqyAUCQy7VGGYRJaaXePynqWfVaSYEmShcpEm", xprv)
 
-        xpub, xprv = self._do_test_bip32("fffcf9f6f3f0edeae7e4e1dedbd8d5d2cfccc9c6c3c0bdbab7b4b1aeaba8a5a29f9c999693908d8a8784817e7b7875726f6c696663605d5a5754514e4b484542","m/0/2147483647'/1/2147483646'/2")
-        self.assertEqual("xpub6FnCn6nSzZAw5Tw7cgR9bi15UV96gLZhjDstkXXxvCLsUXBGXPdSnLFbdpq8p9HmGsApME5hQTZ3emM2rnY5agb9rXpVGyy3bdW6EEgAtqt", xpub)
-        self.assertEqual("xprvA2nrNbFZABcdryreWet9Ea4LvTJcGsqrMzxHx98MMrotbir7yrKCEXw7nadnHM8Dq38EGfSh6dqA9QWTyefMLEcBYJUuekgW4BYPJcr9E7j", xprv)
-
+       
     @needs_test_with_all_ecc_implementations
     def test_xpub_from_xprv(self):
         """We can derive the xpub key from a xprv."""
@@ -570,88 +541,42 @@ class Test_xprv_xpub_testnet(TestCaseForTestnet):
 class Test_keyImport(SequentialTestCase):
 
     priv_pub_addr = (
-           {'priv': 'KzMFjMC2MPadjvX5Cd7b8AKKjjpBSoRKUTpoAtN6B3J9ezWYyXS6',
-            'exported_privkey': 'p2pkh:KzMFjMC2MPadjvX5Cd7b8AKKjjpBSoRKUTpoAtN6B3J9ezWYyXS6',
-            'pub': '02c6467b7e621144105ed3e4835b0b4ab7e35266a2ae1c4f8baa19e9ca93452997',
-            'address': '17azqT8T16coRmWKYFj3UjzJuxiYrYFRBR',
+           {'priv': 'Q7En2pnRNzxqNc3jskfHeoKmhPsctAwTt4LsPiFzPGA58mEpjUDi',
+            'exported_privkey': 'p2pkh:Q7En2pnRNzxqNc3jskfHeoKmhPsctAwTt4LsPiFzPGA58mEpjUDi',
+            'pub': '0282279aa6567878865f744b0599031f4c1c2a8bb9ff69b74f6e4c90d9deb6f770',
+            'address': 'CHPuq5TSZSLijwnHVuP4dfzMwANJkyy3PP',
             'minikey' : False,
             'txin_type': 'p2pkh',
             'compressed': True,
             'addr_encoding': 'base58',
-            'scripthash': 'c9aecd1fef8d661a42c560bf75c8163e337099800b8face5ca3d1393a30508a7'},
-           {'priv': 'p2pkh:Kzj8VjwpZ99bQqVeUiRXrKuX9mLr1o6sWxFMCBJn1umC38BMiQTD',
-            'exported_privkey': 'p2pkh:Kzj8VjwpZ99bQqVeUiRXrKuX9mLr1o6sWxFMCBJn1umC38BMiQTD',
-            'pub': '0352d78b4b37e0f6d4e164423436f2925fa57817467178eca550a88f2821973c41',
-            'address': '1GXgZ5Qi6gmXTHVSpUPZLy4Ci2nbfb3ZNb',
+            'scripthash': '32ff650cbc1c4faa63dcee3d4592caaa60c66e1fd78d7c4384905798e3f775a5'},
+           {'priv': 'p2pkh:QBy8VwS9XiEDDFDmz4TQbKAZ264w362hstGmkvo7EeYW4dzHKJyW',
+            'exported_privkey': 'p2pkh:QBy8VwS9XiEDDFDmz4TQbKAZ264w362hstGmkvo7EeYW4dzHKJyW',
+            'pub': '02ff1e8ef1ac308d8fa4a394cb21ef1b9d653003281185ea8c2410a717e6eb53e1',
+            'address': 'CNmXShWkZPw5SMU4quNHPsq7wkiX17jzFy',
             'minikey': False,
             'txin_type': 'p2pkh',
             'compressed': True,
             'addr_encoding': 'base58',
-            'scripthash': 'a9b2a76fc196c553b352186dfcca81fcf323a721cd8431328f8e9d54216818c1'},
-           {'priv': '5Hxn5C4SQuiV6e62A1MtZmbSeQyrLFhu5uYks62pU5VBUygK2KD',
-            'exported_privkey': 'p2pkh:5Hxn5C4SQuiV6e62A1MtZmbSeQyrLFhu5uYks62pU5VBUygK2KD',
-            'pub': '04e5fe91a20fac945845a5518450d23405ff3e3e1ce39827b47ee6d5db020a9075422d56a59195ada0035e4a52a238849f68e7a325ba5b2247013e0481c5c7cb3f',
-            'address': '1GPHVTY8UD9my6jyP4tb2TYJwUbDetyNC6',
+            'scripthash': 'a5ee6df99fb909fd001634401852f50afe181ca9a45e7dd70d21d86cee733935'},
+           {'priv': 'Q9xUFjLYU4xGBUM43X1sZv95DmWq89UqcXNHosVYV4GAPoNoSRyo',
+            'exported_privkey': 'p2pkh:Q9xUFjLYU4xGBUM43X1sZv95DmWq89UqcXNHosVYV4GAPoNoSRyo',
+            'pub': '026953540ffe6007ade563aa6529ce9daacb11d53711c1e90ea39db9ad6b0307da',
+            'address': 'CaP4iBGndNC6dPwpnjqnXwrDPTr1jCFDBL',
             'minikey': False,
             'txin_type': 'p2pkh',
-            'compressed': False,
+            'compressed': True,
             'addr_encoding': 'base58',
-            'scripthash': 'f5914651408417e1166f725a5829ff9576d0dbf05237055bf13abd2af7f79473'},
-           {'priv': 'p2pkh:5KhYQCe1xd5g2tqpmmGpUWDpDuTbA8vnpbiCNDwMPAx29WNQYfN',
-            'exported_privkey': 'p2pkh:5KhYQCe1xd5g2tqpmmGpUWDpDuTbA8vnpbiCNDwMPAx29WNQYfN',
-            'pub': '048f0431b0776e8210376c81280011c2b68be43194cb00bd47b7e9aa66284b713ce09556cde3fee606051a07613f3c159ef3953b8927c96ae3dae94a6ba4182e0e',
-            'address': '147kiRHHm9fqeMQSgqf4k35XzuWLP9fmmS',
+            'scripthash': '6be6f5e57c414d4fa6cc4866a40e4dd5150208829474dc84454ebe11f6c2357e'},
+           {'priv': 'p2pkh:Q7srxGuvxXYEruQ3jkbgmz9uZJWhcgVU4A68TGej8nE6VSp73W34',
+            'exported_privkey': 'p2pkh:Q7srxGuvxXYEruQ3jkbgmz9uZJWhcgVU4A68TGej8nE6VSp73W34',
+            'pub': '023f019a524708a90348c0f8d6f17d718c31265f8069c56460cf11ad049166a136',
+            'address': 'Cdj7Z7f1rBKDx1uwSvNTuKssD5msdgx8ye',
             'minikey': False,
             'txin_type': 'p2pkh',
-            'compressed': False,
-            'addr_encoding': 'base58',
-            'scripthash': '6dd2e07ad2de9ba8eec4bbe8467eb53f8845acff0d9e6f5627391acc22ff62df'},
-           {'priv': 'LHJnnvRzsdrTX2j5QeWVsaBkabK7gfMNqNNqxnbBVRaJYfk24iJz',
-            'exported_privkey': 'p2wpkh-p2sh:Kz9XebiCXL2BZzhYJViiHDzn5iup1povWV8aqstzWU4sz1K5nVva',
-            'pub': '0279ad237ca0d812fb503ab86f25e15ebd5fa5dd95c193639a8a738dcd1acbad81',
-            'address': '3GeVJB3oKr7psgKR6BTXSxKtWUkfsHHhk7',
-            'minikey': False,
-            'txin_type': 'p2wpkh-p2sh',
             'compressed': True,
             'addr_encoding': 'base58',
-            'scripthash': 'd7b04e882fa6b13246829ac552a2b21461d9152eb00f0a6adb58457a3e63d7c5'},
-           {'priv': 'p2wpkh-p2sh:L3CZH1pm87X4bbE6mSGvZnAZ1KcFDRomBudUkrkBG7EZhDtBVXMW',
-            'exported_privkey': 'p2wpkh-p2sh:L3CZH1pm87X4bbE6mSGvZnAZ1KcFDRomBudUkrkBG7EZhDtBVXMW',
-            'pub': '0229da20a15b3363b2c28e3c5093c180b56c439df0b968a970366bb1f38435361e',
-            'address': '3C79goMwT7zSTjXnPoCg6VFGAnUpZAkyus',
-            'minikey': False,
-            'txin_type': 'p2wpkh-p2sh',
-            'compressed': True,
-            'addr_encoding': 'base58',
-            'scripthash': '714bf6bfe1083e69539f40d4c7a7dca85d187471b35642e55f20d7e866494cf7'},
-           {'priv': 'L8g5V8kFFeg2WbecahRSdobARbHz2w2STH9S8ePHVSY4fmia7Rsj',
-            'exported_privkey': 'p2wpkh:Kz6SuyPM5VktY5dr2d2YqdVgBA6LCWkiHqXJaC3BzxnMPSUuYzmF',
-            'pub': '03e9f948421aaa89415dc5f281a61b60dde12aae3181b3a76cd2d849b164fc6d0b',
-            'address': 'bc1qqmpt7u5e9hfznljta5gnvhyvfd2kdd0r90hwue',
-            'minikey': False,
-            'txin_type': 'p2wpkh',
-            'compressed': True,
-            'addr_encoding': 'bech32',
-            'scripthash': '1929acaaef3a208c715228e9f1ca0318e3a6b9394ab53c8d026137f847ecf97b'},
-           {'priv': 'p2wpkh:KyDWy5WbjLA58Zesh1o8m3pADGdJ3v33DKk4m7h8BD5zDKDmDFwo',
-            'exported_privkey': 'p2wpkh:KyDWy5WbjLA58Zesh1o8m3pADGdJ3v33DKk4m7h8BD5zDKDmDFwo',
-            'pub': '038c57657171c1f73e34d5b3971d05867d50221ad94980f7e87cbc2344425e6a1e',
-            'address': 'bc1qpakeeg4d9ydyjxd8paqrw4xy9htsg532xzxn50',
-            'minikey': False,
-            'txin_type': 'p2wpkh',
-            'compressed': True,
-            'addr_encoding': 'bech32',
-            'scripthash': '242f02adde84ebb2a7dd778b2f3a81b3826f111da4d8960d826d7a4b816cb261'},
-           # from http://bitscan.com/articles/security/spotlight-on-mini-private-keys
-           {'priv': 'SzavMBLoXU6kDrqtUVmffv',
-            'exported_privkey': 'p2pkh:5Kb8kLf9zgWQnogidDA76MzPL6TsZZY36hWXMssSzNydYXYB9KF',
-            'pub': '04588d202afcc1ee4ab5254c7847ec25b9a135bbda0f2bc69ee1a714749fd77dc9f88ff2a00d7e752d44cbe16e1ebcf0890b76ec7c78886109dee76ccfc8445424',
-            'address': '1CC3X2gu58d6wXUWMffpuzN9JAfTUWu4Kj',
-            'minikey': True,
-            'txin_type': 'p2pkh',
-            'compressed': False,  # this is actually ambiguous... issue #2748
-            'addr_encoding': 'base58',
-            'scripthash': '5b07ddfde826f5125ee823900749103cea37808038ecead5505a766a07c34445'},
+            'scripthash': '931712014583520bd86ef12125493f8007af54768d43d7af34f6e5eef28f976a'},
     )
 
     @needs_test_with_all_ecc_implementations

@@ -87,7 +87,7 @@ setup(
         'electrum_exos.gui',
         'electrum_exos.gui.qt',
         'electrum_exos.plugins',
-    ] + [('electrum_exos.plugins.'+pkg) for pkg in find_packages('electrum_exos/plugins')],
+    ] + [('electrum_exos.plugins.'+pkg) for pkg in find_packages('electrum/plugins')],
     package_dir={
         'electrum_exos': 'electrum'
     },

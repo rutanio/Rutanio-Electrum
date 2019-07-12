@@ -18,11 +18,6 @@ set -e
 
 mkdir -p $WINEPREFIX/drive_c/exos-electrum
 
-pushd ../..
-cp -r electrum* .git* pubkeys* setup* run_electrum LICENCE $WINEPREFIX/drive_c/exos-electrum/
-cp --parents contrib/requirements/* $WINEPREFIX/drive_c/exos-electrum/
-popd
-
 pushd $WINEPREFIX/drive_c/exos-electrum
 
 # Load exos-electrum-locale for this release

@@ -46,7 +46,7 @@ from electrum_exos import simple_config
 from electrum_exos.util import bfh, bh2u
 from electrum_exos.transaction import SerializationError, Transaction
 from electrum_exos.wallet import Multisig_Wallet
-from electrum_exos.plugins.cosigner_pool import server
+from electrum_exos.plugins.cosigner_pool import server	
 
 from .util import (MessageBoxMixin, read_QIcon, Buttons, CopyButton,
                    MONOSPACE_FONT, ColorScheme, ButtonsLineEdit)
