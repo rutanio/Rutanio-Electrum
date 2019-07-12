@@ -224,6 +224,9 @@ class Plugin(BasePlugin):
                 # set pick back to true if password incorrect or omitted
                 server.put(keyhash+'_pick', 'True')
                 return
+            else:
+                window.show_warning(_("Please close the transaction dialog after signing to allow") + '\n' +
+                                    _("other cosigners to sign."))
         else:
             password = None
             if not window.question(_("An encrypted transaction was retrieved from cosigning pool.") + '\n' +
