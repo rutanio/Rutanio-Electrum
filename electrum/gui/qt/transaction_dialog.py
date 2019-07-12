@@ -226,11 +226,6 @@ class TxDialog(QDialog, MessageBoxMixin):
                 dialogs.remove(self)
 
                 if type(self.wallet) == Multisig_Wallet:
-                    # delete lock blocking other wallets from opening TX dialog
-                    for keyhash in self.keyhashes:
-                        lock = server.get(keyhash+'_lock')
-                        if lock:
-                            server.delete(keyhash+'_lock')
                     # set pick flag to true
                     for keyhash in self.keyhashes:
                         server.put(keyhash+'_pick', 'True')
