@@ -23,6 +23,7 @@
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+import calendar
 import time
 import signal
 
@@ -239,7 +240,7 @@ class Plugin(BasePlugin):
         
         # check if lock has been placed for current wallet
         server_lock = server.get(keyhash+'_lock')
-        if server_lock == 'locked':
+        if server_lock:
             # set pick back to true if user lock is present
             server.put(keyhash+'_pick', 'True')
             # display pop up
@@ -249,7 +250,8 @@ class Plugin(BasePlugin):
 
         # lock all cosigners, if no lock has been placed
         for window, xpub, K, _hash in self.cosigner_list:
-            server.put(_hash+'_lock', 'locked')
+            current_time = str(calendar.timegm(time.gmtime()))
+            server.put(_hash+'_lock', current_time)
 
         xprv = wallet.keystore.get_master_private_key(password)
         if not xprv:
