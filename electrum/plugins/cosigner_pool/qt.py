@@ -247,15 +247,14 @@ class Plugin(BasePlugin):
                 # set pick back to true if user lock is present
                 server.put(keyhash+'_pick', 'True')
                 # calculate wait time
-                wait_time = (calendar.timegm(time.gmtime()) - int(server_lock)) / 60
+                wait_time = int((600 - (int(server.get_current_time()) - int(server_lock))) / 60) + 1
                 # display pop up
                 window.show_warning(_("A cosigner is currently signing the transaction.") + '\n' +
-                                    _("Please wait {} until the signing has concluded.".format(wait_time)))
+                                    _("Please wait {} minutes until the signing has concluded.".format(wait_time)))
                 return
 
         # lock transaction dialog, if no lock has been placed
-        current_time = str(calendar.timegm(time.gmtime()))
-        server.put(keyhash+'_lock', current_time)
+        server.put(keyhash+'_lock', str(server.get_current_time()))
 
         xprv = wallet.keystore.get_master_private_key(password)
         if not xprv:
