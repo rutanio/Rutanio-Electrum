@@ -285,6 +285,12 @@ class Plugin(BasePlugin):
             
         tx = transaction.Transaction(message)
 
+        def calculate_wait_time(expire):
+            # calculate wait time
+            wait_time = int((WAIT_TIME - (int(server.get_current_time()) - int(expire))))
+            mins, secs = divmod(wait_time, 60)
+            return '{:02d}:{:02d}'.format(mins, secs)
+
         # check if lock has been placed for any wallets
         for _hash, expire in self.locks.items():
             if expire:
@@ -292,11 +298,8 @@ class Plugin(BasePlugin):
                 server.put(keyhash+'_pick', 'True')
                 # suppress any further notifications
                 self.suppress_notifications = True
-                
-                # calculate wait time
-                wait_time = int((WAIT_TIME - (int(server.get_current_time()) - int(expire))))
-                mins, secs = divmod(wait_time, 60)
-                timeformat = '{:02d}:{:02d}'.format(mins, secs)
+                # calculate wait time based on lock expiry and server time
+                timeformat = calculate_wait_time(expire)
 
                 # display pop up
                 window.show_warning(_("A cosigner is currently signing the transaction.") + '\n' +
@@ -305,12 +308,19 @@ class Plugin(BasePlugin):
                 show_timeout_wait_dialog(tx, window, prompt_if_unsaved=True)
 
                 return
-
-        # lock transaction dialog, if no lock has been placed
-        server.put(keyhash+'_lock', str(server.get_current_time()))
+        # test if wallet has previously placed a lock
+        current_wallet_lock = server.get(keyhash+'_lock')
+        if not current_wallet_lock:
+            # no lock has been placed for current wallet => lock transaction dialog 
+            server.put(keyhash+'_lock', str(server.get_current_time()))
+            time_until_expired = '10 minutes'
+        else:
+            time_until_expired = calculate_wait_time(current_wallet_lock)
+        
         # place flag to test for graceful shutdown
         server.put(keyhash+'_shutdown', 'up')
-        window.show_warning(_("You have 10 minutes to conclude signing after which the dialog will") + '\n' +
-                    _("automatically close."))
+        window.show_warning(_("You have {} to conclude signing after which the dialog will".format(time_until_expired)) + '\n' +
+                            _("automatically close."))
+            
         
         show_transaction_timeout(tx, window, prompt_if_unsaved=True)
