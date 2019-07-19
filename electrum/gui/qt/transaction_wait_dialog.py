@@ -100,16 +100,12 @@ class TimeoutWaitDialog(QDialog, MessageBoxMixin):
                     self.cosigner_list.add(_hash)
                     self.locks[_hash] = server.get(_hash+'_lock')
 
-        self.setMinimumWidth(950)
+        self.setMinimumWidth(200)
         self.setWindowTitle(_("Information"))
 
         vbox = QVBoxLayout()
         self.setLayout(vbox)
 
-        # vbox.addWidget(QLabel(_("Transaction ID:")))
-        # self.tx_hash_e  = ButtonsLineEdit()
-        # self.tx_hash_e.setReadOnly(True)
-        # vbox.addWidget(self.tx_hash_e)
         self.tx_desc = QLabel()
         vbox.addWidget(self.tx_desc)
         self.status_label = QLabel()
@@ -190,7 +186,6 @@ class TimeoutWaitDialog(QDialog, MessageBoxMixin):
         size = self.tx.estimated_size()
         can_sign = not self.tx.is_complete() and \
             (self.wallet.can_sign(self.tx) or bool(self.main_window.tx_external_keypairs))
-        # self.tx_hash_e.setText(tx_hash or _('Unknown'))
         if desc is None:
             self.tx_desc.hide()
         else:
