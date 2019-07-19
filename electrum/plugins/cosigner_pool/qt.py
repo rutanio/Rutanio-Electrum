@@ -221,6 +221,22 @@ class Plugin(BasePlugin):
         for window, xpub, K, _hash in self.cosigner_list:
             self.locks[_hash] = server.get(_hash+'_lock')
 
+
+        def correct_shutdown_state(_hash):
+            shutdown_flag = server.get(_hash+'_shutdown')
+            if shutdown_flag == 'down':
+                return
+            server.delete(_hash+'_lock')
+            server.put(_hash+'_pick', 'True')
+            server.put(_hash+'_shutdown', 'down')
+            self.locks.clear()
+
+        for key, _hash, window in self.keys:
+            correct_shutdown_state(_hash)
+
+        for window, xpub, K, _hash in self.cosigner_list:
+            correct_shutdown_state(_hash)
+
         if self.suppress_notifications:
             for _hash, expire in self.locks.items():
                 if expire:
