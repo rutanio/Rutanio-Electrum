@@ -24,21 +24,28 @@
 # SOFTWARE.
 
 import calendar
+import datetime
 import time
 import signal
+import copy
 
 from PyQt5.QtCore import QObject, pyqtSignal
-from PyQt5.QtWidgets import QPushButton
+from PyQt5.QtWidgets import QDialog, QLabel, QPushButton, QHBoxLayout, QVBoxLayout, QTextEdit
 
 from electrum_exos import util, keystore, ecc, bip32, crypto
 from electrum_exos import transaction
-from electrum_exos.plugin import BasePlugin, hook
+from electrum_exos.plugin import BasePlugin, hook, run_hook
+
+from electrum_exos.transaction import SerializationError, Transaction
+
 from electrum_exos.i18n import _
 from electrum_exos.wallet import Multisig_Wallet
 from electrum_exos.util import bh2u, bfh
 
 from electrum_exos.gui.qt.transaction_dialog import show_transaction_timeout, TxDialogTimeout
-from electrum_exos.gui.qt.util import WaitingDialog
+from electrum_exos.gui.qt.transaction_wait_dialog import show_timeout_wait_dialog, TimeoutWaitDialog
+from electrum_exos.gui.qt.util import (WaitingDialog, MessageBoxMixin, Buttons, CopyButton,
+                                        MONOSPACE_FONT, ColorScheme, ButtonsLineEdit)
 
 from . import server
 
@@ -249,26 +256,6 @@ class Plugin(BasePlugin):
                                    _("Do you want to open it now?")):
                 return
         
-        # check if lock has been placed for any wallets
-        for _hash, expire in self.locks.items():
-            if expire:
-                # set pick back to true if user lock is present
-                server.put(keyhash+'_pick', 'True')
-                # calculate wait time
-                wait_time = int((WAIT_TIME - (int(server.get_current_time()) - int(expire))) / 60) + 1
-                # display pop up
-                window.show_warning(_("A cosigner is currently signing the transaction.") + '\n' +
-                                    _("Please wait {} minutes until the signing has concluded.".format(wait_time)))
-                if window.question(_("Do you wish to defer notifications until signing has concluded?")):
-                    self.suppress_notifications = True
-                return
-
-        window.show_warning(_("You have 10 minutes to conclude signing after which the dialog will") + '\n' +
-                            _("automatically close."))
-
-        # lock transaction dialog, if no lock has been placed
-        server.put(keyhash+'_lock', str(server.get_current_time()))
-
         xprv = wallet.keystore.get_master_private_key(password)
         if not xprv:
             return
@@ -282,4 +269,31 @@ class Plugin(BasePlugin):
             return
             
         tx = transaction.Transaction(message)
+
+        # check if lock has been placed for any wallets
+        for _hash, expire in self.locks.items():
+            if expire:
+                # set pick back to true if user lock is present
+                server.put(keyhash+'_pick', 'True')
+                # suppress any further notifications
+                self.suppress_notifications = True
+                
+                # calculate wait time
+                wait_time = int((WAIT_TIME - (int(server.get_current_time()) - int(expire))))
+                mins, secs = divmod(wait_time, 60)
+                timeformat = '{:02d}:{:02d}'.format(mins, secs)
+
+                # display pop up
+                window.show_warning(_("A cosigner is currently signing the transaction.") + '\n' +
+                                    _("Please wait {} until the signing has concluded.".format(timeformat)))
+
+                show_timeout_wait_dialog(tx, window, prompt_if_unsaved=True)
+
+                return
+
+        # lock transaction dialog, if no lock has been placed
+        server.put(keyhash+'_lock', str(server.get_current_time()))
+        window.show_warning(_("You have 10 minutes to conclude signing after which the dialog will") + '\n' +
+                    _("automatically close."))
+
         show_transaction_timeout(tx, window, prompt_if_unsaved=True)

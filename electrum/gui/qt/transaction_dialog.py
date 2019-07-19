@@ -409,6 +409,7 @@ class TxDialogTimeout(TxDialog):
         self.prompt_if_unsaved = prompt_if_unsaved
         self.saved = False
         self.desc = desc
+        self.locks = {}
 
         # Set timeout flag 
         self.timed_out = False
@@ -423,8 +424,10 @@ class TxDialogTimeout(TxDialog):
                 _hash = bh2u(crypto.sha256d(K))
                 if not keystore.is_watching_only():
                     self.keyhashes.add(_hash)
+                    self.locks[_hash] = server.get(_hash+'_lock')
                 else:
                     self.cosigner_list.add(_hash)
+
 
         # if the wallet can populate the inputs with more info, do it now.
         # as a result, e.g. we might learn an imported address tx is segwit,
@@ -504,14 +507,15 @@ class TxDialogTimeout(TxDialog):
         hbox.addLayout(Buttons(*self.buttons))
         vbox.addLayout(hbox)
 
-        # Set time left to desired duration 
-        self.time_left_int = DURATION_INT
+        for _hash, expire in self.locks.items():
+            if expire:
+                self.time_left_int = int((DURATION_INT - (int(server.get_current_time()) - int(expire))))
 
         self.timer_start()
         self.update()
 
     def timer_start(self):
-        self.time_left_int = DURATION_INT
+        #self.time_left_int = DURATION_INT
 
         self.my_qtimer = QTimer(self)
         self.my_qtimer.timeout.connect(self.timer_timeout)
