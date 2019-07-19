@@ -106,10 +106,10 @@ class TimeoutWaitDialog(QDialog, MessageBoxMixin):
         vbox = QVBoxLayout()
         self.setLayout(vbox)
 
-        vbox.addWidget(QLabel(_("Transaction ID:")))
-        self.tx_hash_e  = ButtonsLineEdit()
-        self.tx_hash_e.setReadOnly(True)
-        vbox.addWidget(self.tx_hash_e)
+        # vbox.addWidget(QLabel(_("Transaction ID:")))
+        # self.tx_hash_e  = ButtonsLineEdit()
+        # self.tx_hash_e.setReadOnly(True)
+        # vbox.addWidget(self.tx_hash_e)
         self.tx_desc = QLabel()
         vbox.addWidget(self.tx_desc)
         self.status_label = QLabel()
@@ -144,7 +144,7 @@ class TimeoutWaitDialog(QDialog, MessageBoxMixin):
             if expire:
                 # Set time left to desired duration 
                 self.time_left_int = int(DURATION_INT - (int(server.get_current_time()) - int(expire)))
-
+        
         self.timer_start()
         self.update()
 
@@ -190,7 +190,7 @@ class TimeoutWaitDialog(QDialog, MessageBoxMixin):
         size = self.tx.estimated_size()
         can_sign = not self.tx.is_complete() and \
             (self.wallet.can_sign(self.tx) or bool(self.main_window.tx_external_keypairs))
-        self.tx_hash_e.setText(tx_hash or _('Unknown'))
+        # self.tx_hash_e.setText(tx_hash or _('Unknown'))
         if desc is None:
             self.tx_desc.hide()
         else:
