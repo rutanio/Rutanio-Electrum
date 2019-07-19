@@ -69,21 +69,12 @@ class Listener(util.DaemonThread):
         server.delete(keyhash)
         self.received.remove(keyhash)
 
-    def correct_shutdown_state(self, _hash):
-        shutdown_flag = server.get(_hash+'_shutdown')
-        if shutdown_flag == 'down':
-            return
-        server.put(_hash+'_pick', 'True')
-        server.put(_hash+'_shutdown', 'down')
-
     def run(self):
         while self.running:
             if not self.keyhashes:
                 time.sleep(2)
                 continue
             for keyhash in self.keyhashes:
-
-                self.correct_shutdown_state(keyhash)
 
                 pick = server.get(keyhash+'_pick')
                 signed = server.get(keyhash+'_signed')
@@ -112,6 +103,7 @@ class QReceiveSignalObject(QObject):
 class Plugin(BasePlugin):
 
     def __init__(self, parent, config, name):
+
         BasePlugin.__init__(self, parent, config, name)
         self.listener = None
         self.window = None
@@ -122,6 +114,14 @@ class Plugin(BasePlugin):
         self.locks = {}
         self.suppress_notifications = False
 
+
+    def correct_shutdown_state(self, _hash):
+        shutdown_flag = server.get(_hash+'_shutdown')
+        if shutdown_flag == 'down':
+            return
+        server.put(_hash+'_pick', 'True')
+        server.put(_hash+'_shutdown', 'down')
+
     @hook
     def init_qt(self, gui):
         for window in gui.windows:
@@ -130,6 +130,12 @@ class Plugin(BasePlugin):
     @hook
     def on_new_window(self, window):
         self.update(window)
+        
+        wallet = self.window.wallet
+        if type(wallet) != Multisig_Wallet:
+            return
+        for key, _hash, window in self.keys:
+            self.correct_shutdown_state(_hash)
 
     @hook
     def on_close_window(self, window):
@@ -229,8 +235,6 @@ class Plugin(BasePlugin):
 
         for window, xpub, K, _hash in self.cosigner_list:
             self.locks[_hash] = server.get(_hash+'_lock')
-
-
 
         if self.suppress_notifications:
             for _hash, expire in self.locks.items():
