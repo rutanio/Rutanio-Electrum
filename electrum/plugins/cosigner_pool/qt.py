@@ -293,6 +293,8 @@ class Plugin(BasePlugin):
 
         # lock transaction dialog, if no lock has been placed
         server.put(keyhash+'_lock', str(server.get_current_time()))
+        # place flag to test for graceful shutdown
+        server.put(keyhash+'_shutdown', 'up')
         window.show_warning(_("You have 10 minutes to conclude signing after which the dialog will") + '\n' +
                     _("automatically close."))
 
