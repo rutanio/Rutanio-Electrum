@@ -534,14 +534,13 @@ class TxDialogTimeout(TxDialog):
 
     def release_locks(self):
         if type(self.wallet) == Multisig_Wallet:
-            # delete lock blocking other wallets from opening TX dialog
             for keyhash in self.keyhashes:
-                lock = server.get(keyhash+'_lock')
-                if lock:
-                    server.delete(keyhash+'_lock')
-            # set pick flag to true
-            for keyhash in self.keyhashes:
+                # delete lock blocking other wallets from opening TX dialog
+                server.delete(keyhash+'_lock')
+                # set pick flag to true
                 server.put(keyhash+'_pick', 'True')
+                # set graceful shutdown flag to down to signify a graceful shutdown
+                server.put(keyhash+'_shutdown', 'down')
 
     def closeEvent(self, event):
         if (self.timed_out):
