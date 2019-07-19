@@ -75,7 +75,6 @@ class Listener(util.DaemonThread):
             return
         server.put(_hash+'_pick', 'True')
         server.put(_hash+'_shutdown', 'down')
-        self.locks.clear()
 
     def run(self):
         while self.running:
