@@ -234,7 +234,7 @@ class Plugin(BasePlugin):
 
         if self.suppress_notifications:
             for window, xpub, K, _hash in self.cosigner_list:
-                if server.get(_hash+'lock'):
+                if server.get(_hash+'_lock'):
                     return
             self.suppress_notifications = False
 
