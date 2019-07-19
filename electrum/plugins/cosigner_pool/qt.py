@@ -23,21 +23,29 @@
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+import calendar
+import datetime
 import time
 import signal
+import copy
 
 from PyQt5.QtCore import QObject, pyqtSignal
-from PyQt5.QtWidgets import QPushButton
+from PyQt5.QtWidgets import QDialog, QLabel, QPushButton, QHBoxLayout, QVBoxLayout, QTextEdit
 
 from electrum_exos import util, keystore, ecc, bip32, crypto
 from electrum_exos import transaction
-from electrum_exos.plugin import BasePlugin, hook
+from electrum_exos.plugin import BasePlugin, hook, run_hook
+
+from electrum_exos.transaction import SerializationError, Transaction
+
 from electrum_exos.i18n import _
 from electrum_exos.wallet import Multisig_Wallet
 from electrum_exos.util import bh2u, bfh
 
 from electrum_exos.gui.qt.transaction_dialog import show_transaction_timeout, TxDialogTimeout
-from electrum_exos.gui.qt.util import WaitingDialog
+from electrum_exos.gui.qt.transaction_wait_dialog import show_timeout_wait_dialog, TimeoutWaitDialog
+from electrum_exos.gui.qt.util import (WaitingDialog, MessageBoxMixin, Buttons, CopyButton,
+                                        MONOSPACE_FONT, ColorScheme, ButtonsLineEdit)
 
 from . import server
 
@@ -102,6 +110,8 @@ class Plugin(BasePlugin):
         self.obj.cosigner_receive_signal.connect(self.on_receive)
         self.keys = []
         self.cosigner_list = []
+        self.locks = {}
+        self.suppress_notifications = False
 
     @hook
     def init_qt(self, gui):
@@ -178,7 +188,9 @@ class Plugin(BasePlugin):
         def on_success(result):
             [server.put(t[1]+'_signed', 'True') for t in self.keys]
             self.window.show_message(_("Your transaction was sent to the cosigning pool.") + '\n' +
-                                _("Open your cosigner wallet to retrieve it."))
+                                _("Open your cosigner wallet to retrieve it.") + '\n\n' +
+                                _("Please remember to close the transaction dialog after signing to allow") + '\n' +
+                                _("other cosigners to sign."))
         def on_failure(exc_info):
             e = exc_info[1]
             try: traceback.print_exception(*exc_info)
@@ -203,6 +215,34 @@ class Plugin(BasePlugin):
 
     def on_receive(self, keyhash, message):
         self.print_error("signal arrived for", keyhash)
+
+        WAIT_TIME = 10 * 60
+
+        for window, xpub, K, _hash in self.cosigner_list:
+            self.locks[_hash] = server.get(_hash+'_lock')
+
+
+        def correct_shutdown_state(_hash):
+            shutdown_flag = server.get(_hash+'_shutdown')
+            if shutdown_flag == 'down':
+                return
+            server.delete(_hash+'_lock')
+            server.put(_hash+'_pick', 'True')
+            server.put(_hash+'_shutdown', 'down')
+            self.locks.clear()
+
+        for key, _hash, window in self.keys:
+            correct_shutdown_state(_hash)
+
+        for window, xpub, K, _hash in self.cosigner_list:
+            correct_shutdown_state(_hash)
+
+        if self.suppress_notifications:
+            for _hash, expire in self.locks.items():
+                if expire:
+                    return
+            self.suppress_notifications = False
+
         for key, _hash, window in self.keys:
             if _hash == keyhash:
                 break
@@ -225,32 +265,13 @@ class Plugin(BasePlugin):
                 # set pick back to true if password incorrect or omitted
                 server.put(keyhash+'_pick', 'True')
                 return
-            else:
-                window.show_warning(_("You have 10 minutes to conclude signing after which the dialog will") + '\n' +
-                                    _("automatically close."))
+
         else:
             password = None
             if not window.question(_("An encrypted transaction was retrieved from cosigning pool.") + '\n' +
                                    _("Do you want to open it now?")):
                 return
-            else:
-                window.show_warning(_("You have 10 minutes to conclude signing after which the dialog will") + '\n' +
-                                    _("automatically close."))
         
-        # check if lock has been placed for current wallet
-        for window, xpub, K, _hash in self.cosigner_list:
-            server_lock = server.get(_hash+'_lock')
-            if server_lock == 'locked':
-                # set pick back to true if user lock is present
-                server.put(keyhash+'_pick', 'True')
-                # display pop up
-                window.show_warning(_("A cosigner is currently signing the transaction.") + '\n' +
-                                    _("Please wait until the signing has concluded."))
-                return
-
-        # lock transaction dialog, if no lock has been placed
-        server.put(keyhash+'_lock', 'locked')
-
         xprv = wallet.keystore.get_master_private_key(password)
         if not xprv:
             return
@@ -264,4 +285,33 @@ class Plugin(BasePlugin):
             return
             
         tx = transaction.Transaction(message)
+
+        # check if lock has been placed for any wallets
+        for _hash, expire in self.locks.items():
+            if expire:
+                # set pick back to true if user lock is present
+                server.put(keyhash+'_pick', 'True')
+                # suppress any further notifications
+                self.suppress_notifications = True
+                
+                # calculate wait time
+                wait_time = int((WAIT_TIME - (int(server.get_current_time()) - int(expire))))
+                mins, secs = divmod(wait_time, 60)
+                timeformat = '{:02d}:{:02d}'.format(mins, secs)
+
+                # display pop up
+                window.show_warning(_("A cosigner is currently signing the transaction.") + '\n' +
+                                    _("Please wait {} until the signing has concluded.".format(timeformat)))
+
+                show_timeout_wait_dialog(tx, window, prompt_if_unsaved=True)
+
+                return
+
+        # lock transaction dialog, if no lock has been placed
+        server.put(keyhash+'_lock', str(server.get_current_time()))
+        # place flag to test for graceful shutdown
+        server.put(keyhash+'_shutdown', 'up')
+        window.show_warning(_("You have 10 minutes to conclude signing after which the dialog will") + '\n' +
+                    _("automatically close."))
+
         show_transaction_timeout(tx, window, prompt_if_unsaved=True)

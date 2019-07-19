@@ -226,11 +226,6 @@ class TxDialog(QDialog, MessageBoxMixin):
                 dialogs.remove(self)
 
                 if type(self.wallet) == Multisig_Wallet:
-                    # delete lock blocking other wallets from opening TX dialog
-                    for keyhash in self.keyhashes:
-                        lock = server.get(keyhash+'_lock')
-                        if lock:
-                            server.delete(keyhash+'_lock')
                     # set pick flag to true
                     for keyhash in self.keyhashes:
                         server.put(keyhash+'_pick', 'True')
@@ -414,6 +409,7 @@ class TxDialogTimeout(TxDialog):
         self.prompt_if_unsaved = prompt_if_unsaved
         self.saved = False
         self.desc = desc
+        self.locks = {}
 
         # Set timeout flag 
         self.timed_out = False
@@ -428,8 +424,10 @@ class TxDialogTimeout(TxDialog):
                 _hash = bh2u(crypto.sha256d(K))
                 if not keystore.is_watching_only():
                     self.keyhashes.add(_hash)
+                    self.locks[_hash] = server.get(_hash+'_lock')
                 else:
                     self.cosigner_list.add(_hash)
+
 
         # if the wallet can populate the inputs with more info, do it now.
         # as a result, e.g. we might learn an imported address tx is segwit,
@@ -509,14 +507,15 @@ class TxDialogTimeout(TxDialog):
         hbox.addLayout(Buttons(*self.buttons))
         vbox.addLayout(hbox)
 
-        # Set time left to desired duration 
-        self.time_left_int = DURATION_INT
+        for _hash, expire in self.locks.items():
+            if expire:
+                self.time_left_int = int((DURATION_INT - (int(server.get_current_time()) - int(expire))))
 
         self.timer_start()
         self.update()
 
     def timer_start(self):
-        self.time_left_int = DURATION_INT
+        #self.time_left_int = DURATION_INT
 
         self.my_qtimer = QTimer(self)
         self.my_qtimer.timeout.connect(self.timer_timeout)
@@ -535,14 +534,13 @@ class TxDialogTimeout(TxDialog):
 
     def release_locks(self):
         if type(self.wallet) == Multisig_Wallet:
-            # delete lock blocking other wallets from opening TX dialog
             for keyhash in self.keyhashes:
-                lock = server.get(keyhash+'_lock')
-                if lock:
-                    server.delete(keyhash+'_lock')
-            # set pick flag to true
-            for keyhash in self.keyhashes:
+                # delete lock blocking other wallets from opening TX dialog
+                server.delete(keyhash+'_lock')
+                # set pick flag to true
                 server.put(keyhash+'_pick', 'True')
+                # set graceful shutdown flag to down to signify a graceful shutdown
+                server.put(keyhash+'_shutdown', 'down')
 
     def closeEvent(self, event):
         if (self.timed_out):
