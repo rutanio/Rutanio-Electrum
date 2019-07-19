@@ -111,7 +111,6 @@ class Plugin(BasePlugin):
         self.obj.cosigner_receive_signal.connect(self.on_receive)
         self.keys = []
         self.cosigner_list = []
-        self.locks = {}
         self.suppress_notifications = False
 
 
@@ -233,12 +232,9 @@ class Plugin(BasePlugin):
 
         WAIT_TIME = 10 * 60
 
-        for window, xpub, K, _hash in self.cosigner_list:
-            self.locks[_hash] = server.get(_hash+'_lock')
-
         if self.suppress_notifications:
-            for _hash, expire in self.locks.items():
-                if expire:
+            for window, xpub, K, _hash in self.cosigner_list:
+                if server.get(_hash+'lock'):
                     return
             self.suppress_notifications = False
 
@@ -292,7 +288,8 @@ class Plugin(BasePlugin):
             return '{:02d}:{:02d}'.format(mins, secs)
 
         # check if lock has been placed for any wallets
-        for _hash, expire in self.locks.items():
+        for window, xpub, K, _hash in self.cosigner_list:
+            expire = server.get(_hash+'_lock')
             if expire:
                 # set pick back to true if user lock is present
                 server.put(keyhash+'_pick', 'True')
