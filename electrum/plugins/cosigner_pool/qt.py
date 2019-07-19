@@ -69,12 +69,22 @@ class Listener(util.DaemonThread):
         server.delete(keyhash)
         self.received.remove(keyhash)
 
+    def correct_shutdown_state(self, _hash):
+        shutdown_flag = server.get(_hash+'_shutdown')
+        if shutdown_flag == 'down':
+            return
+        server.put(_hash+'_pick', 'True')
+        server.put(_hash+'_shutdown', 'down')
+        self.locks.clear()
+
     def run(self):
         while self.running:
             if not self.keyhashes:
                 time.sleep(2)
                 continue
             for keyhash in self.keyhashes:
+
+                self.correct_shutdown_state(keyhash)
 
                 pick = server.get(keyhash+'_pick')
                 signed = server.get(keyhash+'_signed')
@@ -222,20 +232,6 @@ class Plugin(BasePlugin):
             self.locks[_hash] = server.get(_hash+'_lock')
 
 
-        def correct_shutdown_state(_hash):
-            shutdown_flag = server.get(_hash+'_shutdown')
-            if shutdown_flag == 'down':
-                return
-            server.delete(_hash+'_lock')
-            server.put(_hash+'_pick', 'True')
-            server.put(_hash+'_shutdown', 'down')
-            self.locks.clear()
-
-        for key, _hash, window in self.keys:
-            correct_shutdown_state(_hash)
-
-        for window, xpub, K, _hash in self.cosigner_list:
-            correct_shutdown_state(_hash)
 
         if self.suppress_notifications:
             for _hash, expire in self.locks.items():
@@ -313,5 +309,5 @@ class Plugin(BasePlugin):
         server.put(keyhash+'_shutdown', 'up')
         window.show_warning(_("You have 10 minutes to conclude signing after which the dialog will") + '\n' +
                     _("automatically close."))
-
+        
         show_transaction_timeout(tx, window, prompt_if_unsaved=True)
