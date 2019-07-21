@@ -107,9 +107,9 @@ class TimeoutWaitDialog(QDialog, MessageBoxMixin):
         self.setLayout(vbox)
         self.warning = QLabel()
         vbox.addWidget(self.warning)
-        warning_text = (_('A transaction witht the following information is currently being signed')+'\n'+
+        warning_text = (_('A transaction with the following information is currently being signed')+'\n'+
                     _('by a cosigner. A notification will appear within 30 seconds of either signing') +'\n'+
-                    _('or the transaction window expiring. Thank you for being patient.'))
+                    _('or the transaction window expiring.'))
         self.warning.setText(warning_text)
         self.tx_desc = QLabel()
         vbox.addWidget(self.tx_desc)
