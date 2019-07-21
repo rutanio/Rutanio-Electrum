@@ -167,7 +167,7 @@ class TimeoutWaitDialog(QDialog, MessageBoxMixin):
         self.update()
 
     def closeEvent(self, event):
-        if (self.time_left_int == 0):
+        if (self.time_left_int <= 0):
             event.accept()
             try:
                 dialogs.remove(self)
@@ -192,6 +192,16 @@ class TimeoutWaitDialog(QDialog, MessageBoxMixin):
         self.close()
 
     def update(self):
+        if self.time_left_int % 10 == 0:
+            lock_present = False
+            for _hash in self.cosigner_list:
+                lock = server.get(_hash+'_lock')
+                if lock:
+                    lock_present = True
+            if not lock_present:
+                self.time_left_int = 0
+                self.close()
+
         desc = None
         base_unit = self.main_window.base_unit()
         format_amount = self.main_window.format_amount
