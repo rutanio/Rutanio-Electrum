@@ -103,6 +103,7 @@ class QReceiveSignalObject(QObject):
 class Plugin(BasePlugin):
 
     def __init__(self, parent, config, name):
+
         BasePlugin.__init__(self, parent, config, name)
         self.listener = None
         self.window = None
@@ -110,8 +111,15 @@ class Plugin(BasePlugin):
         self.obj.cosigner_receive_signal.connect(self.on_receive)
         self.keys = []
         self.cosigner_list = []
-        self.locks = {}
         self.suppress_notifications = False
+
+
+    def correct_shutdown_state(self, _hash):
+        shutdown_flag = server.get(_hash+'_shutdown')
+        if shutdown_flag == 'down':
+            return
+        server.put(_hash+'_pick', 'True')
+        server.put(_hash+'_shutdown', 'down')
 
     @hook
     def init_qt(self, gui):
@@ -121,6 +129,12 @@ class Plugin(BasePlugin):
     @hook
     def on_new_window(self, window):
         self.update(window)
+        
+        wallet = self.window.wallet
+        if type(wallet) != Multisig_Wallet:
+            return
+        for key, _hash, window in self.keys:
+            self.correct_shutdown_state(_hash)
 
     @hook
     def on_close_window(self, window):
@@ -218,28 +232,9 @@ class Plugin(BasePlugin):
 
         WAIT_TIME = 10 * 60
 
-        for window, xpub, K, _hash in self.cosigner_list:
-            self.locks[_hash] = server.get(_hash+'_lock')
-
-
-        def correct_shutdown_state(_hash):
-            shutdown_flag = server.get(_hash+'_shutdown')
-            if shutdown_flag == 'down':
-                return
-            server.delete(_hash+'_lock')
-            server.put(_hash+'_pick', 'True')
-            server.put(_hash+'_shutdown', 'down')
-            self.locks.clear()
-
-        for key, _hash, window in self.keys:
-            correct_shutdown_state(_hash)
-
-        for window, xpub, K, _hash in self.cosigner_list:
-            correct_shutdown_state(_hash)
-
         if self.suppress_notifications:
-            for _hash, expire in self.locks.items():
-                if expire:
+            for window, xpub, K, _hash in self.cosigner_list:
+                if server.get(_hash+'_lock'):
                     return
             self.suppress_notifications = False
 
@@ -286,18 +281,22 @@ class Plugin(BasePlugin):
             
         tx = transaction.Transaction(message)
 
+        def calculate_wait_time(expire):
+            # calculate wait time
+            wait_time = int((WAIT_TIME - (int(server.get_current_time()) - int(expire))))
+            mins, secs = divmod(wait_time, 60)
+            return '{:02d}:{:02d}'.format(mins, secs)
+
         # check if lock has been placed for any wallets
-        for _hash, expire in self.locks.items():
+        for window, xpub, K, _hash in self.cosigner_list:
+            expire = server.get(_hash+'_lock')
             if expire:
                 # set pick back to true if user lock is present
                 server.put(keyhash+'_pick', 'True')
                 # suppress any further notifications
                 self.suppress_notifications = True
-                
-                # calculate wait time
-                wait_time = int((WAIT_TIME - (int(server.get_current_time()) - int(expire))))
-                mins, secs = divmod(wait_time, 60)
-                timeformat = '{:02d}:{:02d}'.format(mins, secs)
+                # calculate wait time based on lock expiry and server time
+                timeformat = calculate_wait_time(expire)
 
                 # display pop up
                 window.show_warning(_("A cosigner is currently signing the transaction.") + '\n' +
@@ -306,12 +305,19 @@ class Plugin(BasePlugin):
                 show_timeout_wait_dialog(tx, window, prompt_if_unsaved=True)
 
                 return
-
-        # lock transaction dialog, if no lock has been placed
-        server.put(keyhash+'_lock', str(server.get_current_time()))
+        # test if wallet has previously placed a lock
+        current_wallet_lock = server.get(keyhash+'_lock')
+        if not current_wallet_lock:
+            # no lock has been placed for current wallet => lock transaction dialog 
+            server.put(keyhash+'_lock', str(server.get_current_time()))
+            time_until_expired = '10 minutes'
+        else:
+            time_until_expired = calculate_wait_time(current_wallet_lock)
+        
         # place flag to test for graceful shutdown
         server.put(keyhash+'_shutdown', 'up')
-        window.show_warning(_("You have 10 minutes to conclude signing after which the dialog will") + '\n' +
-                    _("automatically close."))
-
+        window.show_warning(_("You have {} to conclude signing after which the dialog will".format(time_until_expired)) + '\n' +
+                            _("automatically close."))
+            
+        
         show_transaction_timeout(tx, window, prompt_if_unsaved=True)

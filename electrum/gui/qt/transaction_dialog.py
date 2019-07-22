@@ -54,7 +54,6 @@ from .util import (MessageBoxMixin, read_QIcon, Buttons, CopyButton,
 
 SAVE_BUTTON_ENABLED_TOOLTIP = _("Save transaction offline")
 SAVE_BUTTON_DISABLED_TOOLTIP = _("Please sign this transaction in order to save it")
-DURATION_INT = 60 * 10 
 
 dialogs = []  # Otherwise python randomly garbage collects the dialogs...
 
@@ -388,6 +387,8 @@ class TxDialog(QDialog, MessageBoxMixin):
             cursor.insertBlock()
         vbox.addWidget(o_text)
 
+DURATION_INT = 60 * 10 
+
 class TxDialogTimeout(TxDialog):
     
     def __init__(self, tx, parent, desc, prompt_if_unsaved):
@@ -427,7 +428,7 @@ class TxDialogTimeout(TxDialog):
                     self.locks[_hash] = server.get(_hash+'_lock')
                 else:
                     self.cosigner_list.add(_hash)
-
+                    
 
         # if the wallet can populate the inputs with more info, do it now.
         # as a result, e.g. we might learn an imported address tx is segwit,
@@ -510,13 +511,10 @@ class TxDialogTimeout(TxDialog):
         for _hash, expire in self.locks.items():
             if expire:
                 self.time_left_int = int((DURATION_INT - (int(server.get_current_time()) - int(expire))))
-
-        self.timer_start()
+                self.timer_start()
         self.update()
 
     def timer_start(self):
-        #self.time_left_int = DURATION_INT
-
         self.my_qtimer = QTimer(self)
         self.my_qtimer.timeout.connect(self.timer_timeout)
         self.my_qtimer.start(1000)
