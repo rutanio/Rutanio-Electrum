@@ -167,25 +167,12 @@ class TimeoutWaitDialog(QDialog, MessageBoxMixin):
         self.update()
 
     def closeEvent(self, event):
-        if (self.time_left_int <= 0):
-            event.accept()
-            try:
-                dialogs.remove(self)
-                return
-            except ValueError:
-                pass  # was not in list already
+        event.accept()
+        try:
+            dialogs.remove(self)
 
-        if (self.prompt_if_unsaved and not self.saved
-                and not self.question(_('Are you sure you want to close the waiting dialog?') +'\n'+
-                                    _('Please restart your wallet to display again.'), title=_("Warning"))):
-            event.ignore()
-        else:
-            event.accept()
-            try:
-                dialogs.remove(self)
-
-            except ValueError:
-                pass  # was not in list already
+        except ValueError:
+            pass  # was not in list already
 
     def reject(self):
         # Override escape-key to close normally (and invoke closeEvent)
