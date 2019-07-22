@@ -172,7 +172,7 @@ class Plugin(BasePlugin):
     @hook
     def transaction_dialog(self, d):
         d.cosigner_send_button = b = QPushButton(_("Send to cosigner"))
-        b.clicked.connect(lambda: self.do_send(d.tx))
+        b.clicked.connect(lambda: self.do_send(d.tx, d))
         d.buttons.insert(0, b)
         self.transaction_dialog_update(d)
 
@@ -198,13 +198,12 @@ class Plugin(BasePlugin):
                     xpub_set.add(xpub)
         return cosigner_xpub in xpub_set
 
-    def do_send(self, tx):
+    def do_send(self, tx, d):
         def on_success(result):
             [server.put(t[1]+'_signed', 'True') for t in self.keys]
             self.window.show_message(_("Your transaction was sent to the cosigning pool.") + '\n' +
-                                _("Open your cosigner wallet to retrieve it.") + '\n\n' +
-                                _("Please remember to close the transaction dialog after signing to allow") + '\n' +
-                                _("other cosigners to sign."))
+                                _("Open your cosigner wallet to retrieve it."))
+            d.close()
         def on_failure(exc_info):
             e = exc_info[1]
             try: traceback.print_exception(*exc_info)
