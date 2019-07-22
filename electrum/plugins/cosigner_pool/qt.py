@@ -23,6 +23,8 @@
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+from functools import partial
+
 import calendar
 import datetime
 import time
@@ -30,7 +32,7 @@ import signal
 import copy
 
 from PyQt5.QtCore import QObject, pyqtSignal
-from PyQt5.QtWidgets import QDialog, QLabel, QPushButton, QHBoxLayout, QVBoxLayout, QTextEdit
+from PyQt5.QtWidgets import QDialog, QLabel, QPushButton, QVBoxLayout, QTextEdit, QGridLayout, QLineEdit
 
 from electrum_exos import util, keystore, ecc, bip32, crypto
 from electrum_exos import transaction
@@ -44,9 +46,7 @@ from electrum_exos.util import bh2u, bfh
 
 from electrum_exos.gui.qt.transaction_dialog import show_transaction_timeout, TxDialogTimeout
 from electrum_exos.gui.qt.transaction_wait_dialog import show_timeout_wait_dialog, TimeoutWaitDialog
-from electrum_exos.gui.qt.util import (WaitingDialog, MessageBoxMixin, Buttons, CopyButton,
-                                        MONOSPACE_FONT, ColorScheme, ButtonsLineEdit)
-
+from electrum_exos.gui.qt.util import (WaitingDialog, EnterButton, Buttons, WindowModalDialog, CloseButton, OkButton)
 from . import server
 
 import sys
@@ -113,6 +113,55 @@ class Plugin(BasePlugin):
         self.cosigner_list = []
         self.suppress_notifications = False
 
+    def requires_settings(self):
+        return True
+
+    def settings_widget(self, window):
+        return EnterButton(_('Settings'),
+                           partial(self.calibration_dialog, window))
+
+    def calibration_dialog(self, window):
+        d = WindowModalDialog(window, _("Cosigner Pool Settings"))
+
+        d.setMinimumSize(150, 100)
+
+        vbox = QVBoxLayout(d)
+
+        purge = QPushButton(_("Purge Transactions"))
+        purge.clicked.connect(self.purge_transaction)
+        vbox.addWidget(purge)
+
+        vbox.addWidget(QLabel(_('Wallet Owner:')))
+        grid = QGridLayout()
+        vbox.addLayout(grid)
+
+        grid.addWidget(QLabel(_('Name:')), 0, 0)
+        name = QLineEdit()
+        name.setText('')
+        grid.addWidget(name, 0, 1)
+
+        vbox.addStretch()
+        vbox.addSpacing(13)
+        vbox.addLayout(Buttons(CloseButton(d), OkButton(d)))
+
+        if not d.exec_():
+            return
+
+        self.wallet_owner = str(name.text())
+        print(self.wallet_owner)
+        # post to rest endpoint
+
+
+    def purge_transaction(self):
+        mods = ['_pick', '_signed', '_lock', '_shutdown']
+        for mod in mods:
+            for key, _hash, window in self.keys:
+                server.delete(_hash)
+                server.delete(_hash+mod)
+            for window, xpub, K, _hash in self.cosigner_list:
+                server.delete(_hash)
+                server.delete(_hash+mod)
+        self.window.show_message(_("Your transaction has been purged."))
 
     def correct_shutdown_state(self, _hash):
         shutdown_flag = server.get(_hash+'_shutdown')
