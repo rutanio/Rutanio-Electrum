@@ -216,21 +216,21 @@ class TxDialog(QDialog, MessageBoxMixin):
         self.update()
 
     def closeEvent(self, event):
-        if (self.prompt_if_unsaved and not self.saved
-                and not self.question(_('This transaction is not saved. Close anyway?'), title=_("Warning"))):
-            event.ignore()
-        else:
-            event.accept()
-            try:
-                dialogs.remove(self)
+        # if (self.prompt_if_unsaved and not self.saved
+        #         and not self.question(_('This transaction is not saved. Close anyway?'), title=_("Warning"))):
+        #     event.ignore()
+        # else:
+        event.accept()
+        try:
+            dialogs.remove(self)
 
-                if type(self.wallet) == Multisig_Wallet:
-                    # set pick flag to true
-                    for keyhash in self.keyhashes:
-                        server.put(keyhash+'_pick', 'True')
+            if type(self.wallet) == Multisig_Wallet:
+                # set pick flag to true
+                for keyhash in self.keyhashes:
+                    server.put(keyhash+'_pick', 'True')
 
-            except ValueError:
-                pass  # was not in list already
+        except ValueError:
+            pass  # was not in list already
 
     def reject(self):
         # Override escape-key to close normally (and invoke closeEvent)
@@ -541,25 +541,12 @@ class TxDialogTimeout(TxDialog):
                 server.put(keyhash+'_shutdown', 'down')
 
     def closeEvent(self, event):
-        if (self.timed_out):
-            event.accept()
-            try:
-                dialogs.remove(self)
-                self.release_locks()
-                return
-            except ValueError:
-                pass  # was not in list already
-
-        if (self.prompt_if_unsaved and not self.saved
-                and not self.question(_('This transaction is not saved. Close anyway?'), title=_("Warning"))):
-            event.ignore()
-        else:
-            event.accept()
-            try:
-                dialogs.remove(self)
-                self.release_locks()
-            except ValueError:
-                pass  # was not in list already
+        event.accept()
+        try:
+            dialogs.remove(self)
+            self.release_locks()
+        except ValueError:
+            pass  # was not in list already
 
     def update(self):
         desc = self.desc
