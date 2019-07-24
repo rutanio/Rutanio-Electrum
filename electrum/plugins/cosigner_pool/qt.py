@@ -75,7 +75,7 @@ class Listener(util.DaemonThread):
                 time.sleep(2)
                 continue
             for keyhash in self.keyhashes:
-
+                
                 pick = server.get(keyhash+'_pick')
                 signed = server.get(keyhash+'_signed')
 
@@ -250,6 +250,7 @@ class Plugin(BasePlugin):
     def do_send(self, tx, d):
         def on_success(result):
             [server.put(t[1]+'_signed', 'True') for t in self.keys]
+            release_locks()
             self.window.show_message(_("Your transaction was sent to the cosigning pool.") + '\n' +
                                 _("Open your cosigner wallet to retrieve it."))
             time.sleep(1)
@@ -259,6 +260,17 @@ class Plugin(BasePlugin):
             try: traceback.print_exception(*exc_info)
             except OSError: pass
             self.window.show_error(_("Failed to send transaction to cosigning pool. Please resend") + ':\n' + str(e))
+
+        def release_locks():
+            wallet = self.window.wallet
+            if type(wallet) == Multisig_Wallet:
+                for key, _hash, window in self.keys:
+                    # delete lock blocking other wallets from opening TX dialog
+                    server.delete(_hash+'_lock')
+                    # set pick flag to true
+                    server.put(_hash+'_pick', 'True')
+                    # set graceful shutdown flag to down to signify a graceful shutdown
+                    server.put(_hash+'_shutdown', 'down')
 
         def send_to_cosigner():
             for window, xpub, K, _hash in self.cosigner_list:
