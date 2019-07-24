@@ -252,6 +252,7 @@ class Plugin(BasePlugin):
             [server.put(t[1]+'_signed', 'True') for t in self.keys]
             self.window.show_message(_("Your transaction was sent to the cosigning pool.") + '\n' +
                                 _("Open your cosigner wallet to retrieve it."))
+            time.sleep(1)
             d.close()
         def on_failure(exc_info):
             e = exc_info[1]
