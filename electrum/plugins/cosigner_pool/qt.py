@@ -137,8 +137,16 @@ class Plugin(BasePlugin):
 
         grid.addWidget(QLabel(_('Name:')), 0, 0)
         name = QLineEdit()
-        name.setText('')
+        name.setText(self.config.get('wallet_owner', ''))
         grid.addWidget(name, 0, 1)
+
+        save = QPushButton(_("Save Name"))
+        save.clicked.connect(lambda: self.config.set_key('wallet_owner', name.text()))
+        vbox.addWidget(save)
+
+        sync = QPushButton(_("Sync Name"))
+        sync.clicked.connect(self.sync_name)
+        vbox.addWidget(sync)
 
         vbox.addStretch()
         vbox.addSpacing(13)
@@ -146,11 +154,6 @@ class Plugin(BasePlugin):
 
         if not d.exec_():
             return
-
-        self.wallet_owner = str(name.text())
-        print(self.wallet_owner)
-        # post to rest endpoint
-
 
     def purge_transaction(self):
         mods = ['_pick', '_signed', '_lock', '_shutdown']
@@ -162,6 +165,10 @@ class Plugin(BasePlugin):
                 server.delete(_hash)
                 server.delete(_hash+mod)
         self.window.show_message(_("Your transaction has been purged."))
+    
+    def sync_name(self):
+        for key, _hash, window in self.keys:
+            server.put(_hash+'_name', self.config.get('wallet_owner', ''))
 
     def correct_shutdown_state(self, _hash):
         shutdown_flag = server.get(_hash+'_shutdown')
