@@ -79,6 +79,7 @@ class TimeoutWaitDialog(QDialog, MessageBoxMixin):
         self.saved = False
         self.desc = desc
         self.locks = {}
+        self.currently_signing = None
 
         # Set timeout flag 
         self.timed_out = False
@@ -99,6 +100,10 @@ class TimeoutWaitDialog(QDialog, MessageBoxMixin):
                 else:
                     self.cosigner_list.add(_hash)
                     self.locks[_hash] = server.get(_hash+'_lock')
+                    if self.locks[_hash]:
+                        name = server.get(_hash+'_name')
+                        if name:
+                            self.currently_signing = name
 
         self.setMinimumWidth(200)
         self.setWindowTitle(_("Information"))
@@ -189,7 +194,7 @@ class TimeoutWaitDialog(QDialog, MessageBoxMixin):
                 self.time_left_int = 0
                 self.close()
 
-        desc = None
+        desc = self.currently_signing
         base_unit = self.main_window.base_unit()
         format_amount = self.main_window.format_amount
         tx_hash, status, label, can_broadcast, can_rbf, amount, fee, height, conf, timestamp, exp_n = self.wallet.get_tx_info(self.tx)
@@ -199,7 +204,7 @@ class TimeoutWaitDialog(QDialog, MessageBoxMixin):
         if desc is None:
             self.tx_desc.hide()
         else:
-            self.tx_desc.setText(_("Description") + ': ' + desc)
+            self.tx_desc.setText(_("Currently Signing") + ': ' + desc)
             self.tx_desc.show()
         self.status_label.setText(_('Status:') + ' ' + status)
 
