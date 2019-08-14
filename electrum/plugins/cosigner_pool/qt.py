@@ -75,7 +75,7 @@ class Listener(util.DaemonThread):
                 time.sleep(2)
                 continue
             for keyhash in self.keyhashes:
-
+                
                 pick = server.get(keyhash+'_pick')
                 signed = server.get(keyhash+'_signed')
 
@@ -137,8 +137,16 @@ class Plugin(BasePlugin):
 
         grid.addWidget(QLabel(_('Name:')), 0, 0)
         name = QLineEdit()
-        name.setText('')
+        name.setText(self.config.get('wallet_owner', ''))
         grid.addWidget(name, 0, 1)
+
+        save = QPushButton(_("Save Name"))
+        save.clicked.connect(lambda: self.config.set_key('wallet_owner', name.text()))
+        vbox.addWidget(save)
+
+        sync = QPushButton(_("Sync Name"))
+        sync.clicked.connect(self.sync_name)
+        vbox.addWidget(sync)
 
         vbox.addStretch()
         vbox.addSpacing(13)
@@ -146,11 +154,6 @@ class Plugin(BasePlugin):
 
         if not d.exec_():
             return
-
-        self.wallet_owner = str(name.text())
-        print(self.wallet_owner)
-        # post to rest endpoint
-
 
     def purge_transaction(self):
         mods = ['_pick', '_signed', '_lock', '_shutdown']
@@ -162,6 +165,10 @@ class Plugin(BasePlugin):
                 server.delete(_hash)
                 server.delete(_hash+mod)
         self.window.show_message(_("Your transaction has been purged."))
+    
+    def sync_name(self):
+        for key, _hash, window in self.keys:
+            server.put(_hash+'_name', self.config.get('wallet_owner', ''))
 
     def correct_shutdown_state(self, _hash):
         shutdown_flag = server.get(_hash+'_shutdown')
@@ -250,6 +257,7 @@ class Plugin(BasePlugin):
     def do_send(self, tx, d):
         def on_success(result):
             [server.put(t[1]+'_signed', 'True') for t in self.keys]
+            release_locks()
             self.window.show_message(_("Your transaction was sent to the cosigning pool.") + '\n' +
                                 _("Open your cosigner wallet to retrieve it."))
             time.sleep(1)
@@ -259,6 +267,17 @@ class Plugin(BasePlugin):
             try: traceback.print_exception(*exc_info)
             except OSError: pass
             self.window.show_error(_("Failed to send transaction to cosigning pool. Please resend") + ':\n' + str(e))
+
+        def release_locks():
+            wallet = self.window.wallet
+            if type(wallet) == Multisig_Wallet:
+                for key, _hash, window in self.keys:
+                    # delete lock blocking other wallets from opening TX dialog
+                    server.delete(_hash+'_lock')
+                    # set pick flag to true
+                    server.put(_hash+'_pick', 'True')
+                    # set graceful shutdown flag to down to signify a graceful shutdown
+                    server.put(_hash+'_shutdown', 'down')
 
         def send_to_cosigner():
             for window, xpub, K, _hash in self.cosigner_list:
