@@ -65,7 +65,7 @@ from electrum_exos.transaction import Transaction, TxOutput
 from electrum_exos.address_synchronizer import AddTransactionException
 from electrum_exos.wallet import (Multisig_Wallet, CannotBumpFee, Abstract_Wallet,
                              sweep_preparations, InternalAddressCorruption)
-from electrum_exos.version import ELECTRUM_VERSION
+from electrum_exos.version import ELECTRUM_VERSION, ELECTRUM_BUILD
 from electrum_exos.network import Network, TxBroadcastError, BestEffortRequestFailed
 from electrum_exos.exchange_rate import FxThread
 from electrum_exos.simple_config import SimpleConfig
@@ -629,7 +629,7 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, PrintError):
 
     def show_about(self):
         QMessageBox.about(self, "EXOS-Electrum",
-                          (_("Version")+" %s" % ELECTRUM_VERSION + "\n\n" +
+                          (_("Version")+" %s" % ELECTRUM_BUILD + "\n\n" +
                            _("EXOS-Electrum's focus is speed, with low resource usage and simplicity.") + " " +
                            _("You do not need to perform regular backups, because your wallet can be "
                               "recovered from a secret phrase that you can memorize or write on paper.") + " " +
