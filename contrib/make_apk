@@ -24,12 +24,25 @@ make theming
 if [[ -n "$1"  && "$1" == "release" ]] ; then
     echo -n Keystore Password:
     read -s password
-    export P4A_RELEASE_KEYSTORE=~/.keystore
+    export P4A_RELEASE_KEYSTORE="$CONTRIB"/android_release.keystore
     export P4A_RELEASE_KEYSTORE_PASSWD=$password
     export P4A_RELEASE_KEYALIAS_PASSWD=$password
-    export P4A_RELEASE_KEYALIAS=electrum
+    export P4A_RELEASE_KEYALIAS=exoselectrum
     make release
 else
+    export P4A_DEBUG_KEYSTORE="$CONTRIB"/android_debug.keystore
+    export P4A_DEBUG_KEYSTORE_PASSWD=unsafepassword
+    export P4A_DEBUG_KEYALIAS_PASSWD=unsafepassword
+    export P4A_DEBUG_KEYALIAS=exoselectrum
+    # create keystore if needed
+    if [ ! -f "$P4A_DEBUG_KEYSTORE" ]; then
+        keytool -genkey -v -keystore "$CONTRIB"/android_debug.keystore \
+            -alias "$P4A_DEBUG_KEYALIAS" -keyalg RSA -keysize 2048 -validity 10000 \
+            -dname "CN=mqttserver.ibm.com, OU=ID, O=IBM, L=Hursley, S=Hants, C=GB" \
+            -storepass "$P4A_DEBUG_KEYSTORE_PASSWD" \
+            -keypass "$P4A_DEBUG_KEYALIAS_PASSWD"
+    fi
+
     make apk
 fi
 
