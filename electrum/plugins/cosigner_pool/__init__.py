@@ -12,4 +12,4 @@ description = ' '.join([
 #requires_wallet_type = ['2of2', '2of3']
 available_for = ['qt']
 
-server = ServerProxy('https://cosigner.exos.to/', allow_none=True, verbose=False, use_datetime=True,context=ssl._create_unverified_context())
+server = ServerProxy('https://cosigner.exos.to/', allow_none=True, verbose=False, use_datetime=True)
