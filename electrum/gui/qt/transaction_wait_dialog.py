@@ -194,7 +194,7 @@ class TimeoutWaitDialog(QDialog, MessageBoxMixin):
                 self.time_left_int = 0
                 self.close()
 
-        desc = self.currently_signing
+        desc = self.currently_signing or "Information unavailable"
         base_unit = self.main_window.base_unit()
         format_amount = self.main_window.format_amount
         tx_hash, status, label, can_broadcast, can_rbf, amount, fee, height, conf, timestamp, exp_n = self.wallet.get_tx_info(self.tx)
