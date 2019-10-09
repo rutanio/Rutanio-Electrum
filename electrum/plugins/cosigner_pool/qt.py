@@ -30,6 +30,7 @@ import datetime
 import time
 import signal
 import copy
+from httplib import CannotSendRequest
 
 from PyQt5.QtCore import QObject, pyqtSignal
 from PyQt5.QtWidgets import QDialog, QLabel, QPushButton, QVBoxLayout, QTextEdit, QGridLayout, QLineEdit
@@ -76,8 +77,12 @@ class Listener(util.DaemonThread):
                 continue
             for keyhash in self.keyhashes:
                 
-                pick = server.get(keyhash+'_pick')
-                signed = server.get(keyhash+'_signed')
+                try:
+                    pick = server.get(keyhash+'_pick')
+                    signed = server.get(keyhash+'_signed')
+                except CannotSendRequest:
+                    self.print_error("cannot contact cosigner pool")
+                    continue
 
                 if pick == 'False' or signed == 'True':
                     continue
