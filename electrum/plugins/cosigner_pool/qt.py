@@ -140,12 +140,8 @@ class Plugin(BasePlugin):
         name.setText(self.config.get('wallet_owner', ''))
         grid.addWidget(name, 0, 1)
 
-        save = QPushButton(_("Save Name"))
-        save.clicked.connect(lambda: self.config.set_key('wallet_owner', name.text()))
-        vbox.addWidget(save)
-
         sync = QPushButton(_("Sync Name"))
-        sync.clicked.connect(self.sync_name)
+        sync.clicked.connect(partial(self.sync_name, name))
         vbox.addWidget(sync)
 
         vbox.addStretch()
@@ -166,9 +162,17 @@ class Plugin(BasePlugin):
                 server.delete(_hash+mod)
         self.window.show_message(_("Your transaction has been purged."))
     
-    def sync_name(self):
+    def sync_name(self, name):
+        self.config.set_key('wallet_owner', name.text())
+        if self.config.get('wallet_owner', ''):
+            for key, _hash, window in self.keys:
+                server.put(_hash+'_name', self.config.get('wallet_owner', ''))
         for key, _hash, window in self.keys:
-            server.put(_hash+'_name', self.config.get('wallet_owner', ''))
+            if self.config.get('wallet_owner', '') == server.get(_hash+'_name'):
+                self.window.show_message(_("Your name has been synced"))
+            else:
+                self.window.show_message(_("Failed to sync name with cosigner pool"))
+
 
     def correct_shutdown_state(self, _hash):
         shutdown_flag = server.get(_hash+'_shutdown')
