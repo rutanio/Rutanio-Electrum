@@ -153,6 +153,9 @@ class Plugin(BasePlugin):
 
     def purge_transaction(self):
         mods = ['_pick', '_signed', '_lock', '_shutdown']
+        if not self.window.question(_("Purging you transactions will erase the current transaction") + '\n' +
+                        _("Are you sure you want to purge your transaction?")):
+            return
         for mod in mods:
             for key, _hash, window in self.keys:
                 server.delete(_hash)
@@ -160,7 +163,7 @@ class Plugin(BasePlugin):
             for window, xpub, K, _hash in self.cosigner_list:
                 server.delete(_hash)
                 server.delete(_hash+mod)
-        self.window.show_message(_("Your transaction has been purged."))
+        self.window.show_message(_("Your transactions have been purged."))
     
     def sync_name(self, name):
         self.config.set_key('wallet_owner', name.text())
