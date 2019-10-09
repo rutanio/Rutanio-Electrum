@@ -30,7 +30,8 @@ import datetime
 import time
 import signal
 import copy
-from httplib import CannotSendRequest
+
+from http.client import CannotSendRequest
 
 from PyQt5.QtCore import QObject, pyqtSignal
 from PyQt5.QtWidgets import QDialog, QLabel, QPushButton, QVBoxLayout, QTextEdit, QGridLayout, QLineEdit
