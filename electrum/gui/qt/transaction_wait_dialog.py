@@ -33,6 +33,8 @@ from PyQt5.QtCore import QTimer
 from PyQt5.QtWidgets import (QDialog, QLabel, QPushButton, QHBoxLayout, QVBoxLayout,
                              QTextEdit)
 
+from PyQt5.QtGui import QFont
+
 from electrum_exos import bip32, crypto
 from electrum_exos.i18n import _
 from electrum_exos.plugin import run_hook
@@ -204,6 +206,9 @@ class TimeoutWaitDialog(QDialog, MessageBoxMixin):
         if desc is None:
             self.tx_desc.hide()
         else:
+            myFont=QFont()
+            myFont.setBold(True)
+            self.tx_desc.setFont(myFont)
             self.tx_desc.setText(_("Currently Signing") + ': ' + desc)
             self.tx_desc.show()
         self.status_label.setText(_('Status:') + ' ' + status)
