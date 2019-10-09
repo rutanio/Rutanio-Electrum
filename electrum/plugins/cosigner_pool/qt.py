@@ -79,8 +79,10 @@ class Listener(util.DaemonThread):
                 time.sleep(2)
                 continue
             for keyhash in self.keyhashes:
-                
+
                 try:
+                    if server.get(keyhash+'_name') == None:
+                        server.put(keyhash+'_name', keyhash)
                     pick = server.get(keyhash+'_pick')
                     signed = server.get(keyhash+'_signed')
                 except CannotSendRequest:
