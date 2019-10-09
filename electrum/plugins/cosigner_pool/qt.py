@@ -48,7 +48,9 @@ from electrum_exos.util import bh2u, bfh
 
 from electrum_exos.gui.qt.transaction_dialog import show_transaction_timeout, TxDialogTimeout
 from electrum_exos.gui.qt.transaction_wait_dialog import show_timeout_wait_dialog, TimeoutWaitDialog
-from electrum_exos.gui.qt.util import (WaitingDialog, EnterButton, Buttons, WindowModalDialog, CloseButton, OkButton)
+from electrum_exos.gui.qt.util import (WaitingDialog, EnterButton, Buttons, WindowModalDialog, CloseButton, OkButton, read_QIcon)
+
+
 from . import server
 
 import sys
@@ -135,6 +137,7 @@ class Plugin(BasePlugin):
 
         purge = QPushButton(_("Purge Transactions"))
         purge.clicked.connect(self.purge_transaction)
+        purge.setIcon(read_QIcon("warning.png"))
         vbox.addWidget(purge)
 
         vbox.addWidget(QLabel(_('Wallet Owner:')))
