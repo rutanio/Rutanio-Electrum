@@ -31,6 +31,8 @@ import time
 import signal
 import copy
 
+from http.client import CannotSendRequest
+
 from PyQt5.QtCore import QObject, pyqtSignal
 from PyQt5.QtWidgets import QDialog, QLabel, QPushButton, QVBoxLayout, QTextEdit, QGridLayout, QLineEdit
 
@@ -46,7 +48,9 @@ from electrum_exos.util import bh2u, bfh
 
 from electrum_exos.gui.qt.transaction_dialog import show_transaction_timeout, TxDialogTimeout
 from electrum_exos.gui.qt.transaction_wait_dialog import show_timeout_wait_dialog, TimeoutWaitDialog
-from electrum_exos.gui.qt.util import (WaitingDialog, EnterButton, Buttons, WindowModalDialog, CloseButton, OkButton)
+from electrum_exos.gui.qt.util import (WaitingDialog, EnterButton, Buttons, WindowModalDialog, CloseButton, OkButton, read_QIcon)
+
+
 from . import server
 
 import sys
@@ -75,9 +79,15 @@ class Listener(util.DaemonThread):
                 time.sleep(2)
                 continue
             for keyhash in self.keyhashes:
-                
-                pick = server.get(keyhash+'_pick')
-                signed = server.get(keyhash+'_signed')
+
+                try:
+                    if server.get(keyhash+'_name') == None:
+                        server.put(keyhash+'_name', keyhash)
+                    pick = server.get(keyhash+'_pick')
+                    signed = server.get(keyhash+'_signed')
+                except CannotSendRequest:
+                    self.print_error("cannot contact cosigner pool")
+                    continue
 
                 if pick == 'False' or signed == 'True':
                     continue
@@ -129,6 +139,7 @@ class Plugin(BasePlugin):
 
         purge = QPushButton(_("Purge Transactions"))
         purge.clicked.connect(self.purge_transaction)
+        purge.setIcon(read_QIcon("warning.png"))
         vbox.addWidget(purge)
 
         vbox.addWidget(QLabel(_('Wallet Owner:')))
@@ -140,12 +151,8 @@ class Plugin(BasePlugin):
         name.setText(self.config.get('wallet_owner', ''))
         grid.addWidget(name, 0, 1)
 
-        save = QPushButton(_("Save Name"))
-        save.clicked.connect(lambda: self.config.set_key('wallet_owner', name.text()))
-        vbox.addWidget(save)
-
         sync = QPushButton(_("Sync Name"))
-        sync.clicked.connect(self.sync_name)
+        sync.clicked.connect(partial(self.sync_name, name))
         vbox.addWidget(sync)
 
         vbox.addStretch()
@@ -157,6 +164,9 @@ class Plugin(BasePlugin):
 
     def purge_transaction(self):
         mods = ['_pick', '_signed', '_lock', '_shutdown']
+        if not self.window.question(_("Purging you transactions will erase the current transaction") + '\n' +
+                        _("Are you sure you want to purge your transaction?")):
+            return
         for mod in mods:
             for key, _hash, window in self.keys:
                 server.delete(_hash)
@@ -164,11 +174,19 @@ class Plugin(BasePlugin):
             for window, xpub, K, _hash in self.cosigner_list:
                 server.delete(_hash)
                 server.delete(_hash+mod)
-        self.window.show_message(_("Your transaction has been purged."))
+        self.window.show_message(_("Your transactions have been purged."))
     
-    def sync_name(self):
+    def sync_name(self, name):
+        self.config.set_key('wallet_owner', name.text())
+        if self.config.get('wallet_owner', ''):
+            for key, _hash, window in self.keys:
+                server.put(_hash+'_name', self.config.get('wallet_owner', ''))
         for key, _hash, window in self.keys:
-            server.put(_hash+'_name', self.config.get('wallet_owner', ''))
+            if self.config.get('wallet_owner', '') == server.get(_hash+'_name'):
+                self.window.show_message(_("Your name has been synced"))
+            else:
+                self.window.show_message(_("Failed to sync name with cosigner pool"))
+
 
     def correct_shutdown_state(self, _hash):
         shutdown_flag = server.get(_hash+'_shutdown')
