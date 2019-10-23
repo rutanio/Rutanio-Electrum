@@ -33,14 +33,15 @@ import copy
 
 from http.client import CannotSendRequest
 
+from xmlrpc.client import ServerProxy
+
 from PyQt5.QtCore import QObject, pyqtSignal
 from PyQt5.QtWidgets import QDialog, QLabel, QPushButton, QVBoxLayout, QTextEdit, QGridLayout, QLineEdit
 
-from electrum_exos import util, keystore, ecc, bip32, crypto
+from electrum_exos import util, keystore, ecc, crypto
 from electrum_exos import transaction
+from electrum_exos.bip32 import BIP32Node
 from electrum_exos.plugin import BasePlugin, hook, run_hook
-
-from electrum_exos.transaction import SerializationError, Transaction
 
 from electrum_exos.i18n import _
 from electrum_exos.wallet import Multisig_Wallet
@@ -48,8 +49,7 @@ from electrum_exos.util import bh2u, bfh
 
 from electrum_exos.gui.qt.transaction_dialog import show_transaction_timeout, TxDialogTimeout
 from electrum_exos.gui.qt.transaction_wait_dialog import show_timeout_wait_dialog, TimeoutWaitDialog
-from electrum_exos.gui.qt.util import (WaitingDialog, EnterButton, Buttons, WindowModalDialog, CloseButton, OkButton, read_QIcon)
-
+from electrum_exos.gui.qt.util import WaitingDialog, EnterButton, Buttons, WindowModalDialog, CloseButton, OkButton, read_QIcon
 
 from . import server
 
@@ -79,7 +79,6 @@ class Listener(util.DaemonThread):
                 time.sleep(2)
                 continue
             for keyhash in self.keyhashes:
-
                 try:
                     if server.get(keyhash+'_name') == None:
                         server.put(keyhash+'_name', keyhash)
@@ -94,12 +93,12 @@ class Listener(util.DaemonThread):
                 try:
                     message = server.get(keyhash)
                 except Exception as e:
-                    self.print_error("cannot contact cosigner pool")
+                    self.logger.info("cannot contact cosigner pool")
                     time.sleep(30)
                     continue
                 if message:
                     self.received.add(keyhash)
-                    self.print_error("received message for", keyhash)
+                    self.logger.info(f"received message for {keyhash}")
                     self.parent.obj.cosigner_receive_signal.emit(
                         keyhash, message)
             # poll every 30 seconds
@@ -113,7 +112,6 @@ class QReceiveSignalObject(QObject):
 class Plugin(BasePlugin):
 
     def __init__(self, parent, config, name):
-
         BasePlugin.__init__(self, parent, config, name)
         self.listener = None
         self.window = None
@@ -223,23 +221,23 @@ class Plugin(BasePlugin):
         if type(wallet) != Multisig_Wallet:
             return
         if self.listener is None:
-            self.print_error("starting listener")
+            self.logger.info("starting listener")
             self.listener = Listener(self)
             self.listener.start()
         elif self.listener:
-            self.print_error("shutting down listener")
+            self.logger.info("shutting down listener")
             self.listener.stop()
             self.listener = None
         self.keys = []
         self.cosigner_list = []
         for key, keystore in wallet.keystores.items():
             xpub = keystore.get_master_public_key()
-            K = bip32.deserialize_xpub(xpub)[-1]
-            _hash = bh2u(crypto.sha256d(K))
+            pubkey = BIP32Node.from_xkey(xpub).eckey.get_public_key_bytes(compressed=True)
+            _hash = bh2u(crypto.sha256d(pubkey))
             if not keystore.is_watching_only():
                 self.keys.append((key, _hash, window))
             else:
-                self.cosigner_list.append((window, xpub, K, _hash))
+                self.cosigner_list.append((window, xpub, pubkey, _hash))
         if self.listener:
             self.listener.set_keyhashes([t[1] for t in self.keys])
 
@@ -280,9 +278,10 @@ class Plugin(BasePlugin):
                                 _("Open your cosigner wallet to retrieve it."))
             time.sleep(1)
             d.close()
+
         def on_failure(exc_info):
             e = exc_info[1]
-            try: traceback.print_exception(*exc_info)
+            try: self.logger.error("on_failure", exc_info=exc_info)
             except OSError: pass
             self.window.show_error(_("Failed to send transaction to cosigning pool. Please resend") + ':\n' + str(e))
 
@@ -297,7 +296,7 @@ class Plugin(BasePlugin):
                     # set graceful shutdown flag to down to signify a graceful shutdown
                     server.put(_hash+'_shutdown', 'down')
 
-        def send_to_cosigner():
+        def send_to_cosigner():        
             for window, xpub, K, _hash in self.cosigner_list:
                 if not self.cosigner_can_sign(tx, xpub):
                     continue
@@ -306,15 +305,16 @@ class Plugin(BasePlugin):
                 public_key = ecc.ECPubkey(K)
                 message = public_key.encrypt_message(raw_tx_bytes).decode('ascii')
                 # send message
-                server.put(_hash, message)
-                server.put(_hash+'_pick', 'True')
+                task = lambda: server.put(_hash, message)
+                task = lambda: server.put(_hash+'_pick', 'True')
+
         task = lambda: send_to_cosigner()
         msg = _('Sending transaction to cosigning pool...')
         WaitingDialog(self.window, msg, task, on_success, on_failure)
         time.sleep(.5)
 
     def on_receive(self, keyhash, message):
-        self.print_error("signal arrived for", keyhash)
+        self.logger.info(f"signal arrived for {keyhash}")
 
         WAIT_TIME = 10 * 60
 
@@ -328,7 +328,7 @@ class Plugin(BasePlugin):
             if _hash == keyhash:
                 break
         else:
-            self.print_error("keyhash not found")
+            self.logger.info("keyhash not found")
             return
 
         wallet = window.wallet
@@ -346,25 +346,24 @@ class Plugin(BasePlugin):
                 # set pick back to true if password incorrect or omitted
                 server.put(keyhash+'_pick', 'True')
                 return
-
         else:
             password = None
             if not window.question(_("An encrypted transaction was retrieved from cosigning pool.") + '\n' +
                                    _("Do you want to open it now?")):
                 return
-        
+
         xprv = wallet.keystore.get_master_private_key(password)
         if not xprv:
             return
         try:
-            k = bip32.deserialize_xprv(xprv)[-1]
-            EC = ecc.ECPrivkey(k)
-            message = bh2u(EC.decrypt_message(message))
+            privkey = BIP32Node.from_xkey(xprv).eckey
+            message = bh2u(privkey.decrypt_message(message))
         except Exception as e:
-            traceback.print_exc(file=sys.stdout)
+            self.logger.exception('')
             window.show_error(_('Error decrypting message') + ':\n' + str(e))
             return
-            
+
+        #self.listener.clear(keyhash)
         tx = transaction.Transaction(message)
 
         def calculate_wait_time(expire):
@@ -391,6 +390,7 @@ class Plugin(BasePlugin):
                 show_timeout_wait_dialog(tx, window, prompt_if_unsaved=True)
 
                 return
+
         # test if wallet has previously placed a lock
         current_wallet_lock = server.get(keyhash+'_lock')
         if not current_wallet_lock:
@@ -405,5 +405,5 @@ class Plugin(BasePlugin):
         window.show_warning(_("You have {} to conclude signing after which the dialog will".format(time_until_expired)) + '\n' +
                             _("automatically close."))
             
-        
+
         show_transaction_timeout(tx, window, prompt_if_unsaved=True)

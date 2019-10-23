@@ -6,7 +6,7 @@ EXOS-Electrum - Lightweight EXOS client
   Licence: MIT Licence
   Original Author: Thomas Voegtlin
   Port Maintainer: OpenExO and ExO Economy Developers, Fluid Chains
-  Language: Python
+  Language: Python (>= 3.6)
   Homepage: https://economy.openexo.com
 
 .. image:: https://travis-ci.org/exoeconomy/exos-electrum.svg?branch=master
@@ -59,8 +59,8 @@ Development version
 
 Check out the code from GitHub::
 
-    git clone git://github.com/exoeconomy/exos-electrum.git
-    cd exos-electrum
+    git clone git://github.com/exoeconomy/EXOS-Electrum.git
+    cd EXOS-Electrum
 
 Run install (this should install dependencies)::
 
@@ -75,7 +75,7 @@ Compile the protobuf description file::
 Create translations (optional)::
 
     sudo apt-get install python-requests gettext
-    ./contrib/make_locale
+    ./contrib/pull_locale
 
 
 
@@ -83,10 +83,16 @@ Create translations (optional)::
 Creating Binaries
 =================
 
-Linux
------
+Linux (tarball)
+---------------
 
 See :code:`contrib/build-linux/README.md`.
+
+
+Linux (AppImage)
+----------------
+
+See :code:`contrib/build-linux/appimage/README.md`.
 
 
 Mac OS X / macOS
@@ -98,7 +104,7 @@ See :code:`contrib/osx/README.md`.
 Windows
 -------
 
-See :code:`contrib/build-wine/docker/README.md`.
+See :code:`contrib/build-wine/README.md`.
 
 
 Android

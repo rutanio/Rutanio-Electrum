@@ -103,3 +103,7 @@ function CreateDMG() {   # ARGS: PACKAGE_NAME VERSION DMG_BACKGROUND
 
     rm -rf "${DMG_TMP}" "${STAGING_DIR}"
 }
+
+function realpath() {
+    [[ $1 = /* ]] && echo "$1" || echo "$PWD/${1#./}"
+}

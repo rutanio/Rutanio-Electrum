@@ -10,7 +10,7 @@ from electrum_exos.util import bh2u, bfh, make_dir
 from . import SequentialTestCase
 
 
-class TestBlockchain():
+class TestBlockchain(SequentialTestCase):
 
     HEADERS = {
         'A': deserialize_header(bfh("0100000000000000000000000000000000000000000000000000000000000000000000003ba3edfd7a7b12b27ac72c3e67768f617fc81bc3888a51323a9fb8aa4b1e5e4adae5494dffff7f2002000000"), 0),
@@ -69,3 +69,273 @@ class TestBlockchain():
     def _append_header(self, chain: Blockchain, header: dict):
         self.assertTrue(chain.can_connect(header))
         chain.save_header(header)
+
+    def test_get_height_of_last_common_block_with_chain(self):
+        blockchain.blockchains[constants.net.GENESIS] = chain_u = Blockchain(
+            config=self.config, forkpoint=0, parent=None,
+            forkpoint_hash=constants.net.GENESIS, prev_hash=None)
+        open(chain_u.path(), 'w+').close()
+        self._append_header(chain_u, self.HEADERS['A'])
+        self._append_header(chain_u, self.HEADERS['B'])
+        self._append_header(chain_u, self.HEADERS['C'])
+        self._append_header(chain_u, self.HEADERS['D'])
+        self._append_header(chain_u, self.HEADERS['E'])
+        self._append_header(chain_u, self.HEADERS['F'])
+        self._append_header(chain_u, self.HEADERS['O'])
+        self._append_header(chain_u, self.HEADERS['P'])
+        self._append_header(chain_u, self.HEADERS['Q'])
+
+        chain_l = chain_u.fork(self.HEADERS['G'])
+        self._append_header(chain_l, self.HEADERS['H'])
+        self._append_header(chain_l, self.HEADERS['I'])
+        self._append_header(chain_l, self.HEADERS['J'])
+        self._append_header(chain_l, self.HEADERS['K'])
+        self._append_header(chain_l, self.HEADERS['L'])
+
+        self.assertEqual({chain_u:  8, chain_l: 5}, chain_u.get_parent_heights())
+        self.assertEqual({chain_l: 11},             chain_l.get_parent_heights())
+
+        chain_z = chain_l.fork(self.HEADERS['M'])
+        self._append_header(chain_z, self.HEADERS['N'])
+        self._append_header(chain_z, self.HEADERS['X'])
+        self._append_header(chain_z, self.HEADERS['Y'])
+        self._append_header(chain_z, self.HEADERS['Z'])
+
+        self.assertEqual({chain_u:  8, chain_z: 5}, chain_u.get_parent_heights())
+        self.assertEqual({chain_l: 11, chain_z: 8}, chain_l.get_parent_heights())
+        self.assertEqual({chain_z: 13},             chain_z.get_parent_heights())
+        self.assertEqual(5, chain_u.get_height_of_last_common_block_with_chain(chain_l))
+        self.assertEqual(5, chain_l.get_height_of_last_common_block_with_chain(chain_u))
+        self.assertEqual(5, chain_u.get_height_of_last_common_block_with_chain(chain_z))
+        self.assertEqual(5, chain_z.get_height_of_last_common_block_with_chain(chain_u))
+        self.assertEqual(8, chain_l.get_height_of_last_common_block_with_chain(chain_z))
+        self.assertEqual(8, chain_z.get_height_of_last_common_block_with_chain(chain_l))
+
+        self._append_header(chain_u, self.HEADERS['R'])
+        self._append_header(chain_u, self.HEADERS['S'])
+        self._append_header(chain_u, self.HEADERS['T'])
+        self._append_header(chain_u, self.HEADERS['U'])
+
+        self.assertEqual({chain_u: 12, chain_z: 5}, chain_u.get_parent_heights())
+        self.assertEqual({chain_l: 11, chain_z: 8}, chain_l.get_parent_heights())
+        self.assertEqual({chain_z: 13},             chain_z.get_parent_heights())
+        self.assertEqual(5, chain_u.get_height_of_last_common_block_with_chain(chain_l))
+        self.assertEqual(5, chain_l.get_height_of_last_common_block_with_chain(chain_u))
+        self.assertEqual(5, chain_u.get_height_of_last_common_block_with_chain(chain_z))
+        self.assertEqual(5, chain_z.get_height_of_last_common_block_with_chain(chain_u))
+        self.assertEqual(8, chain_l.get_height_of_last_common_block_with_chain(chain_z))
+        self.assertEqual(8, chain_z.get_height_of_last_common_block_with_chain(chain_l))
+
+    def test_parents_after_forking(self):
+        blockchain.blockchains[constants.net.GENESIS] = chain_u = Blockchain(
+            config=self.config, forkpoint=0, parent=None,
+            forkpoint_hash=constants.net.GENESIS, prev_hash=None)
+        open(chain_u.path(), 'w+').close()
+        self._append_header(chain_u, self.HEADERS['A'])
+        self._append_header(chain_u, self.HEADERS['B'])
+        self._append_header(chain_u, self.HEADERS['C'])
+        self._append_header(chain_u, self.HEADERS['D'])
+        self._append_header(chain_u, self.HEADERS['E'])
+        self._append_header(chain_u, self.HEADERS['F'])
+        self._append_header(chain_u, self.HEADERS['O'])
+        self._append_header(chain_u, self.HEADERS['P'])
+        self._append_header(chain_u, self.HEADERS['Q'])
+
+        self.assertEqual(None, chain_u.parent)
+
+        chain_l = chain_u.fork(self.HEADERS['G'])
+        self._append_header(chain_l, self.HEADERS['H'])
+        self._append_header(chain_l, self.HEADERS['I'])
+        self._append_header(chain_l, self.HEADERS['J'])
+        self._append_header(chain_l, self.HEADERS['K'])
+        self._append_header(chain_l, self.HEADERS['L'])
+
+        self.assertEqual(None,    chain_l.parent)
+        self.assertEqual(chain_l, chain_u.parent)
+
+        chain_z = chain_l.fork(self.HEADERS['M'])
+        self._append_header(chain_z, self.HEADERS['N'])
+        self._append_header(chain_z, self.HEADERS['X'])
+        self._append_header(chain_z, self.HEADERS['Y'])
+        self._append_header(chain_z, self.HEADERS['Z'])
+
+        self.assertEqual(chain_z, chain_u.parent)
+        self.assertEqual(chain_z, chain_l.parent)
+        self.assertEqual(None,    chain_z.parent)
+
+        self._append_header(chain_u, self.HEADERS['R'])
+        self._append_header(chain_u, self.HEADERS['S'])
+        self._append_header(chain_u, self.HEADERS['T'])
+        self._append_header(chain_u, self.HEADERS['U'])
+
+        self.assertEqual(chain_z, chain_u.parent)
+        self.assertEqual(chain_z, chain_l.parent)
+        self.assertEqual(None,    chain_z.parent)
+
+    def test_forking_and_swapping(self):
+        blockchain.blockchains[constants.net.GENESIS] = chain_u = Blockchain(
+            config=self.config, forkpoint=0, parent=None,
+            forkpoint_hash=constants.net.GENESIS, prev_hash=None)
+        open(chain_u.path(), 'w+').close()
+
+        self._append_header(chain_u, self.HEADERS['A'])
+        self._append_header(chain_u, self.HEADERS['B'])
+        self._append_header(chain_u, self.HEADERS['C'])
+        self._append_header(chain_u, self.HEADERS['D'])
+        self._append_header(chain_u, self.HEADERS['E'])
+        self._append_header(chain_u, self.HEADERS['F'])
+        self._append_header(chain_u, self.HEADERS['O'])
+        self._append_header(chain_u, self.HEADERS['P'])
+        self._append_header(chain_u, self.HEADERS['Q'])
+        self._append_header(chain_u, self.HEADERS['R'])
+
+        chain_l = chain_u.fork(self.HEADERS['G'])
+        self._append_header(chain_l, self.HEADERS['H'])
+        self._append_header(chain_l, self.HEADERS['I'])
+        self._append_header(chain_l, self.HEADERS['J'])
+
+        # do checks
+        self.assertEqual(2, len(blockchain.blockchains))
+        self.assertEqual(1, len(os.listdir(os.path.join(self.data_dir, "forks"))))
+        self.assertEqual(0, chain_u.forkpoint)
+        self.assertEqual(None, chain_u.parent)
+        self.assertEqual(constants.net.GENESIS, chain_u._forkpoint_hash)
+        self.assertEqual(None, chain_u._prev_hash)
+        self.assertEqual(os.path.join(self.data_dir, "blockchain_headers"), chain_u.path())
+        self.assertEqual(10 * 80, os.stat(chain_u.path()).st_size)
+        self.assertEqual(6, chain_l.forkpoint)
+        self.assertEqual(chain_u, chain_l.parent)
+        self.assertEqual(hash_header(self.HEADERS['G']), chain_l._forkpoint_hash)
+        self.assertEqual(hash_header(self.HEADERS['F']), chain_l._prev_hash)
+        self.assertEqual(os.path.join(self.data_dir, "forks", "fork2_6_5c400c7966145d56291080b6482716a16aa644eefe590f984c1da0ee46ed33b8_711a2e2a701354121a33660f45c9f9f3c4bbdb4441114c39ca837f6e7f689ee1"), chain_l.path())
+        self.assertEqual(4 * 80, os.stat(chain_l.path()).st_size)
+
+        self._append_header(chain_l, self.HEADERS['K'])
+
+        # chains were swapped, do checks
+        self.assertEqual(2, len(blockchain.blockchains))
+        self.assertEqual(1, len(os.listdir(os.path.join(self.data_dir, "forks"))))
+        self.assertEqual(6, chain_u.forkpoint)
+        self.assertEqual(chain_l, chain_u.parent)
+        self.assertEqual(hash_header(self.HEADERS['O']), chain_u._forkpoint_hash)
+        self.assertEqual(hash_header(self.HEADERS['F']), chain_u._prev_hash)
+        self.assertEqual(os.path.join(self.data_dir, "forks", "fork2_6_5c400c7966145d56291080b6482716a16aa644eefe590f984c1da0ee46ed33b8_aff81830e28e01ef7d23277c56779a6b93f251a2d50dcc09d7c87d119e1e8ab"), chain_u.path())
+        self.assertEqual(4 * 80, os.stat(chain_u.path()).st_size)
+        self.assertEqual(0, chain_l.forkpoint)
+        self.assertEqual(None, chain_l.parent)
+        self.assertEqual(constants.net.GENESIS, chain_l._forkpoint_hash)
+        self.assertEqual(None, chain_l._prev_hash)
+        self.assertEqual(os.path.join(self.data_dir, "blockchain_headers"), chain_l.path())
+        self.assertEqual(11 * 80, os.stat(chain_l.path()).st_size)
+        for b in (chain_u, chain_l):
+            self.assertTrue(all([b.can_connect(b.read_header(i), False) for i in range(b.height())]))
+
+        self._append_header(chain_u, self.HEADERS['S'])
+        self._append_header(chain_u, self.HEADERS['T'])
+        self._append_header(chain_u, self.HEADERS['U'])
+        self._append_header(chain_l, self.HEADERS['L'])
+
+        chain_z = chain_l.fork(self.HEADERS['M'])
+        self._append_header(chain_z, self.HEADERS['N'])
+        self._append_header(chain_z, self.HEADERS['X'])
+        self._append_header(chain_z, self.HEADERS['Y'])
+        self._append_header(chain_z, self.HEADERS['Z'])
+
+        # chain_z became best chain, do checks
+        self.assertEqual(3, len(blockchain.blockchains))
+        self.assertEqual(2, len(os.listdir(os.path.join(self.data_dir, "forks"))))
+        self.assertEqual(0, chain_z.forkpoint)
+        self.assertEqual(None, chain_z.parent)
+        self.assertEqual(constants.net.GENESIS, chain_z._forkpoint_hash)
+        self.assertEqual(None, chain_z._prev_hash)
+        self.assertEqual(os.path.join(self.data_dir, "blockchain_headers"), chain_z.path())
+        self.assertEqual(14 * 80, os.stat(chain_z.path()).st_size)
+        self.assertEqual(9, chain_l.forkpoint)
+        self.assertEqual(chain_z, chain_l.parent)
+        self.assertEqual(hash_header(self.HEADERS['J']), chain_l._forkpoint_hash)
+        self.assertEqual(hash_header(self.HEADERS['I']), chain_l._prev_hash)
+        self.assertEqual(os.path.join(self.data_dir, "forks", "fork2_9_2874a1277687ab8042eff9916256b860a5b0a08b0038456c5a4a37d3bdf3656a_6e1acd473503ce0ee3cee916ca07db2f656b48baf8968f999189545316423bbb"), chain_l.path())
+        self.assertEqual(3 * 80, os.stat(chain_l.path()).st_size)
+        self.assertEqual(6, chain_u.forkpoint)
+        self.assertEqual(chain_z, chain_u.parent)
+        self.assertEqual(hash_header(self.HEADERS['O']), chain_u._forkpoint_hash)
+        self.assertEqual(hash_header(self.HEADERS['F']), chain_u._prev_hash)
+        self.assertEqual(os.path.join(self.data_dir, "forks", "fork2_6_5c400c7966145d56291080b6482716a16aa644eefe590f984c1da0ee46ed33b8_aff81830e28e01ef7d23277c56779a6b93f251a2d50dcc09d7c87d119e1e8ab"), chain_u.path())
+        self.assertEqual(7 * 80, os.stat(chain_u.path()).st_size)
+        for b in (chain_u, chain_l, chain_z):
+            self.assertTrue(all([b.can_connect(b.read_header(i), False) for i in range(b.height())]))
+
+        self.assertEqual(constants.net.GENESIS, chain_z.get_hash(0))
+        self.assertEqual(hash_header(self.HEADERS['F']), chain_z.get_hash(5))
+        self.assertEqual(hash_header(self.HEADERS['G']), chain_z.get_hash(6))
+        self.assertEqual(hash_header(self.HEADERS['I']), chain_z.get_hash(8))
+        self.assertEqual(hash_header(self.HEADERS['M']), chain_z.get_hash(9))
+        self.assertEqual(hash_header(self.HEADERS['Z']), chain_z.get_hash(13))
+
+    def test_doing_multiple_swaps_after_single_new_header(self):
+        blockchain.blockchains[constants.net.GENESIS] = chain_u = Blockchain(
+            config=self.config, forkpoint=0, parent=None,
+            forkpoint_hash=constants.net.GENESIS, prev_hash=None)
+        open(chain_u.path(), 'w+').close()
+
+        self._append_header(chain_u, self.HEADERS['A'])
+        self._append_header(chain_u, self.HEADERS['B'])
+        self._append_header(chain_u, self.HEADERS['C'])
+        self._append_header(chain_u, self.HEADERS['D'])
+        self._append_header(chain_u, self.HEADERS['E'])
+        self._append_header(chain_u, self.HEADERS['F'])
+        self._append_header(chain_u, self.HEADERS['O'])
+        self._append_header(chain_u, self.HEADERS['P'])
+        self._append_header(chain_u, self.HEADERS['Q'])
+        self._append_header(chain_u, self.HEADERS['R'])
+        self._append_header(chain_u, self.HEADERS['S'])
+
+        self.assertEqual(1, len(blockchain.blockchains))
+        self.assertEqual(0, len(os.listdir(os.path.join(self.data_dir, "forks"))))
+
+        chain_l = chain_u.fork(self.HEADERS['G'])
+        self._append_header(chain_l, self.HEADERS['H'])
+        self._append_header(chain_l, self.HEADERS['I'])
+        self._append_header(chain_l, self.HEADERS['J'])
+        self._append_header(chain_l, self.HEADERS['K'])
+        # now chain_u is best chain, but it's tied with chain_l
+
+        self.assertEqual(2, len(blockchain.blockchains))
+        self.assertEqual(1, len(os.listdir(os.path.join(self.data_dir, "forks"))))
+
+        chain_z = chain_l.fork(self.HEADERS['M'])
+        self._append_header(chain_z, self.HEADERS['N'])
+        self._append_header(chain_z, self.HEADERS['X'])
+
+        self.assertEqual(3, len(blockchain.blockchains))
+        self.assertEqual(2, len(os.listdir(os.path.join(self.data_dir, "forks"))))
+
+        # chain_z became best chain, do checks
+        self.assertEqual(0, chain_z.forkpoint)
+        self.assertEqual(None, chain_z.parent)
+        self.assertEqual(constants.net.GENESIS, chain_z._forkpoint_hash)
+        self.assertEqual(None, chain_z._prev_hash)
+        self.assertEqual(os.path.join(self.data_dir, "blockchain_headers"), chain_z.path())
+        self.assertEqual(12 * 80, os.stat(chain_z.path()).st_size)
+        self.assertEqual(9, chain_l.forkpoint)
+        self.assertEqual(chain_z, chain_l.parent)
+        self.assertEqual(hash_header(self.HEADERS['J']), chain_l._forkpoint_hash)
+        self.assertEqual(hash_header(self.HEADERS['I']), chain_l._prev_hash)
+        self.assertEqual(os.path.join(self.data_dir, "forks", "fork2_9_2874a1277687ab8042eff9916256b860a5b0a08b0038456c5a4a37d3bdf3656a_6e1acd473503ce0ee3cee916ca07db2f656b48baf8968f999189545316423bbb"), chain_l.path())
+        self.assertEqual(2 * 80, os.stat(chain_l.path()).st_size)
+        self.assertEqual(6, chain_u.forkpoint)
+        self.assertEqual(chain_z, chain_u.parent)
+        self.assertEqual(hash_header(self.HEADERS['O']), chain_u._forkpoint_hash)
+        self.assertEqual(hash_header(self.HEADERS['F']), chain_u._prev_hash)
+        self.assertEqual(os.path.join(self.data_dir, "forks", "fork2_6_5c400c7966145d56291080b6482716a16aa644eefe590f984c1da0ee46ed33b8_aff81830e28e01ef7d23277c56779a6b93f251a2d50dcc09d7c87d119e1e8ab"), chain_u.path())
+        self.assertEqual(5 * 80, os.stat(chain_u.path()).st_size)
+
+        self.assertEqual(constants.net.GENESIS, chain_z.get_hash(0))
+        self.assertEqual(hash_header(self.HEADERS['F']), chain_z.get_hash(5))
+        self.assertEqual(hash_header(self.HEADERS['G']), chain_z.get_hash(6))
+        self.assertEqual(hash_header(self.HEADERS['I']), chain_z.get_hash(8))
+        self.assertEqual(hash_header(self.HEADERS['M']), chain_z.get_hash(9))
+        self.assertEqual(hash_header(self.HEADERS['X']), chain_z.get_hash(11))
+
+        for b in (chain_u, chain_l, chain_z):
+            self.assertTrue(all([b.can_connect(b.read_header(i), False) for i in range(b.height())]))
