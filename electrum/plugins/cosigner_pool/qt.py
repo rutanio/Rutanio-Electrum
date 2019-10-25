@@ -305,8 +305,8 @@ class Plugin(BasePlugin):
                 public_key = ecc.ECPubkey(K)
                 message = public_key.encrypt_message(raw_tx_bytes).decode('ascii')
                 # send message
-                task = lambda: server.put(_hash, message)
-                task = lambda: server.put(_hash+'_pick', 'True')
+                server.put(_hash, message)
+                server.put(_hash+'_pick', 'True')
 
         task = lambda: send_to_cosigner()
         msg = _('Sending transaction to cosigning pool...')

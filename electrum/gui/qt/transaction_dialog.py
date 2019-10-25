@@ -30,14 +30,15 @@ import json
 import traceback
 from typing import TYPE_CHECKING
 
-from PyQt5.QtCore import QSize, Qt
+from PyQt5.QtCore import QSize, Qt, QTimer
 from PyQt5.QtGui import QTextCharFormat, QBrush, QFont
 from PyQt5.QtWidgets import (QDialog, QLabel, QPushButton, QHBoxLayout, QVBoxLayout,
                              QTextEdit, QFrame)
 import qrcode
 from qrcode import exceptions
 
-from electrum_exos import util, keystore, ecc, bip32, crypto
+from electrum_exos import util, keystore, ecc, crypto
+from electrum_exos.bip32 import BIP32Node
 from electrum_exos.bitcoin import base_encode
 from electrum_exos.i18n import _
 from electrum_exos.plugin import run_hook
@@ -113,8 +114,8 @@ class TxDialog(QDialog, MessageBoxMixin):
         if type(self.wallet) == Multisig_Wallet:
             for key, keystore in self.wallet.keystores.items():
                 xpub = keystore.get_master_public_key()
-                K = bip32.deserialize_xpub(xpub)[-1]
-                _hash = bh2u(crypto.sha256d(K))
+                pubkey = BIP32Node.from_xkey(xpub).eckey.get_public_key_bytes(compressed=True)
+                _hash = bh2u(crypto.sha256d(pubkey))
                 if not keystore.is_watching_only():
                     self.keyhashes.add(_hash)
                 else:
@@ -477,8 +478,8 @@ class TxDialogTimeout(TxDialog):
         if type(self.wallet) == Multisig_Wallet:
             for key, keystore in self.wallet.keystores.items():
                 xpub = keystore.get_master_public_key()
-                K = bip32.deserialize_xpub(xpub)[-1]
-                _hash = bh2u(crypto.sha256d(K))
+                pubkey = BIP32Node.from_xkey(xpub).eckey.get_public_key_bytes(compressed=True)
+                _hash = bh2u(crypto.sha256d(pubkey))
                 if not keystore.is_watching_only():
                     self.keyhashes.add(_hash)
                     self.locks[_hash] = server.get(_hash+'_lock')
@@ -608,22 +609,26 @@ class TxDialogTimeout(TxDialog):
         desc = self.desc
         base_unit = self.main_window.base_unit()
         format_amount = self.main_window.format_amount
-        tx_hash, status, label, can_broadcast, can_rbf, amount, fee, height, conf, timestamp, exp_n = self.wallet.get_tx_info(self.tx)
+        # tx_hash, status, label, can_broadcast, can_rbf, amount, fee, height, conf, timestamp, exp_n, = self.wallet.get_tx_info(self.tx)
+        tx_details = self.wallet.get_tx_info(self.tx)
+        tx_mined_status = tx_details.tx_mined_status
+        exp_n = tx_details.mempool_depth_bytes
+        amount, fee = tx_details.amount, tx_details.fee
         size = self.tx.estimated_size()
-        self.broadcast_button.setEnabled(can_broadcast)
+        self.broadcast_button.setEnabled(tx_details.can_broadcast)
         can_sign = not self.tx.is_complete() and \
             (self.wallet.can_sign(self.tx) or bool(self.main_window.tx_external_keypairs))
         self.sign_button.setEnabled(can_sign)
-        self.tx_hash_e.setText(tx_hash or _('Unknown'))
+        self.tx_hash_e.setText(tx_details.txid or _('Unknown'))
         if desc is None:
             self.tx_desc.hide()
         else:
             self.tx_desc.setText(_("Description") + ': ' + desc)
             self.tx_desc.show()
-        self.status_label.setText(_('Status:') + ' ' + status)
+        self.status_label.setText(_('Status:') + ' ' + tx_details.status)
 
-        if timestamp:
-            time_str = datetime.datetime.fromtimestamp(timestamp).isoformat(' ')[:-3]
+        if tx_mined_status.timestamp:
+            time_str = datetime.datetime.fromtimestamp(tx_mined_status.timestamp).isoformat(' ')[:-3]
             self.date_label.setText(_("Date: {}").format(time_str))
             self.date_label.show()
         elif exp_n:
