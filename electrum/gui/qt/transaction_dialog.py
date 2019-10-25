@@ -30,7 +30,7 @@ import json
 import traceback
 from typing import TYPE_CHECKING
 
-from PyQt5.QtCore import QSize, Qt
+from PyQt5.QtCore import QSize, Qt, QTimer
 from PyQt5.QtGui import QTextCharFormat, QBrush, QFont
 from PyQt5.QtWidgets import (QDialog, QLabel, QPushButton, QHBoxLayout, QVBoxLayout,
                              QTextEdit, QFrame)
