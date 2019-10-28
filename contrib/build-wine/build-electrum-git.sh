@@ -27,7 +27,7 @@ info "Last commit: $VERSION"
 # Load electrum-locale for this release
 git submodule update --init
 
-pushd ./contrib/deterministic-build/electrum-locale
+pushd ./contrib/deterministic-build/exos-electrum-locale
 if ! which msgfmt > /dev/null 2>&1; then
     fail "Please install gettext"
 fi

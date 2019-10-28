@@ -81,7 +81,7 @@ info "generating locale"
         brew install gettext
         brew link --force gettext
     fi
-    cd "$CONTRIB"/deterministic-build/electrum-locale
+    cd "$CONTRIB"/deterministic-build/exos-electrum-locale
     for i in ./locale/*; do
         dir="$ROOT_FOLDER"/electrum/$i/LC_MESSAGES
         mkdir -p $dir

@@ -143,8 +143,8 @@ cp "/usr/lib/libzbar.so.0" "$APPDIR/usr/lib/libzbar.so.0"
 
 
 info "desktop integration."
-cp "$PROJECT_ROOT/electrum.desktop" "$APPDIR/electrum.desktop"
-cp "$PROJECT_ROOT/electrum/gui/icons/electrum.png" "$APPDIR/electrum.png"
+cp "$PROJECT_ROOT/exos-electrum.desktop" "$APPDIR/exos-electrum.desktop"
+cp "$PROJECT_ROOT/electrum/gui/icons/exos-electrum.png" "$APPDIR/exos-electrum.png"
 
 
 # add launcher
