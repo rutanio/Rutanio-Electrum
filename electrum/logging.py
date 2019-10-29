@@ -48,7 +48,7 @@ def _shorten_name_of_logrecord(record: logging.LogRecord) -> logging.LogRecord:
     record = copy.copy(record)  # avoid mutating arg
     # strip the main module name from the logger name
     if record.name.startswith("exos-electrum."):
-        record.name = record.name[9:]
+        record.name = record.name[14:]
     # manual map to shorten common module names
     record.name = record.name.replace("interface.Interface", "interface", 1)
     record.name = record.name.replace("network.Network", "network", 1)
