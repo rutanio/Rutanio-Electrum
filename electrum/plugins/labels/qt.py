@@ -34,23 +34,23 @@ class Plugin(LabelsPlugin):
         d = WindowModalDialog(window, _("Label Settings"))
         hbox = QHBoxLayout()
         hbox.addWidget(QLabel("Label sync options:"))
-        upload = ThreadedButton("Force upload",
-                                partial(self.push, wallet),
-                                partial(self.done_processing_success, d),
-                                partial(self.done_processing_error, d))
-        download = ThreadedButton("Force download",
-                                  partial(self.pull, wallet, True),
-                                  partial(self.done_processing_success, d),
-                                  partial(self.done_processing_error, d))
+        synchronize = ThreadedButton("Synchronize",
+                            partial(self.synchronize, wallet, True),
+                            partial(self.done_processing_success, d),
+                            partial(self.done_processing_error, d))
         vbox = QVBoxLayout()
-        vbox.addWidget(upload)
-        vbox.addWidget(download)
+        vbox.addWidget(synchronize)
         hbox.addLayout(vbox)
         vbox = QVBoxLayout(d)
         vbox.addLayout(hbox)
         vbox.addSpacing(20)
         vbox.addLayout(Buttons(OkButton(d)))
         return bool(d.exec_())
+
+
+    def synchronize(self, wallet, force):
+        self.pull(wallet, force)
+        self.push(wallet)
 
     def on_pulled(self, wallet):
         self.obj.labels_changed_signal.emit(wallet)
