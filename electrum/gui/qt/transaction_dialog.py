@@ -517,7 +517,7 @@ class TxDialogTimeout(TxDialog):
         vbox.addWidget(self.size_label)
         self.fee_label = QLabel()
         vbox.addWidget(self.fee_label)
-
+        self.add_tx_stats(vbox)
         self.add_io(vbox)
 
         self.sign_button = b = QPushButton(_("Sign"))
