@@ -85,7 +85,7 @@ class Listener(util.DaemonThread):
                     pick = server.get(keyhash+'_pick')
                     signed = server.get(keyhash+'_signed')
                 except CannotSendRequest:
-                    self.print_error("cannot contact cosigner pool")
+                    self.logger.info("cannot contact cosigner pool")
                     continue
 
                 if pick == 'False' or signed == 'True':
