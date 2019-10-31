@@ -35,7 +35,8 @@ from PyQt5.QtWidgets import (QDialog, QLabel, QPushButton, QHBoxLayout, QVBoxLay
 
 from PyQt5.QtGui import QFont
 
-from electrum_exos import bip32, crypto
+from electrum_exos import crypto
+from electrum_exos.bip32 import BIP32Node
 from electrum_exos.i18n import _
 from electrum_exos.plugin import run_hook
 from electrum_exos.util import bh2u
@@ -95,8 +96,8 @@ class TimeoutWaitDialog(QDialog, MessageBoxMixin):
         if type(self.wallet) == Multisig_Wallet:
             for key, keystore in self.wallet.keystores.items():
                 xpub = keystore.get_master_public_key()
-                K = bip32.deserialize_xpub(xpub)[-1]
-                _hash = bh2u(crypto.sha256d(K))
+                pubkey = BIP32Node.from_xkey(xpub).eckey.get_public_key_bytes(compressed=True)
+                _hash = bh2u(crypto.sha256d(pubkey))
                 if not keystore.is_watching_only():
                     self.keyhashes.add(_hash)
                 else:
@@ -199,7 +200,10 @@ class TimeoutWaitDialog(QDialog, MessageBoxMixin):
         desc = self.currently_signing or "Information unavailable"
         base_unit = self.main_window.base_unit()
         format_amount = self.main_window.format_amount
-        tx_hash, status, label, can_broadcast, can_rbf, amount, fee, height, conf, timestamp, exp_n = self.wallet.get_tx_info(self.tx)
+        tx_details = self.wallet.get_tx_info(self.tx)
+        tx_mined_status = tx_details.tx_mined_status
+        exp_n = tx_details.mempool_depth_bytes
+        amount, fee = tx_details.amount, tx_details.fee
         size = self.tx.estimated_size()
         can_sign = not self.tx.is_complete() and \
             (self.wallet.can_sign(self.tx) or bool(self.main_window.tx_external_keypairs))
@@ -211,10 +215,10 @@ class TimeoutWaitDialog(QDialog, MessageBoxMixin):
             self.tx_desc.setFont(myFont)
             self.tx_desc.setText(_("Currently Signing") + ': ' + desc)
             self.tx_desc.show()
-        self.status_label.setText(_('Status:') + ' ' + status)
+        self.status_label.setText(_('Status:') + ' ' + tx_details.status)
 
-        if timestamp:
-            time_str = datetime.datetime.fromtimestamp(timestamp).isoformat(' ')[:-3]
+        if tx_mined_status.timestamp:
+            time_str = datetime.datetime.fromtimestamp(tx_mined_status.timestamp).isoformat(' ')[:-3]
             self.date_label.setText(_("Date: {}").format(time_str))
             self.date_label.show()
         elif exp_n:
