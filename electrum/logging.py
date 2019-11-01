@@ -31,17 +31,24 @@ file_formatter = LogFormatterForFiles(fmt="%(asctime)22s | %(levelname)8s | %(na
 
 class LogFormatterForConsole(logging.Formatter):
 
+    def formatTime(self, record, datefmt=None):
+        # timestamps follow ISO 8601 UTC
+        date = datetime.datetime.fromtimestamp(record.created).astimezone(datetime.timezone.utc)
+        if not datefmt:
+            datefmt = "%Y-%m-%d %H:%M:%S.%fZ"
+        return date.strftime(datefmt)
+
     def format(self, record):
         record = _shorten_name_of_logrecord(record)
         text = super().format(record)
         shortcut = getattr(record, 'custom_shortcut', None)
         if shortcut:
-            text = text[:1] + f"/{shortcut}" + text[1:]
+            text = text[:31] + f"/{shortcut}" + text[31:]
         return text
 
 
 # try to make console log lines short... no timestamp, short levelname, no "electrum."
-console_formatter = LogFormatterForConsole(fmt="%(levelname).1s | %(name)s | %(message)s")
+console_formatter = LogFormatterForConsole(fmt="%(asctime)26s | %(levelname).1s | %(name)s | %(message)s")
 
 
 def _shorten_name_of_logrecord(record: logging.LogRecord) -> logging.LogRecord:
