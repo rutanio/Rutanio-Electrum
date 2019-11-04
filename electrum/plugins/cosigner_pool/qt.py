@@ -88,6 +88,9 @@ class Listener(util.DaemonThread):
                 except CannotSendRequest:
                     self.logger.info("cannot contact cosigner pool")
                     continue
+                except Exception as e:
+                    self.logger.info(e)
+                    continue
 
                 if pick == 'False' or signed == 'True':
                     continue
