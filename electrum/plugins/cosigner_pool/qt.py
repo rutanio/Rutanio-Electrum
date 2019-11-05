@@ -35,7 +35,7 @@ from http.client import CannotSendRequest
 
 from xmlrpc.client import ServerProxy
 
-from PyQt5.QtCore import QObject, pyqtSignal
+from PyQt5.QtCore import Qt, QObject, pyqtSignal
 from PyQt5.QtWidgets import QDialog, QLabel, QPushButton, QVBoxLayout, QTextEdit, QGridLayout, QLineEdit
 
 from electrum_exos import util, keystore, ecc, crypto
@@ -157,6 +157,10 @@ class Plugin(BasePlugin):
         sync.clicked.connect(partial(self.sync_name, name))
         vbox.addWidget(sync)
 
+        status = QPushButton(_("Tx. Status"))
+        status.clicked.connect(partial(self.tx_status_dialog, window))
+        vbox.addWidget(status)
+
         vbox.addStretch()
         vbox.addSpacing(13)
         vbox.addLayout(Buttons(CloseButton(d), OkButton(d)))
@@ -189,6 +193,33 @@ class Plugin(BasePlugin):
             else:
                 self.window.show_message(_("Failed to sync name with cosigner pool"))
 
+
+    def tx_status_dialog(self, window):
+        d = WindowModalDialog(window, _("Transaction Status"))
+
+        d.setMinimumSize(600, 300)
+
+        vbox = QVBoxLayout(d)
+
+        status = ''
+
+        for window, xpub, K, _hash in self.cosigner_list:
+            cosigner = server.get(_hash+'_name')
+            signed = 'True' if server.get(_hash+'_signed') else 'False'
+            status += f'<br><br> {cosigner} signed: <b>{signed}</b>'
+
+        self.tx_status = QLabel()
+        vbox.addWidget(self.tx_status)
+        self.tx_status.setTextFormat(Qt.RichText)
+        self.tx_status.setText(_("<b>Transaction Status</b>") + ': ' + status)
+        self.tx_status.show()
+
+        vbox.addStretch()
+        vbox.addSpacing(13)
+        vbox.addLayout(Buttons(CloseButton(d)))
+        
+        if not d.exec_():
+            return
 
     def correct_shutdown_state(self, _hash):
         shutdown_flag = server.get(_hash+'_shutdown')
