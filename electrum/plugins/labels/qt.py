@@ -26,27 +26,14 @@ class Plugin(LabelsPlugin):
         return True
 
     def settings_widget(self, window):
-        return EnterButton(_('Settings'),
-                           partial(self.settings_dialog, window))
 
-    def settings_dialog(self, window):
         wallet = window.parent().wallet
         d = WindowModalDialog(window, _("Label Settings"))
-        hbox = QHBoxLayout()
-        hbox.addWidget(QLabel("Label sync options:"))
-        synchronize = ThreadedButton("Synchronize",
+
+        return ThreadedButton("Synchronize",
                             partial(self.synchronize, wallet, True),
                             partial(self.done_processing_success, d),
                             partial(self.done_processing_error, d))
-        vbox = QVBoxLayout()
-        vbox.addWidget(synchronize)
-        hbox.addLayout(vbox)
-        vbox = QVBoxLayout(d)
-        vbox.addLayout(hbox)
-        vbox.addSpacing(20)
-        vbox.addLayout(Buttons(OkButton(d)))
-        return bool(d.exec_())
-
 
     def synchronize(self, wallet, force):
         self.pull(wallet, force)

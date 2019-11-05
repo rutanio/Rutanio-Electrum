@@ -542,6 +542,7 @@ class TxDialogTimeout(TxDialog):
         hbox.addLayout(Buttons(*self.buttons))
         vbox.addLayout(hbox)
 
+        self.time_left_int = int(DURATION_INT)
         for _hash, expire in self.locks.items():
             if expire:
                 self.time_left_int = int((DURATION_INT - (int(server.get_current_time()) - int(expire))))
