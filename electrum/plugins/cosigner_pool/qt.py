@@ -205,8 +205,11 @@ class Plugin(BasePlugin):
 
         for window, xpub, K, _hash in self.cosigner_list:
             cosigner = server.get(_hash+'_name')
-            signed = 'True' if server.get(_hash+'_signed') else 'False'
-            status += f'<br><br> {cosigner} signed: <b>{signed}</b>'
+        for key, _hash, window in self.keys:
+            cosigner = server.get(_hash+'_name')
+            signed = True if server.get(_hash+'_signed') else False
+            in_progress_message = 'Transaction in progress' if signed else 'No transaction in progress'
+            status += f'<br><br> You signed: <b>{str(signed)}</b>'
 
         self.tx_status = QLabel()
         vbox.addWidget(self.tx_status)
