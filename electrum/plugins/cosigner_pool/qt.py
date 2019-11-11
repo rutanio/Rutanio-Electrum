@@ -201,25 +201,41 @@ class Plugin(BasePlugin):
 
         vbox = QVBoxLayout(d)
 
-        in_progress_message = ''
+        status_header = 'No transaction in progress'
         status = ''
 
         for window, xpub, K, _hash in self.cosigner_list:
             cosigner = server.get(_hash+'_name')
             signed = True if server.get(_hash+'_signed') else False
-            in_progress_message = 'Transaction in progress' if signed else 'No transaction in progress'
-            status += f'<br><br> {cosigner} signed: <b>{str(signed)}</b>'
+            signing = True if server.get(_hash+'_lock') else False
+            if signed:
+                status_header = 'Transaction in progress'
+            if signed:
+                message = 'Signed'
+            elif signing: 
+                message = 'Signing'
+            else:
+                message = 'Not signed'
+            status += f'<br><br> {cosigner}: <b>{message}</b>'
 
         for key, _hash, window in self.keys:
             cosigner = server.get(_hash+'_name')
             signed = True if server.get(_hash+'_signed') else False
-            in_progress_message = 'Transaction in progress' if signed else 'No transaction in progress'
-            status += f'<br><br> You signed: <b>{str(signed)}</b>'
+            signing = True if server.get(_hash+'_lock') else False
+            if signed:
+                status_header = 'Transaction in progress'
+            if signed:
+                message = 'Signed'
+            elif signing: 
+                message = 'Signing'
+            else:
+                message = 'Not signed'
+            status += f'<br><br> You: <b>{message}</b>'
 
         self.tx_status = QLabel()
         vbox.addWidget(self.tx_status)
         self.tx_status.setTextFormat(Qt.RichText)
-        self.tx_status.setText(_("<b>Transaction Status</b>") + ': ' + in_progress_message + status)
+        self.tx_status.setText(_("<b>Transaction Status</b>") + ': ' + status_header + status)
         self.tx_status.show()
 
         vbox.addStretch()
