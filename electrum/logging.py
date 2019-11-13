@@ -249,9 +249,9 @@ def configure_logging(config):
     # if using kivy, avoid kivy's own logs to get printed twice
     logging.getLogger('kivy').propagate = False
 
-    from . import ELECTRUM_VERSION
+    from .version import ELECTRUM_BUILD
     from .constants import GIT_REPO_URL
-    _logger.info(f"EXOS-Electrum version: {ELECTRUM_VERSION} - https://economy.openexo.com - {GIT_REPO_URL}")
+    _logger.info(f"EXOS-Electrum version: {ELECTRUM_BUILD} - https://economy.openexo.com - {GIT_REPO_URL}")
     _logger.info(f"Python version: {sys.version}. On platform: {describe_os_version()}")
     _logger.info(f"Logging to file: {str(_logfile_path)}")
     _logger.info(f"Log filters: verbosity {repr(verbosity)}, verbosity_shortcuts {repr(verbosity_shortcuts)}")
