@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<installer-gui-script minSpecVersion="1">
+    <title>EXOS-Electrum</title>
+    <background file="exos-electrum-background-pkg.jpg" alignment="left" scaling="tofit"/>
+    <welcome file="welcome-pkg.rtf"/>
+    <readme file="readme-pkg.rtf"/>
+    <license file="license-pkg.rtf"/>    
+    <pkg-ref id="com.openexo.economy.exos-electrum"/>
+    <options customize="never" require-scripts="false"/>
+    <choices-outline>
+        <line choice="default">
+            <line choice="com.openexo.economy.exos-electrum"/>
+        </line>
+    </choices-outline>
+    <choice id="default"/>
+    <choice id="com.openexo.economy.exos-electrum" visible="false">
+        <pkg-ref id="com.openexo.economy.exos-electrum"/>
+    </choice>
+    <pkg-ref id="com.openexo.economy.exos-electrum" onConclusion="none">EXOS-Electrum.pkg</pkg-ref>
+</installer-gui-script>

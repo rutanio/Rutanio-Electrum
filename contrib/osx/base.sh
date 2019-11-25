@@ -104,6 +104,50 @@ function CreateDMG() {   # ARGS: PACKAGE_NAME VERSION DMG_BACKGROUND
     rm -rf "${DMG_TMP}" "${STAGING_DIR}"
 }
 
+function CreatePKG() {   # ARGS: PACKAGE_NAME VERSION PKG_BACKGROUND IDENTIFIER APPLE_DEV_INSTALLER_CERT
+    PACKAGE_NAME="$1"
+    VERSION="$2"
+    PKG_ICON="$3"
+    IDENTIFIER="$4"
+    DEV_INSTALLER_CERT="$5"
+
+    # set up app name, version number, and icon for the pkg file
+    PKG_ICON="electrum/gui/icons/${PKG_ICON}" 
+    VOL_NAME="${PACKAGE_NAME}-${VERSION}"
+    PKG_TMP="dist/${PACKAGE_NAME}.pkg"
+    PKG_FINAL="dist/${VOL_NAME}.pkg"    
+
+    mkdir -p dist/build && cp -r dist/${PACKAGE_NAME}.app $_
+    pkgbuild --analyze --root dist/build dist/components.plist
+    plutil -replace BundleIsRelocatable -bool false dist/components.plist
+
+    pkgbuild --root "dist/build" \
+      --component-plist "dist/components.plist" \
+      --version ${VERSION} \
+      --identifier ${IDENTIFIER} \
+      --install-location "/Applications" \
+      "${PKG_TMP}"
+    
+    if [ -z "$DEV_INSTALLER_CERT" ]; then
+        productbuild --distribution "contrib/osx/distribution.xml" \
+        --package-path "dist" \
+        --resources "contrib/osx" \
+        "${PKG_FINAL}"
+    else
+        productbuild --distribution "contrib/osx/distribution.xml" \
+        --package-path "dist" \
+        --resources "contrib/osx" \
+        --sign "$DEV_INSTALLER_CERT" \
+        "${PKG_FINAL}"
+    fi
+    
+    echo "read 'icns' (-16455) \"${PKG_ICON}\";" > dist/tmpicns.rsrc
+    Rez -a dist/tmpicns.rsrc -o ${PKG_FINAL}
+    SetFile -a C ${PKG_FINAL}
+
+    rm -rf dist/tmpicns.rsrc dist/components.plist dist/build ${PKG_TMP}
+}
+
 function realpath() {
     [[ $1 = /* ]] && echo "$1" || echo "$PWD/${1#./}"
 }
