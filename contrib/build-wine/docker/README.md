@@ -35,15 +35,15 @@ folder.
         rm -rf $FRESH_CLONE && \
         mkdir -p $FRESH_CLONE && \
         cd $FRESH_CLONE  && \
-        git clone https://github.com/spesmilo/electrum.git && \
-        cd electrum
+        git clone https://github.com/exoeconomy/EXOS-Electrum.git && \
+        cd EXOS-Electrum
     ```
 
     And then build from this directory:
     ```
     $ git checkout $REV
     $ sudo docker run -it \
-        --name electrum-wine-builder-cont \
+        --name exos-electrum-wine-builder-cont \
         -v $PWD:/opt/wine64/drive_c/exos-electrum \
         --rm \
         --workdir /opt/wine64/drive_c/exos-electrum/contrib/build-wine \

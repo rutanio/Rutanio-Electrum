@@ -5,15 +5,17 @@ import datetime
 import locale
 from decimal import Decimal
 import getpass
+import logging
 
-import electrum_exos
-from electrum_exos.util import format_satoshis, set_verbosity
+import electrum
+from electrum_exos.util import format_satoshis
 from electrum_exos.bitcoin import is_address, COIN, TYPE_ADDRESS
 from electrum_exos.transaction import TxOutput
 from electrum_exos.wallet import Wallet
 from electrum_exos.storage import WalletStorage
 from electrum_exos.network import NetworkParameters, TxBroadcastError, BestEffortRequestFailed
 from electrum_exos.interface import deserialize_server
+from electrum_exos.logging import console_stderr_handler
 
 _ = lambda x:x  # i18n
 
@@ -26,7 +28,7 @@ class ElectrumGui:
         self.network = daemon.network
         storage = WalletStorage(config.get_wallet_path())
         if not storage.file_exists():
-            print("Wallet not found. try 'exos-electrum create'")
+            print("Wallet not found. try 'electrum create'")
             exit()
         if storage.is_encrypted():
             password = getpass.getpass('Password:', stream=None)
@@ -52,7 +54,7 @@ class ElectrumGui:
         self.set_cursor(0)
         self.w = curses.newwin(10, 50, 5, 5)
 
-        set_verbosity(False)
+        console_stderr_handler.setLevel(logging.CRITICAL)
         self.tab = 0
         self.pos = 0
         self.popup_pos = 0

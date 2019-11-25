@@ -27,13 +27,14 @@ import subprocess
 import sys
 import os
 
-from .version import ELECTRUM_VERSION
+from .version import ELECTRUM_BUILD
 from . import constants
 from .i18n import _
 from .util import make_aiohttp_session
+from .logging import describe_os_version, Logger
 
 
-class BaseCrashReporter:
+class BaseCrashReporter(Logger):
     report_server = "https://crashhub.exos.to"
     config_key = "show_crash_reporter"
     issue_template = """<h2>Traceback</h2>
@@ -43,14 +44,14 @@ class BaseCrashReporter:
 
 <h2>Additional information</h2>
 <ul>
-  <li>Electrum version: {app_version}</li>
+  <li>EXOS-Electrum version: {app_version}</li>
   <li>Python version: {python_version}</li>
   <li>Operating system: {os}</li>
   <li>Wallet type: {wallet_type}</li>
   <li>Locale: {locale}</li>
 </ul>
     """
-    CRASH_MESSAGE = _('Something went wrong while executing Electrum.')
+    CRASH_MESSAGE = _('Something went wrong while executing EXOS-Electrum.')
     CRASH_TITLE = _('Sorry!')
     REQUEST_HELP_MESSAGE = _('To help us diagnose and fix the problem, you can send us a bug report that contains '
                              'useful debug information:')
@@ -58,9 +59,10 @@ class BaseCrashReporter:
     ASK_CONFIRM_SEND = _("Do you want to send this report?")
 
     def __init__(self, exctype, value, tb):
+        Logger.__init__(self)
         self.exc_args = (exctype, value, tb)
 
-    def send_report(self, asyncio_loop, proxy, endpoint="/crash"):
+    def send_report(self, asyncio_loop, proxy, endpoint="/crash", *, timeout=None):
         if constants.net.GENESIS[-4:] not in ["4943", "e26f"] and ".electrum.org" in BaseCrashReporter.report_server:
             # Gah! Some kind of altcoin wants to send us crash reports.
             raise Exception(_("Missing report URL."))
@@ -68,7 +70,7 @@ class BaseCrashReporter:
         report.update(self.get_additional_info())
         report = json.dumps(report)
         coro = self.do_post(proxy, BaseCrashReporter.report_server + endpoint, data=report)
-        response = asyncio.run_coroutine_threadsafe(coro, asyncio_loop).result(5)
+        response = asyncio.run_coroutine_threadsafe(coro, asyncio_loop).result(timeout)
         return response
 
     async def do_post(self, proxy, url, data):
@@ -93,9 +95,9 @@ class BaseCrashReporter:
 
     def get_additional_info(self):
         args = {
-            "app_version": ELECTRUM_VERSION,
+            "app_version": ELECTRUM_BUILD,
             "python_version": sys.version,
-            "os": self.get_os_version(),
+            "os": describe_os_version(),
             "wallet_type": "unknown",
             "locale": locale.getdefaultlocale()[0] or "?",
             "description": self.get_user_description()
@@ -116,7 +118,7 @@ class BaseCrashReporter:
     def get_git_version():
         dir = os.path.dirname(os.path.realpath(sys.argv[0]))
         version = subprocess.check_output(
-            ['git', 'describe', '--always', '--dirty'], cwd=dir)
+            ['git', 'describe', '--tags'], cwd=dir)
         return str(version, "utf8").strip()
 
     def get_report_string(self):
@@ -130,5 +132,19 @@ class BaseCrashReporter:
     def get_wallet_type(self):
         raise NotImplementedError
 
-    def get_os_version(self):
-        raise NotImplementedError
+
+def trigger_crash():
+    # note: do not change the type of the exception, the message,
+    # or the name of this method. All reports generated through this
+    # method will be grouped together by the crash reporter, and thus
+    # don't spam the issue tracker.
+
+    class TestingException(Exception):
+        pass
+
+    def crash_test():
+        raise TestingException("triggered crash for testing purposes")
+
+    import threading
+    t = threading.Thread(target=crash_test)
+    t.start()

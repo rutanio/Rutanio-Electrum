@@ -26,31 +26,18 @@ class Plugin(LabelsPlugin):
         return True
 
     def settings_widget(self, window):
-        return EnterButton(_('Settings'),
-                           partial(self.settings_dialog, window))
 
-    def settings_dialog(self, window):
         wallet = window.parent().wallet
         d = WindowModalDialog(window, _("Label Settings"))
-        hbox = QHBoxLayout()
-        hbox.addWidget(QLabel("Label sync options:"))
-        upload = ThreadedButton("Force upload",
-                                partial(self.push, wallet),
-                                partial(self.done_processing_success, d),
-                                partial(self.done_processing_error, d))
-        download = ThreadedButton("Force download",
-                                  partial(self.pull, wallet, True),
-                                  partial(self.done_processing_success, d),
-                                  partial(self.done_processing_error, d))
-        vbox = QVBoxLayout()
-        vbox.addWidget(upload)
-        vbox.addWidget(download)
-        hbox.addLayout(vbox)
-        vbox = QVBoxLayout(d)
-        vbox.addLayout(hbox)
-        vbox.addSpacing(20)
-        vbox.addLayout(Buttons(OkButton(d)))
-        return bool(d.exec_())
+
+        return ThreadedButton("Synchronize",
+                            partial(self.synchronize, wallet, True),
+                            partial(self.done_processing_success, d),
+                            partial(self.done_processing_error, d))
+
+    def synchronize(self, wallet, force):
+        self.pull(wallet, force)
+        self.push(wallet)
 
     def on_pulled(self, wallet):
         self.obj.labels_changed_signal.emit(wallet)
@@ -58,9 +45,9 @@ class Plugin(LabelsPlugin):
     def done_processing_success(self, dialog, result):
         dialog.show_message(_("Your labels have been synchronised."))
 
-    def done_processing_error(self, dialog, result):
-        traceback.print_exception(*result, file=sys.stderr)
-        dialog.show_error(_("Error synchronising labels") + ':\n' + str(result[:2]))
+    def done_processing_error(self, dialog, exc_info):
+        self.logger.error("Error synchronising labels", exc_info=exc_info)
+        dialog.show_error(_("Error synchronising labels") + f':\n{repr(exc_info[1])}')
 
     @hook
     def load_wallet(self, wallet, window):

@@ -23,7 +23,7 @@
 import binascii
 import os, sys, re, json
 from collections import defaultdict, OrderedDict
-from typing import NamedTuple, Union, TYPE_CHECKING, Tuple, Optional, Callable
+from typing import NamedTuple, Union, TYPE_CHECKING, Tuple, Optional, Callable, Any
 from datetime import datetime
 import decimal
 from decimal import Decimal
@@ -47,6 +47,7 @@ from aiorpcx import TaskGroup
 import certifi
 
 from .i18n import _
+from .logging import get_logger, Logger
 
 if TYPE_CHECKING:
     from .network import Network
@@ -54,8 +55,12 @@ if TYPE_CHECKING:
     from .simple_config import SimpleConfig
 
 
+_logger = get_logger(__name__)
+
+
 def inv_dict(d):
     return {v: k for k, v in d.items()}
+
 
 ca_path = certifi.where()
 
@@ -159,9 +164,11 @@ class Satoshis(object):
 class Fiat(object):
     __slots__ = ('value', 'ccy')
 
-    def __new__(cls, value, ccy):
+    def __new__(cls, value: Optional[Decimal], ccy: str):
         self = super(Fiat, cls).__new__(cls)
         self.ccy = ccy
+        if not isinstance(value, (Decimal, type(None))):
+            raise TypeError(f"value should be Decimal or None, not {type(value)}")
         self.value = value
         return self
 
@@ -172,10 +179,21 @@ class Fiat(object):
         if self.value is None or self.value.is_nan():
             return _('No Data')
         else:
+            return "{:.2f}".format(self.value)
+
+    def to_ui_string(self):
+        if self.value is None or self.value.is_nan():
+            return _('No Data')
+        else:
             return "{:.2f}".format(self.value) + ' ' + self.ccy
 
     def __eq__(self, other):
-        return self.ccy == other.ccy and self.value == other.value
+        if self.ccy != other.ccy:
+            return False
+        if isinstance(self.value, Decimal) and isinstance(other.value, Decimal) \
+                and self.value.is_nan() and other.value.is_nan():
+            return True
+        return self.value == other.value
 
     def __ne__(self, other):
         return not (self == other)
@@ -197,35 +215,16 @@ class MyEncoder(json.JSONEncoder):
             return obj.isoformat(' ')[:-3]
         if isinstance(obj, set):
             return list(obj)
-        return super(MyEncoder, self).default(obj)
+        return super().default(obj)
 
-class PrintError(object):
-    '''A handy base class'''
-    verbosity_filter = ''
 
-    def diagnostic_name(self):
-        return ''
-
-    def log_name(self):
-        msg = self.verbosity_filter or self.__class__.__name__
-        d = self.diagnostic_name()
-        if d: msg += "][" + d
-        return "[%s]" % msg
-
-    def print_error(self, *msg):
-        if self.verbosity_filter in verbosity or verbosity == '*':
-            print_error(self.log_name(), *msg)
-
-    def print_stderr(self, *msg):
-        print_stderr(self.log_name(), *msg)
-
-    def print_msg(self, *msg):
-        print_msg(self.log_name(), *msg)
-
-class ThreadJob(PrintError):
+class ThreadJob(Logger):
     """A job that is run periodically from a thread's main loop.  run() is
     called from that thread's context.
     """
+
+    def __init__(self):
+        Logger.__init__(self)
 
     def run(self):
         """Called periodically from the thread"""
@@ -234,13 +233,14 @@ class ThreadJob(PrintError):
 class DebugMem(ThreadJob):
     '''A handy class for debugging GC memory leaks'''
     def __init__(self, classes, interval=30):
+        ThreadJob.__init__(self)
         self.next_time = 0
         self.classes = classes
         self.interval = interval
 
     def mem_stats(self):
         import gc
-        self.print_error("Start memscan")
+        self.logger.info("Start memscan")
         gc.collect()
         objmap = defaultdict(list)
         for obj in gc.get_objects():
@@ -248,20 +248,22 @@ class DebugMem(ThreadJob):
                 if isinstance(obj, class_):
                     objmap[class_].append(obj)
         for class_, objs in objmap.items():
-            self.print_error("%s: %d" % (class_.__name__, len(objs)))
-        self.print_error("Finish memscan")
+            self.logger.info(f"{class_.__name__}: {len(objs)}")
+        self.logger.info("Finish memscan")
 
     def run(self):
         if time.time() > self.next_time:
             self.mem_stats()
             self.next_time = time.time() + self.interval
 
-class DaemonThread(threading.Thread, PrintError):
+class DaemonThread(threading.Thread, Logger):
     """ daemon thread that terminates cleanly """
-    verbosity_filter = 'd'
+
+    LOGGING_SHORTCUT = 'd'
 
     def __init__(self):
         threading.Thread.__init__(self)
+        Logger.__init__(self)
         self.parent_thread = threading.currentThread()
         self.running = False
         self.running_lock = threading.Lock()
@@ -281,7 +283,7 @@ class DaemonThread(threading.Thread, PrintError):
                 try:
                     job.run()
                 except Exception as e:
-                    traceback.print_exc(file=sys.stderr)
+                    self.logger.exception('')
 
     def remove_jobs(self, jobs):
         with self.job_lock:
@@ -305,22 +307,9 @@ class DaemonThread(threading.Thread, PrintError):
         if 'ANDROID_DATA' in os.environ:
             import jnius
             jnius.detach()
-            self.print_error("jnius detach")
-        self.print_error("stopped")
+            self.logger.info("jnius detach")
+        self.logger.info("stopped")
 
-
-verbosity = ''
-def set_verbosity(filters: Union[str, bool]):
-    global verbosity
-    if type(filters) is bool:  # backwards compat
-        verbosity = '*' if filters else ''
-        return
-    verbosity = filters
-
-
-def print_error(*args):
-    if not verbosity: return
-    print_stderr(*args)
 
 def print_stderr(*args):
     args = [str(item) for item in args]
@@ -354,13 +343,14 @@ def constant_time_compare(val1, val2):
 
 
 # decorator that prints execution time
+_profiler_logger = _logger.getChild('profiler')
 def profiler(func):
     def do_profile(args, kw_args):
         name = func.__qualname__
         t0 = time.time()
         o = func(*args, **kw_args)
         t = time.time() - t0
-        print_error("[profiler]", name, "%.4f"%t)
+        _profiler_logger.debug(f"{name} {t:,.4f}")
         return o
     return lambda *args, **kw_args: do_profile(args, kw_args)
 
@@ -378,7 +368,7 @@ def ensure_sparse_file(filename):
         try:
             os.system('fsutil sparse setflag "{}" 1'.format(filename))
         except Exception as e:
-            print_error('error marking file {} as sparse: {}'.format(filename, e))
+            _logger.info(f'error marking file {filename} as sparse: {e}')
 
 
 def get_headers_dir(config):
@@ -504,9 +494,14 @@ def is_valid_email(s):
     return re.match(regexp, s) is not None
 
 
-def is_hash256_str(text: str) -> bool:
+def is_hash256_str(text: Any) -> bool:
     if not isinstance(text, str): return False
     if len(text) != 64: return False
+    return is_hex_str(text)
+
+
+def is_hex_str(text: Any) -> bool:
+    if not isinstance(text, str): return False
     try:
         bytes.fromhex(text)
     except:
@@ -522,6 +517,14 @@ def is_non_negative_integer(val) -> bool:
     except:
         pass
     return False
+
+
+def chunks(items, size: int):
+    """Break up items, an iterable, into chunks of length size."""
+    if size < 1:
+        raise ValueError(f"size must be positive, not {repr(size)}")
+    for i in range(0, len(items), size):
+        yield items[i: i + size]
 
 
 def format_satoshis_plain(x, decimal_point = 8):
@@ -663,10 +666,12 @@ def block_explorer_info():
     from . import constants
     return mainnet_block_explorers if not constants.net.TESTNET else testnet_block_explorers
 
-    return testnet_block_explorers if constants.net.TESTNET else mainnet_block_explorers
-
-def block_explorer(config):
-    return config.get('block_explorer', 'BlockEXOS')
+def block_explorer(config: 'SimpleConfig') -> str:
+    from . import constants
+    default_ = 'BlockEXOS'
+    be_key = config.get('block_explorer', default_)
+    be = block_explorer_info().get(be_key)
+    return be_key if be is not None else default_
 
 def block_explorer_tuple(config: 'SimpleConfig') -> Optional[Tuple[str, dict]]:
     return block_explorer_info().get(block_explorer(config))
@@ -686,18 +691,25 @@ def block_explorer_URL(config: 'SimpleConfig', kind: str, item: str) -> Optional
 #_ud = re.compile('%([0-9a-hA-H]{2})', re.MULTILINE)
 #urldecode = lambda x: _ud.sub(lambda m: chr(int(m.group(1), 16)), x)
 
-def parse_URI(uri: str, on_pr: Callable=None) -> dict:
+class InvalidBitcoinURI(Exception): pass
+
+
+def parse_URI(uri: str, on_pr: Callable = None, *, loop=None) -> dict:
+    """Raises InvalidBitcoinURI on malformed URI."""
     from . import bitcoin
     from .bitcoin import COIN
 
+    if not isinstance(uri, str):
+        raise InvalidBitcoinURI(f"expected string, not {repr(uri)}")
+
     if ':' not in uri:
         if not bitcoin.is_address(uri):
-            raise Exception("Not an EXOS address")
+            raise InvalidBitcoinURI("Not an EXOS address")
         return {'address': uri}
 
     u = urllib.parse.urlparse(uri)
     if u.scheme != 'exos':
-        raise Exception("Not an EXOS URI")
+        raise InvalidBitcoinURI("Not an EXOS URI")
     address = u.path
 
     # python for android fails to parse query
@@ -708,37 +720,50 @@ def parse_URI(uri: str, on_pr: Callable=None) -> dict:
         pq = urllib.parse.parse_qs(u.query)
 
     for k, v in pq.items():
-        if len(v)!=1:
-            raise Exception('Duplicate Key', k)
+        if len(v) != 1:
+            raise InvalidBitcoinURI(f'Duplicate Key: {repr(k)}')
 
     out = {k: v[0] for k, v in pq.items()}
     if address:
         if not bitcoin.is_address(address):
-            raise Exception("Invalid EXOS address:" + address)
+            raise InvalidBitcoinURI(f"Invalid EXOS address: {address}")
         out['address'] = address
     if 'amount' in out:
         am = out['amount']
-        m = re.match('([0-9\.]+)X([0-9])', am)
-        if m:
-            k = int(m.group(2)) - 8
-            amount = Decimal(m.group(1)) * pow(  Decimal(10) , k)
-        else:
-            amount = Decimal(am) * COIN
-        out['amount'] = int(amount)
+        try:
+            m = re.match(r'([0-9.]+)X([0-9])', am)
+            if m:
+                k = int(m.group(2)) - 8
+                amount = Decimal(m.group(1)) * pow(  Decimal(10) , k)
+            else:
+                amount = Decimal(am) * COIN
+            out['amount'] = int(amount)
+        except Exception as e:
+            raise InvalidBitcoinURI(f"failed to parse 'amount' field: {repr(e)}") from e
     if 'message' in out:
         out['message'] = out['message']
         out['memo'] = out['message']
     if 'time' in out:
-        out['time'] = int(out['time'])
+        try:
+            out['time'] = int(out['time'])
+        except Exception as e:
+            raise InvalidBitcoinURI(f"failed to parse 'time' field: {repr(e)}") from e
     if 'exp' in out:
-        out['exp'] = int(out['exp'])
+        try:
+            out['exp'] = int(out['exp'])
+        except Exception as e:
+            raise InvalidBitcoinURI(f"failed to parse 'exp' field: {repr(e)}") from e
     if 'sig' in out:
-        out['sig'] = bh2u(bitcoin.base_decode(out['sig'], None, base=58))
+        try:
+            out['sig'] = bh2u(bitcoin.base_decode(out['sig'], None, base=58))
+        except Exception as e:
+            raise InvalidBitcoinURI(f"failed to parse 'sig' field: {repr(e)}") from e
 
     r = out.get('r')
     sig = out.get('sig')
     name = out.get('name')
     if on_pr and (r or (name and sig)):
+        @log_exceptions
         async def get_payment_request():
             from . import paymentrequest as pr
             if name and sig:
@@ -748,23 +773,31 @@ def parse_URI(uri: str, on_pr: Callable=None) -> dict:
                 request = await pr.get_payment_request(r)
             if on_pr:
                 on_pr(request)
-        loop = asyncio.get_event_loop()
+        loop = loop or asyncio.get_event_loop()
         asyncio.run_coroutine_threadsafe(get_payment_request(), loop)
 
     return out
 
 
-def create_URI(addr, amount, message):
+def create_bip21_uri(addr, amount_sat: Optional[int], message: Optional[str],
+                     *, extra_query_params: Optional[dict] = None) -> str:
     from . import bitcoin
     if not bitcoin.is_address(addr):
         return ""
+    if extra_query_params is None:
+        extra_query_params = {}
     query = []
-    if amount:
-        query.append('amount=%s'%format_satoshis_plain(amount))
+    if amount_sat:
+        query.append('amount=%s'%format_satoshis_plain(amount_sat))
     if message:
         query.append('message=%s'%urllib.parse.quote(message))
+    for k, v in extra_query_params.items():
+        if not isinstance(k, str) or k != urllib.parse.quote(k):
+            raise Exception(f"illegal key for URI: {repr(k)}")
+        v = urllib.parse.quote(v)
+        query.append(f"{k}={v}")
     p = urllib.parse.ParseResult(scheme='exos', netloc='', path=addr, params='', query='&'.join(query), fragment='')
-    return urllib.parse.urlunparse(p)
+    return str(urllib.parse.urlunparse(p))
 
 
 # Python bug (http://bugs.python.org/issue1927) causes raw_input
@@ -832,10 +865,10 @@ def import_meta(path, validater, load_meta):
         load_meta(d)
     #backwards compatibility for JSONDecodeError
     except ValueError:
-        traceback.print_exc(file=sys.stderr)
+        _logger.exception('')
         raise FileImportFailed(_("Invalid JSON code."))
     except BaseException as e:
-        traceback.print_exc(file=sys.stdout)
+        _logger.exception('')
         raise FileImportFailed(e)
 
 
@@ -844,7 +877,7 @@ def export_meta(meta, fileName):
         with open(fileName, 'w+', encoding='utf-8') as f:
             json.dump(meta, f, indent=4, sort_keys=True)
     except (IOError, os.error) as e:
-        traceback.print_exc(file=sys.stderr)
+        _logger.exception('')
         raise FileExportFailed(e)
 
 
@@ -867,12 +900,11 @@ def log_exceptions(func):
         except asyncio.CancelledError as e:
             raise
         except BaseException as e:
-            print_ = self.print_error if hasattr(self, 'print_error') else print_error
-            print_("Exception in", func.__name__, ":", repr(e))
+            mylogger = self.logger if hasattr(self, 'logger') else _logger
             try:
-                traceback.print_exc(file=sys.stderr)
+                mylogger.exception(f"Exception in {func.__name__}: {repr(e)}")
             except BaseException as e2:
-                print_error("traceback.print_exc raised: {}...".format(e2))
+                print(f"logging exception raised: {repr(e2)}... orig exc: {repr(e)} in {func.__name__}")
             raise
     return wrapper
 
@@ -896,11 +928,13 @@ class TxMinedInfo(NamedTuple):
     header_hash: Optional[str] = None  # hash of block that mined tx
 
 
-def make_aiohttp_session(proxy: dict, headers=None, timeout=None):
+def make_aiohttp_session(proxy: Optional[dict], headers=None, timeout=None):
     if headers is None:
         headers = {'User-Agent': 'Electrum'}
     if timeout is None:
-        timeout = aiohttp.ClientTimeout(total=10)
+        timeout = aiohttp.ClientTimeout(total=30)
+    elif isinstance(timeout, (int, float)):
+        timeout = aiohttp.ClientTimeout(total=timeout)
     ssl_context = ssl.create_default_context(purpose=ssl.Purpose.SERVER_AUTH, cafile=ca_path)
 
     if proxy:
@@ -911,10 +945,10 @@ def make_aiohttp_session(proxy: dict, headers=None, timeout=None):
             username=proxy.get('user', None),
             password=proxy.get('password', None),
             rdns=True,
-            ssl_context=ssl_context,
+            ssl=ssl_context,
         )
     else:
-        connector = aiohttp.TCPConnector(ssl_context=ssl_context)
+        connector = aiohttp.TCPConnector(ssl=ssl_context)
 
     return aiohttp.ClientSession(headers=headers, timeout=timeout, connector=connector)
 
@@ -928,12 +962,13 @@ class SilentTaskGroup(TaskGroup):
         return super().spawn(*args, **kwargs)
 
 
-class NetworkJobOnDefaultServer(PrintError):
+class NetworkJobOnDefaultServer(Logger):
     """An abstract base class for a job that runs on the main network
     interface. Every time the main interface changes, the job is
     restarted, and some of its internals are reset.
     """
     def __init__(self, network: 'Network'):
+        Logger.__init__(self)
         asyncio.set_event_loop(network.asyncio_loop)
         self.network = network
         self.interface = None  # type: Interface
@@ -959,6 +994,10 @@ class NetworkJobOnDefaultServer(PrintError):
         raise NotImplementedError()  # implemented by subclasses
 
     async def stop(self):
+        self.network.unregister_callback(self._restart)
+        await self._stop()
+
+    async def _stop(self):
         await self.group.cancel_remaining()
 
     @log_exceptions
@@ -968,7 +1007,7 @@ class NetworkJobOnDefaultServer(PrintError):
             return  # we should get called again soon
 
         async with self._restart_lock:
-            await self.stop()
+            await self._stop()
             self._reset()
             await self._start(interface)
 
@@ -1062,3 +1101,14 @@ class OrderedDictWithIndex(OrderedDict):
             self._key_to_pos[key] = pos
             self._pos_to_key[pos] = key
         return ret
+
+
+def multisig_type(wallet_type):
+    '''If wallet_type is mofn multi-sig, return [m, n],
+    otherwise return None.'''
+    if not wallet_type:
+        return None
+    match = re.match(r'(\d+)of(\d+)', wallet_type)
+    if match:
+        match = [int(x) for x in match.group(1, 2)]
+    return match

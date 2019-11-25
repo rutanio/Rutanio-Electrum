@@ -17,7 +17,7 @@ _min_python_version_tuple = tuple(map(int, (MIN_PYTHON_VERSION.split("."))))
 
 
 if sys.version_info[:3] < _min_python_version_tuple:
-    sys.exit("Error: Electrum requires Python version >= {}...".format(MIN_PYTHON_VERSION))
+    sys.exit("Error: Electrum requires Python version >= %s..." % MIN_PYTHON_VERSION)
 
 with open('contrib/requirements/requirements.txt') as f:
     requirements = f.read().splitlines()
@@ -58,24 +58,6 @@ extras_require = {
 extras_require['full'] = [pkg for sublist in list(extras_require.values()) for pkg in sublist]
 
 
-class CustomInstallCommand(install):
-    def run(self):
-        install.run(self)
-        # potentially build Qt icons file
-        try:
-            import PyQt5
-        except ImportError:
-            pass
-        else:
-            try:
-                path = os.path.join(self.install_lib, "electrum/gui/qt/icons_rc.py")
-                if not os.path.exists(path):
-                    subprocess.call(["pyrcc5", "icons.qrc", "-o", path])
-            except Exception as e:
-                print('Warning: building icons file failed with {}'.format(e))
-
-
-
 setup(
     name="EXOS-Electrum",
     version=version.ELECTRUM_VERSION,
@@ -105,11 +87,8 @@ setup(
     data_files=data_files,
     description="Lightweight EXOS Wallet",
     author="OpenExO and ExO Economy Developers, Fluid Chains Devs",
-    author_email="turcol@gmail.com",
+    author_email="nayib@fluidchains.com",
     license="MIT Licence",
     url="https://economy.openexo.com",
     long_description="""Lightweight EXOS Wallet""",
-    cmdclass={
-        'install': CustomInstallCommand,
-    },
 )

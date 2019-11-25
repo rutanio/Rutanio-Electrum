@@ -8,7 +8,7 @@
 
   !define PRODUCT_NAME "EXOS-Electrum"
   !define PRODUCT_WEB_SITE "https://github.com/exoeconomy/exos-electrum"
-  !define PRODUCT_PUBLISHER "ExF Developers"
+  !define PRODUCT_PUBLISHER "OpenExO Developers"
   !define PRODUCT_UNINST_KEY "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_NAME}"
 
 ;--------------------------------

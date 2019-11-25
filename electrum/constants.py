@@ -26,6 +26,8 @@
 import os
 import json
 
+from .util import inv_dict
+
 
 def read_json(filename, default):
     path = os.path.join(os.path.dirname(__file__), filename)
@@ -35,6 +37,10 @@ def read_json(filename, default):
     except:
         r = default
     return r
+
+
+GIT_REPO_URL = "https://github.com/exoeconomy/EXOS-Electrum"
+GIT_REPO_ISSUES_URL = "https://github.com/exoeconomy/EXOS-Electrum/issues"
 
 
 class AbstractNet:
@@ -50,7 +56,7 @@ class BitcoinMainnet(AbstractNet):
     WIF_PREFIX = 0x9C
     ADDRTYPE_P2PKH = 28
     ADDRTYPE_P2SH = 87
-    SEGWIT_HRP = "ci"
+    SEGWIT_HRP = "exos"
     GENESIS = "00000036090a68c523471da7a4f0f958c1b4403fef74a003be7f71877699cab7"
     DEFAULT_PORTS = {'t': '50001', 's': '50002'}
     DEFAULT_SERVERS = read_json('servers.json', {})
@@ -63,6 +69,7 @@ class BitcoinMainnet(AbstractNet):
         'p2wpkh':      0x04b2430c,  # zprv
         'p2wsh':       0x02aa7a99,  # Zprv
     }
+    XPRV_HEADERS_INV = inv_dict(XPRV_HEADERS)
     XPUB_HEADERS = {
         'standard':    0x0488b21e,  # xpub
         'p2wpkh-p2sh': 0x049d7cb2,  # ypub
@@ -70,6 +77,7 @@ class BitcoinMainnet(AbstractNet):
         'p2wpkh':      0x04b24746,  # zpub
         'p2wsh':       0x02aa7ed3,  # Zpub
     }
+    XPUB_HEADERS_INV = inv_dict(XPUB_HEADERS)
     BIP44_COIN_TYPE = 248
 
 
@@ -79,7 +87,7 @@ class BitcoinTestnet(AbstractNet):
     WIF_PREFIX = 0xcb
     ADDRTYPE_P2PKH = 75
     ADDRTYPE_P2SH = 206
-    SEGWIT_HRP = "tci"
+    SEGWIT_HRP = "texos"
     GENESIS = "0000059bb2c2048493efcb0f1a034972b3ce4089d54c93b69aaab212fb369887"
     DEFAULT_PORTS = {'t': '51001', 's': '51002'}
     DEFAULT_SERVERS = read_json('servers_testnet.json', {})
@@ -92,6 +100,7 @@ class BitcoinTestnet(AbstractNet):
         'p2wpkh':      0x045f18bc,  # vprv
         'p2wsh':       0x02575048,  # Vprv
     }
+    XPRV_HEADERS_INV = inv_dict(XPRV_HEADERS)
     XPUB_HEADERS = {
         'standard':    0x043587cf,  # tpub
         'p2wpkh-p2sh': 0x044a5262,  # upub
@@ -99,12 +108,13 @@ class BitcoinTestnet(AbstractNet):
         'p2wpkh':      0x045f1cf6,  # vpub
         'p2wsh':       0x02575483,  # Vpub
     }
+    XPUB_HEADERS_INV = inv_dict(XPUB_HEADERS)
     BIP44_COIN_TYPE = 1
 
 
 class BitcoinRegtest(BitcoinTestnet):
 
-    SEGWIT_HRP = "cirt"
+    SEGWIT_HRP = "exosrt"
     GENESIS = "00000755a53922ad3443a7609ee700ca246a547783116f2085fff1e486e56085"
     DEFAULT_SERVERS = read_json('servers_regtest.json', {})
     CHECKPOINTS = []

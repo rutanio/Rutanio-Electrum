@@ -5,10 +5,18 @@ PYTHON_VERSION=3.6.6
 BUILDDIR=/tmp/exos-electrum-build
 PACKAGE=EXOS-Electrum
 DMG_BACKGROUND_IMG="exos-electrum-background-dmg.png"
+PKG_ICON="exos-electrum.icns"
+IDENTIFIER="com.openexo.economy.exos-electrum"
+APPLE_DEV_INSTALLER_CERT="Developer ID Installer: "
+APPLE_DEV_APPLICATION_CERT="Developer ID Application: "
 GIT_REPO=https://github.com/exoeconomy/exos-electrum
 LIBSECP_VERSION="b408c6a8b287003d1ade5709e6f7bc3c7f1d5be7"
 
 . $(dirname "$0")/base.sh
+
+CONTRIB_OSX="$(dirname "$(realpath "$0")")"
+CONTRIB="$CONTRIB_OSX/.."
+ROOT_FOLDER="$CONTRIB/.."
 
 src_dir=$(dirname "$0")
 cd $src_dir/../..
@@ -24,14 +32,14 @@ APP_SIGN=""
 if [ -n "$1" ]; then
     # Test the identity is valid for signing by doing this hack. There is no other way to do this.
     cp -f /bin/ls ./CODESIGN_TEST
-    codesign -s "$1" --dryrun -f ./CODESIGN_TEST > /dev/null 2>&1
+    codesign -s "$APPLE_DEV_APPLICATION_CERT$1" --dryrun -f ./CODESIGN_TEST > /dev/null 2>&1
     res=$?
     rm -f ./CODESIGN_TEST
     if ((res)); then
-        fail "Code signing identity \"$1\" appears to be invalid."
+        fail "Code signing identity \"$APPLE_DEV_APPLICATION_CERT$1\" appears to be invalid."
     fi
     unset res
-    APP_SIGN="$1"
+    APP_SIGN="$APPLE_DEV_APPLICATION_CERT$1"
     info "Code signing enabled using identity \"$APP_SIGN\""
 else
     warn "Code signing DISABLED. Specify a valid macOS Developer identity installed on the system as the first argument to this script to enable signing."
@@ -66,13 +74,24 @@ pyinstaller --version
 
 rm -rf ./dist
 
-git submodule init
-git submodule update
+git submodule update --init
 
 rm  -rf $BUILDDIR > /dev/null 2>&1
 mkdir $BUILDDIR
 
-cp -R ./contrib/deterministic-build/exos-electrum-locale/locale/ ./electrum/locale/
+info "generating locale"
+(
+    if ! which msgfmt > /dev/null 2>&1; then
+        brew install gettext
+        brew link --force gettext
+    fi
+    cd "$CONTRIB"/deterministic-build/exos-electrum-locale
+    for i in ./locale/*; do
+        dir="$ROOT_FOLDER"/electrum/$i/LC_MESSAGES
+        mkdir -p $dir
+        msgfmt --output-file=$dir/electrum.mo $i/electrum.po || true
+    done
+) || fail "failed generating locale"
 
 
 info "Downloading libusb..."
@@ -132,6 +151,9 @@ plutil -insert 'CFBundleURLTypes' \
 	|| fail "Could not add keys to Info.plist. Make sure the program 'plutil' exists and is installed."
 
 DoCodeSignMaybe "app bundle" "dist/${PACKAGE}.app" "$APP_SIGN" # If APP_SIGN is empty will be a noop
+
+info "Creating .PKG"
+CreatePKG "$PACKAGE" "$VERSION" "$PKG_ICON" "$IDENTIFIER" "$APPLE_DEV_INSTALLER_CERT$1"
 
 info "Creating .DMG"
 CreateDMG "$PACKAGE" "$VERSION" "$DMG_BACKGROUND_IMG"  
