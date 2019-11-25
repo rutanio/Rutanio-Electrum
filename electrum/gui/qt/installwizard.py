@@ -121,7 +121,7 @@ class InstallWizard(QDialog, MessageBoxMixin, BaseWizard):
         self.setWindowTitle('EXOS Electrum  -  ' + _('Install Wizard'))
         self.app = app
         self.config = config
-        self.setMinimumSize(600, 400)
+        self.setMinimumSize(615, 435)
         self.accept_signal.connect(self.accept)
         self.title = QLabel()
         self.main_widget = QWidget()
