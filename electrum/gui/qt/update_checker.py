@@ -20,7 +20,7 @@ from electrum_exos.logging import Logger
 
 class UpdateCheck(QWidget, Logger):
     url = "https://github.com/exoeconomy/EXOS-Electrum-version/raw/master/version"
-    download_url = "https://github.com/exoeconomy/EXOS-Electrum-version/releases/"
+    download_url = "https://github.com/exoeconomy/EXOS-Electrum/releases/"
 
     VERSION_ANNOUNCEMENT_SIGNING_KEYS = (
         "CPvQvHN6e9mZyUSxZtmaX1E17wj9MbjKET",
