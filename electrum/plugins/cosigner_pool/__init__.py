@@ -21,7 +21,7 @@ if sys.platform == 'darwin':
     context.check_hostname = True
     v, _, _ = platform.mac_ver()
     v = float('.'.join(v.split('.')[:2]))
-    if v > 10.12:
+    if v >= 10.12:
         context.load_verify_locations(cafile='/private/etc/ssl/cert.pem')    
 
 server = ServerProxy('https://cosigner.exos.to/', allow_none=True, verbose=False, use_datetime=True, context=context)
