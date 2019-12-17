@@ -13,17 +13,16 @@ description = ' '.join([
 #requires_wallet_type = ['2of2', '2of3']
 available_for = ['qt']
 
-context = ssl.SSLContext()
-context.verify_mode = ssl.CERT_REQUIRED
-context.check_hostname = True
+context = None
 
 if sys.platform == 'darwin':
+    context = ssl.SSLContext()
+    context.verify_mode = ssl.CERT_REQUIRED
+    context.check_hostname = True
     v, _, _ = platform.mac_ver()
     v = float('.'.join(v.split('.')[:2]))
     release = [10.12, 10.13, 10.14, 10.15]
     if v in release:
         context.load_verify_locations(cafile='/private/etc/ssl/cert.pem')    
-else:
-    context.load_default_certs()
 
-server = ServerProxy('https://cosigner.exos.to/', allow_none=True, verbose=False, use_datetime=True)
+server = ServerProxy('https://cosigner.exos.to/', allow_none=True, verbose=False, use_datetime=True, context=context)
