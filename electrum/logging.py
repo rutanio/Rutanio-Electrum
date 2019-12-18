@@ -31,24 +31,31 @@ file_formatter = LogFormatterForFiles(fmt="%(asctime)22s | %(levelname)8s | %(na
 
 class LogFormatterForConsole(logging.Formatter):
 
+    def formatTime(self, record, datefmt=None):
+        # timestamps follow ISO 8601 UTC
+        date = datetime.datetime.fromtimestamp(record.created).astimezone(datetime.timezone.utc)
+        if not datefmt:
+            datefmt = "%Y-%m-%d %H:%M:%S.%fZ"
+        return date.strftime(datefmt)
+
     def format(self, record):
         record = _shorten_name_of_logrecord(record)
         text = super().format(record)
         shortcut = getattr(record, 'custom_shortcut', None)
         if shortcut:
-            text = text[:1] + f"/{shortcut}" + text[1:]
+            text = text[:31] + f"/{shortcut}" + text[31:]
         return text
 
 
 # try to make console log lines short... no timestamp, short levelname, no "electrum."
-console_formatter = LogFormatterForConsole(fmt="%(levelname).1s | %(name)s | %(message)s")
+console_formatter = LogFormatterForConsole(fmt="%(asctime)26s | %(levelname).1s | %(name)s | %(message)s")
 
 
 def _shorten_name_of_logrecord(record: logging.LogRecord) -> logging.LogRecord:
     record = copy.copy(record)  # avoid mutating arg
     # strip the main module name from the logger name
     if record.name.startswith("exos-electrum."):
-        record.name = record.name[9:]
+        record.name = record.name[14:]
     # manual map to shorten common module names
     record.name = record.name.replace("interface.Interface", "interface", 1)
     record.name = record.name.replace("network.Network", "network", 1)
@@ -242,9 +249,9 @@ def configure_logging(config):
     # if using kivy, avoid kivy's own logs to get printed twice
     logging.getLogger('kivy').propagate = False
 
-    from . import ELECTRUM_VERSION
+    from .version import ELECTRUM_BUILD
     from .constants import GIT_REPO_URL
-    _logger.info(f"EXOS-Electrum version: {ELECTRUM_VERSION} - https://economy.openexo.com - {GIT_REPO_URL}")
+    _logger.info(f"EXOS-Electrum version: {ELECTRUM_BUILD} - https://economy.openexo.com - {GIT_REPO_URL}")
     _logger.info(f"Python version: {sys.version}. On platform: {describe_os_version()}")
     _logger.info(f"Logging to file: {str(_logfile_path)}")
     _logger.info(f"Log filters: verbosity {repr(verbosity)}, verbosity_shortcuts {repr(verbosity_shortcuts)}")

@@ -121,7 +121,7 @@ class InstallWizard(QDialog, MessageBoxMixin, BaseWizard):
         self.setWindowTitle('EXOS Electrum  -  ' + _('Install Wizard'))
         self.app = app
         self.config = config
-        self.setMinimumSize(600, 400)
+        self.setMinimumSize(615, 435)
         self.accept_signal.connect(self.accept)
         self.title = QLabel()
         self.main_widget = QWidget()
@@ -160,7 +160,7 @@ class InstallWizard(QDialog, MessageBoxMixin, BaseWizard):
         hbox.setStretchFactor(scroll, 1)
         outer_vbox.addLayout(hbox)
         outer_vbox.addLayout(Buttons(self.back_button, self.next_button))
-        self.set_icon('electrum.png')
+        self.set_icon('exos-electrum.png')
         self.show()
         self.raise_()
         self.refresh_gui()  # Need for QT on MacOSX.  Lame.

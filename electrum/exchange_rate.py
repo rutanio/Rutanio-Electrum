@@ -155,13 +155,6 @@ class BitcoinAverage(ExchangeBase):
                      for r in json if r != 'timestamp'])
 
 
-class Bitcointoyou(ExchangeBase):
-
-    async def get_rates(self, ccy):
-        json = await self.get_json('bitcointoyou.com', "/API/ticker.aspx")
-        return {'BRL': Decimal(json['ticker']['last'])}
-
-
 class BitcoinVenezuela(ExchangeBase):
 
     async def get_rates(self, ccy):
@@ -314,17 +307,6 @@ class CoinGecko(ExchangeBase):
                      for h in history['prices']])
 
 
-class itBit(ExchangeBase):
-
-    async def get_rates(self, ccy):
-        ccys = ['USD', 'EUR', 'SGD']
-        json = await self.get_json('api.itbit.com', '/v1/markets/XBT%s/ticker' % ccy)
-        result = dict.fromkeys(ccys)
-        if ccy in ccys:
-            result[ccy] = Decimal(json['lastPrice'])
-        return result
-
-
 class Kraken(ExchangeBase):
 
     async def get_rates(self, ccy):
@@ -344,42 +326,12 @@ class LocalBitcoins(ExchangeBase):
         return dict([(r, Decimal(json[r]['rates']['last'])) for r in json])
 
 
-class MercadoBitcoin(ExchangeBase):
-
-    async def get_rates(self, ccy):
-        json = await self.get_json('api.bitvalor.com', '/v1/ticker.json')
-        return {'BRL': Decimal(json['ticker_1h']['exchanges']['MBT']['last'])}
-
-
-class NegocieCoins(ExchangeBase):
-
-    async def get_rates(self,ccy):
-        json = await self.get_json('api.bitvalor.com', '/v1/ticker.json')
-        return {'BRL': Decimal(json['ticker_1h']['exchanges']['NEG']['last'])}
-
 class TheRockTrading(ExchangeBase):
 
     async def get_rates(self, ccy):
         json = await self.get_json('api.therocktrading.com',
                              '/v1/funds/BTCEUR/ticker')
         return {'EUR': Decimal(json['last'])}
-
-
-class Winkdex(ExchangeBase):
-
-    async def get_rates(self, ccy):
-        json = await self.get_json('winkdex.com', '/api/v0/price')
-        return {'USD': Decimal(json['price'] / 100.0)}
-
-    def history_ccys(self):
-        return ['USD']
-
-    async def request_history(self, ccy):
-        json = await self.get_json('winkdex.com',
-                             "/api/v0/series?start_time=1342915200")
-        history = json['series'][0]['results']
-        return dict([(h['timestamp'][:10], h['price'] / 100.0)
-                     for h in history])
 
 
 class Zaif(ExchangeBase):

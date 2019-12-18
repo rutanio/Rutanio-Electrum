@@ -27,7 +27,7 @@ import subprocess
 import sys
 import os
 
-from .version import ELECTRUM_VERSION
+from .version import ELECTRUM_BUILD
 from . import constants
 from .i18n import _
 from .util import make_aiohttp_session
@@ -44,14 +44,14 @@ class BaseCrashReporter(Logger):
 
 <h2>Additional information</h2>
 <ul>
-  <li>Electrum version: {app_version}</li>
+  <li>EXOS-Electrum version: {app_version}</li>
   <li>Python version: {python_version}</li>
   <li>Operating system: {os}</li>
   <li>Wallet type: {wallet_type}</li>
   <li>Locale: {locale}</li>
 </ul>
     """
-    CRASH_MESSAGE = _('Something went wrong while executing Electrum.')
+    CRASH_MESSAGE = _('Something went wrong while executing EXOS-Electrum.')
     CRASH_TITLE = _('Sorry!')
     REQUEST_HELP_MESSAGE = _('To help us diagnose and fix the problem, you can send us a bug report that contains '
                              'useful debug information:')
@@ -95,7 +95,7 @@ class BaseCrashReporter(Logger):
 
     def get_additional_info(self):
         args = {
-            "app_version": ELECTRUM_VERSION,
+            "app_version": ELECTRUM_BUILD,
             "python_version": sys.version,
             "os": describe_os_version(),
             "wallet_type": "unknown",
@@ -118,7 +118,7 @@ class BaseCrashReporter(Logger):
     def get_git_version():
         dir = os.path.dirname(os.path.realpath(sys.argv[0]))
         version = subprocess.check_output(
-            ['git', 'describe', '--always', '--dirty'], cwd=dir)
+            ['git', 'describe', '--tags'], cwd=dir)
         return str(version, "utf8").strip()
 
     def get_report_string(self):
