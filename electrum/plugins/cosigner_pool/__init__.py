@@ -1,5 +1,5 @@
 from electrum_exos.i18n import _
-import ssl 
+from electrum_exos.util import SSLContextSafe
 
 from xmlrpc.client import ServerProxy
 
@@ -12,4 +12,7 @@ description = ' '.join([
 #requires_wallet_type = ['2of2', '2of3']
 available_for = ['qt']
 
-server = ServerProxy('https://cosigner.exos.to/', allow_none=True, verbose=False, use_datetime=True)
+# get ssl context with known cert trust store location
+context = SSLContextSafe.get_context()
+
+server = ServerProxy('https://cosigner.exos.to/', allow_none=True, verbose=False, use_datetime=True, context=context)
