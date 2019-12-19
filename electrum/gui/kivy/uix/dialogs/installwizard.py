@@ -38,8 +38,8 @@ Builder.load_string('''
     border: 4, 4, 4, 4
     font_size: '15sp'
     padding: '15dp', '15dp'
-    background_color: (1, 1, 1, 1) if self.focus else (0.454, 0.698, 0.909, 1)
-    foreground_color: (0.31, 0.31, 0.31, 1) if self.focus else (0.835, 0.909, 0.972, 1)
+    background_color: (1, 1, 1, 1) if self.focus else (1, 1, 0, 1)
+    foreground_color: (0, 1, 0, 1) if self.focus else (0.835, 0.909, 0.972, 1)
     hint_text_color: self.foreground_color
     background_active: 'atlas://electrum/gui/kivy/theming/light/create_act_text_active'
     background_normal: 'atlas://electrum/gui/kivy/theming/light/create_act_text_active'
@@ -52,6 +52,8 @@ Builder.load_string('''
     height: '48sp'
     on_press: if self.root: self.root.dispatch('on_press', self)
     on_release: if self.root: self.root.dispatch('on_release', self)
+    background_normal: ''
+    background_color: 0.173, 0.294, 0.455, 1
 
 <BigLabel@Label>
     color: .854, .925, .984, 1
@@ -67,7 +69,7 @@ Builder.load_string('''
     size_hint: None, None
     canvas.before:
         Color:
-            rgba: .239, .588, .882, 1
+            rgba: 0, .118, .278, 1
         Rectangle:
             size: Window.size
 
@@ -137,7 +139,7 @@ Builder.load_string('''
             text: _('From {} cosigners').format(n.value)
         Slider:
             id: n
-            range: 2, 5
+            range: 2, 8
             step: 1
             value: 2
         Label:
@@ -299,7 +301,7 @@ Builder.load_string('''
     valign: 'top'
     font_size: '18dp'
     text_size: self.width - dp(24), self.height - dp(12)
-    color: .1, .1, .1, 1
+    color: 1, 0, 0, 1
     background_normal: 'atlas://electrum/gui/kivy/theming/light/white_bg_round_top'
     background_down: self.background_normal
     size_hint_y: None
