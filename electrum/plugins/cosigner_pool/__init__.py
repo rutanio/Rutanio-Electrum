@@ -1,8 +1,7 @@
 from electrum_exos.i18n import _
-import ssl 
-import sys
+from electrum_exos.util import SSLContextSafe
+
 from xmlrpc.client import ServerProxy
-import platform
 
 fullname = _('Cosigner Pool')
 description = ' '.join([
@@ -13,15 +12,7 @@ description = ' '.join([
 #requires_wallet_type = ['2of2', '2of3']
 available_for = ['qt']
 
-context = None
-
-if sys.platform == 'darwin':
-    context = ssl.SSLContext()
-    context.verify_mode = ssl.CERT_REQUIRED
-    context.check_hostname = True
-    v, _, _ = platform.mac_ver()
-    v = float('.'.join(v.split('.')[:2]))
-    if v >= 10.12:
-        context.load_verify_locations(cafile='/private/etc/ssl/cert.pem')    
+# get ssl context with known cert trust store location
+context = SSLContextSafe.get_context()
 
 server = ServerProxy('https://cosigner.exos.to/', allow_none=True, verbose=False, use_datetime=True, context=context)

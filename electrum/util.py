@@ -40,6 +40,7 @@ import json
 import time
 from typing import NamedTuple, Optional
 import ssl
+import platform
 
 import aiohttp
 from aiohttp_socks import SocksConnector, SocksVer
@@ -935,8 +936,8 @@ def make_aiohttp_session(proxy: Optional[dict], headers=None, timeout=None):
         timeout = aiohttp.ClientTimeout(total=30)
     elif isinstance(timeout, (int, float)):
         timeout = aiohttp.ClientTimeout(total=timeout)
-    ssl_context = ssl.create_default_context(purpose=ssl.Purpose.SERVER_AUTH, cafile=ca_path)
-
+    alt_context = ssl.create_default_context(purpose=ssl.Purpose.SERVER_AUTH, cafile=ca_path)
+    ssl_context = SSLContextSafe.get_context(alt_context=alt_context)
     if proxy:
         connector = SocksConnector(
             socks_ver=SocksVer.SOCKS5 if proxy['mode'] == 'socks5' else SocksVer.SOCKS4,
@@ -1112,3 +1113,22 @@ def multisig_type(wallet_type):
     if match:
         match = [int(x) for x in match.group(1, 2)]
     return match
+
+class SSLContextSafe:
+    """ Returns a known path for cert trust store on platforms with
+    known issues validating certificate chains, or other
+    """ 
+    @classmethod
+    def get_context(self, alt_context: ssl.SSLContext=None) -> ssl.SSLContext:
+        context = alt_context
+        if sys.platform == 'darwin':
+            context = ssl.SSLContext()
+            context.verify_mode = ssl.CERT_REQUIRED
+            context.check_hostname = True
+            v, _, _ = platform.mac_ver()
+            v = float('.'.join(v.split('.')[:2]))
+            if v >= 10.12:
+                if os.path.exists('/private/etc/ssl/cert.pem'):
+                    context.load_verify_locations(cafile='/private/etc/ssl/cert.pem') 
+
+        return context
