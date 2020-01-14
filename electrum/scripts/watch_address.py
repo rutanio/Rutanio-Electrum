@@ -3,15 +3,15 @@
 import sys
 import asyncio
 
-from electrum_exos.network import Network
-from electrum_exos.util import print_msg, create_and_start_event_loop
-from electrum_exos.synchronizer import SynchronizerBase
+from electrum_rutanio.network import Network
+from electrum_rutanio.util import print_msg, create_and_start_event_loop
+from electrum_rutanio.synchronizer import SynchronizerBase
 
 
 try:
     addr = sys.argv[1]
 except Exception:
-    print("usage: watch_address <exos_address>")
+    print("usage: watch_address <rutanio_address>")
     sys.exit(1)
 
 # start network

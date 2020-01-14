@@ -3,7 +3,7 @@ from kivy.factory import Factory
 from kivy.properties import ObjectProperty
 from kivy.lang import Builder
 
-from electrum_exos.gui.kivy.i18n import _
+from electrum_rutanio.gui.kivy.i18n import _
 
 Builder.load_string('''
 <BumpFeeDialog@Popup>
@@ -102,7 +102,7 @@ class BumpFeeDialog(Factory.Popup):
             fee_rate = self.config.depth_to_fee(pos) if self.mempool else self.config.eta_to_fee(pos)
         else:
             fee_rate = self.config.static_fee(pos)
-        return fee_rate  # exo/kbyte
+        return fee_rate  # rutax/kbyte
 
     def on_ok(self):
         new_fee_rate = self.get_fee_rate() / 1000

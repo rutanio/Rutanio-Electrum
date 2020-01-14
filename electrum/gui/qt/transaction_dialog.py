@@ -37,17 +37,17 @@ from PyQt5.QtWidgets import (QDialog, QLabel, QPushButton, QHBoxLayout, QVBoxLay
 import qrcode
 from qrcode import exceptions
 
-from electrum_exos import util, keystore, ecc, crypto
-from electrum_exos.bip32 import BIP32Node
-from electrum_exos.bitcoin import base_encode
-from electrum_exos.i18n import _
-from electrum_exos.plugin import run_hook
-from electrum_exos import simple_config
-from electrum_exos.util import bfh, bh2u
-from electrum_exos.transaction import SerializationError, Transaction
-from electrum_exos.wallet import Multisig_Wallet
-from electrum_exos.plugins.cosigner_pool import server	
-from electrum_exos.logging import get_logger
+from electrum_rutanio import util, keystore, ecc, crypto
+from electrum_rutanio.bip32 import BIP32Node
+from electrum_rutanio.bitcoin import base_encode
+from electrum_rutanio.i18n import _
+from electrum_rutanio.plugin import run_hook
+from electrum_rutanio import simple_config
+from electrum_rutanio.util import bfh, bh2u
+from electrum_rutanio.transaction import SerializationError, Transaction
+from electrum_rutanio.wallet import Multisig_Wallet
+from electrum_rutanio.plugins.cosigner_pool import server	
+from electrum_rutanio.logging import get_logger
 
 from .util import (MessageBoxMixin, read_QIcon, Buttons, CopyButton,
                    MONOSPACE_FONT, ColorScheme, ButtonsLineEdit)
@@ -68,7 +68,7 @@ def show_transaction_timeout(tx, parent, desc=None, prompt_if_unsaved=False):
         d = TxDialogTimeout(tx, parent, desc, prompt_if_unsaved)
     except SerializationError as e:
         traceback.print_exc(file=sys.stderr)
-        parent.show_critical(_("EXOS-Electrum was unable to deserialize the transaction:") + "\n" + str(e))
+        parent.show_critical(_("Rutanio-Electrum was unable to deserialize the transaction:") + "\n" + str(e))
     else:
         dialogs.append(d)
         d.show()
@@ -79,7 +79,7 @@ def show_transaction(tx, parent, desc=None, prompt_if_unsaved=False):
         d = TxDialog(tx, parent, desc, prompt_if_unsaved)
     except SerializationError as e:
         _logger.exception('unable to deserialize the transaction')
-        parent.show_critical(_("EXOS-Electrum was unable to deserialize the transaction:") + "\n" + str(e))
+        parent.show_critical(_("Rutanio-Electrum was unable to deserialize the transaction:") + "\n" + str(e))
     else:
         dialogs.append(d)
         d.show()

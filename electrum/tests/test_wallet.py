@@ -7,14 +7,14 @@ from decimal import Decimal
 import time
 
 from io import StringIO
-from electrum_exos.storage import WalletStorage
-from electrum_exos.json_db import FINAL_SEED_VERSION
-from electrum_exos.wallet import (Abstract_Wallet, Standard_Wallet, create_new_wallet,
+from electrum_rutanio.storage import WalletStorage
+from electrum_rutanio.json_db import FINAL_SEED_VERSION
+from electrum_rutanio.wallet import (Abstract_Wallet, Standard_Wallet, create_new_wallet,
                              restore_wallet_from_text, Imported_Wallet)
-from electrum_exos.exchange_rate import ExchangeBase, FxThread
-from electrum_exos.util import TxMinedInfo
-from electrum_exos.bitcoin import COIN
-from electrum_exos.json_db import JsonDB
+from electrum_rutanio.exchange_rate import ExchangeBase, FxThread
+from electrum_rutanio.util import TxMinedInfo
+from electrum_rutanio.bitcoin import COIN
+from electrum_rutanio.json_db import JsonDB
 
 from . import SequentialTestCase
 

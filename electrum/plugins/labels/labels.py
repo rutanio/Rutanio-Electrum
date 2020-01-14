@@ -7,11 +7,11 @@ from typing import Union
 
 import base64
 
-from electrum_exos.plugin import BasePlugin, hook
-from electrum_exos.crypto import aes_encrypt_with_iv, aes_decrypt_with_iv
-from electrum_exos.i18n import _
-from electrum_exos.util import log_exceptions, ignore_exceptions, make_aiohttp_session
-from electrum_exos.network import Network
+from electrum_rutanio.plugin import BasePlugin, hook
+from electrum_rutanio.crypto import aes_encrypt_with_iv, aes_decrypt_with_iv
+from electrum_rutanio.i18n import _
+from electrum_rutanio.util import log_exceptions, ignore_exceptions, make_aiohttp_session
+from electrum_rutanio.network import Network
 
 
 class ErrorConnectingServer(Exception):
@@ -30,7 +30,7 @@ class LabelsPlugin(BasePlugin):
 
     def __init__(self, parent, config, name):
         BasePlugin.__init__(self, parent, config, name)
-        self.target_host = 'labels.exos.to'
+        self.target_host = 'labels.rutax.co'
         self.wallets = {}
         self.proxy = None
 

@@ -8,11 +8,11 @@ from PyQt5.QtWidgets import (QVBoxLayout, QLabel, QGridLayout, QPushButton,
                              QTextEdit, QLineEdit, QRadioButton, QCheckBox, QWidget,
                              QMessageBox, QFileDialog, QSlider, QTabWidget)
 
-from electrum_exos.gui.qt.util import (WindowModalDialog, WWLabel, Buttons, CancelButton,
+from electrum_rutanio.gui.qt.util import (WindowModalDialog, WWLabel, Buttons, CancelButton,
                                   OkButton, CloseButton)
-from electrum_exos.i18n import _
-from electrum_exos.plugin import hook
-from electrum_exos.util import bh2u
+from electrum_rutanio.i18n import _
+from electrum_rutanio.plugin import hook
+from electrum_rutanio.util import bh2u
 
 from ..hw_wallet.qt import QtHandlerBase, QtPluginBase
 from ..hw_wallet.plugin import only_hook_if_libraries_available
@@ -130,7 +130,7 @@ class QtPlugin(QtPluginBase):
             else:
                 msg = _("Enter the master private key beginning with xprv:")
                 def set_enabled():
-                    from electrum_exos.bip32 import is_xprv
+                    from electrum_rutanio.bip32 import is_xprv
                     wizard.next_button.setEnabled(is_xprv(clean_text(text)))
                 text.textChanged.connect(set_enabled)
                 next_enabled = False

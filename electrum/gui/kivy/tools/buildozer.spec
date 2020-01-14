@@ -1,13 +1,13 @@
 [app]
 
 # (str) Title of your application
-title = EXOS-Electrum
+title = Rutanio-Electrum
 
 # (str) Package name
-package.name = ElectrumEXOS
+package.name = ElectrumRutanio
 
 # (str) Package domain (needed for android/ios packaging)
-package.domain = com.openexo.economy
+package.domain = co.rutax
 
 # (str) Source code where the main.py live
 source.dir = .

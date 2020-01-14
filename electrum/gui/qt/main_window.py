@@ -47,13 +47,13 @@ from PyQt5.QtWidgets import (QMessageBox, QComboBox, QSystemTrayIcon, QTabWidget
                              QShortcut, QMainWindow, QCompleter, QInputDialog,
                              QWidget, QMenu, QSizePolicy, QStatusBar)
 
-import electrum_exos
-from electrum_exos import (keystore, simple_config, ecc, constants, util, bitcoin, commands,
+import electrum_rutanio
+from electrum_rutanio import (keystore, simple_config, ecc, constants, util, bitcoin, commands,
                       coinchooser, paymentrequest)
-from electrum_exos.bitcoin import COIN, is_address, TYPE_ADDRESS
-from electrum_exos.plugin import run_hook
-from electrum_exos.i18n import _
-from electrum_exos.util import (format_time, format_satoshis, format_fee_satoshis,
+from electrum_rutanio.bitcoin import COIN, is_address, TYPE_ADDRESS
+from electrum_rutanio.plugin import run_hook
+from electrum_rutanio.i18n import _
+from electrum_rutanio.util import (format_time, format_satoshis, format_fee_satoshis,
                            format_satoshis_plain, NotEnoughFunds,
                            UserCancelled, NoDynamicFeeEstimates, profiler,
                            export_meta, import_meta, bh2u, bfh, InvalidPassword,
@@ -62,16 +62,16 @@ from electrum_exos.util import (format_time, format_satoshis, format_fee_satoshi
                            UnknownBaseUnit, DECIMAL_POINT_DEFAULT, UserFacingException,
                            get_new_wallet_name, send_exception_to_crash_reporter,
                            InvalidBitcoinURI)
-from electrum_exos.transaction import Transaction, TxOutput
-from electrum_exos.address_synchronizer import AddTransactionException
-from electrum_exos.wallet import (Multisig_Wallet, CannotBumpFee, Abstract_Wallet,
+from electrum_rutanio.transaction import Transaction, TxOutput
+from electrum_rutanio.address_synchronizer import AddTransactionException
+from electrum_rutanio.wallet import (Multisig_Wallet, CannotBumpFee, Abstract_Wallet,
                              sweep_preparations, InternalAddressCorruption)
-from electrum_exos.version import ELECTRUM_VERSION, ELECTRUM_BUILD
-from electrum_exos.network import Network, TxBroadcastError, BestEffortRequestFailed
-from electrum_exos.exchange_rate import FxThread
-from electrum_exos.simple_config import SimpleConfig
-from electrum_exos.logging import Logger
-from electrum_exos.paymentrequest import PR_PAID
+from electrum_rutanio.version import ELECTRUM_VERSION, ELECTRUM_BUILD
+from electrum_rutanio.network import Network, TxBroadcastError, BestEffortRequestFailed
+from electrum_rutanio.exchange_rate import FxThread
+from electrum_rutanio.simple_config import SimpleConfig
+from electrum_rutanio.logging import Logger
+from electrum_rutanio.paymentrequest import PR_PAID
 
 from .exception_window import Exception_Hook
 from .amountedit import AmountEdit, BTCAmountEdit, MyLineEdit, FeerateEdit
@@ -194,7 +194,7 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, Logger):
         if self.config.get("is_maximized"):
             self.showMaximized()
 
-        self.setWindowIcon(read_QIcon("exos-electrum.png"))
+        self.setWindowIcon(read_QIcon("rutanio-electrum.png"))
         self.init_menubar()
 
         wrtabs = weakref.proxy(tabs)
@@ -238,9 +238,9 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, Logger):
 
         # If the option hasn't been set yet
         if config.get('check_updates') is None:
-            choice = self.question(title="EXOS Electrum - " + _("Enable update check"),
-                                   msg=_("For security reasons we advise that you always use the latest version of EXOS Electrum.") + " " +
-                                       _("Would you like to be notified when there is a newer version of EXOS Electrum available?"))
+            choice = self.question(title="Rutanio Electrum - " + _("Enable update check"),
+                                   msg=_("For security reasons we advise that you always use the latest version of Rutanio Electrum.") + " " +
+                                       _("Would you like to be notified when there is a newer version of Rutanio Electrum available?"))
             config.set_key('check_updates', bool(choice), save=True)
 
         if config.get('check_updates', False):
@@ -248,7 +248,7 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, Logger):
             # to prevent GC from getting in our way.
             def on_version_received(v):
                 if UpdateCheck.is_newer(v):
-                    self.update_check_button.setText(_("Update to EXOS-Electrum {} is available").format(v))
+                    self.update_check_button.setText(_("Update to Rutanio-Electrum {} is available").format(v))
                     self.update_check_button.clicked.connect(lambda: self.show_update_check(v))
                     self.update_check_button.show()
             self._update_check_thread = UpdateCheckThread(self)
@@ -446,7 +446,7 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, Logger):
             self.setGeometry(100, 100, 840, 400)
 
     def watching_only_changed(self):
-        name = "EXOS-Electrum Testnet" if constants.net.TESTNET else "EXOS-Electrum"
+        name = "Rutanio-Electrum Testnet" if constants.net.TESTNET else "Rutanio-Electrum"
         title = '%s %s  -  %s' % (name, ELECTRUM_VERSION,
                                         self.wallet.basename())
         extra = [self.wallet.storage.get('wallet_type', '?')]
@@ -463,7 +463,7 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, Logger):
         if self.wallet.is_watching_only():
             msg = ' '.join([
                 _("This wallet is watching-only."),
-                _("This means you will not be able to spend EXOS with it."),
+                _("This means you will not be able to spend Rutanio with it."),
                 _("Make sure you own the seed phrase or the private keys, before you request Bitcoins to be sent to this wallet.")
             ])
             self.show_warning(msg, title=_('Watch-only wallet'))
@@ -481,7 +481,7 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, Logger):
         msg = ''.join([
             _("You are in testnet mode."), ' ',
             _("Testnet coins are worthless."), '\n',
-            _("Testnet is separate from the main EXOS network. It is used for testing.")
+            _("Testnet is separate from the main Rutanio network. It is used for testing.")
         ])
         cb = QCheckBox(_("Don't show this again."))
         cb_checked = False
@@ -517,7 +517,7 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, Logger):
                 shutil.copy2(path, new_path)
                 self.show_message(_("A copy of your wallet file was created in")+" '%s'" % str(new_path), title=_("Wallet backup created"))
             except BaseException as reason:
-                self.show_critical(_("EXOS-Electrum was unable to copy your wallet file to the specified location.") + "\n" + str(reason), title=_("Unable to create backup"))
+                self.show_critical(_("Rutanio-Electrum was unable to copy your wallet file to the specified location.") + "\n" + str(reason), title=_("Unable to create backup"))
 
     def update_recently_visited(self, filename):
         recent = self.config.get('recently_open', [])
@@ -611,7 +611,7 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, Logger):
         tools_menu = menubar.addMenu(_("&Tools"))
 
         # Settings / Preferences are all reserved keywords in macOS using this as work around
-        tools_menu.addAction(_("EXOS-Electrum preferences") if sys.platform == 'darwin' else _("Preferences"), self.settings_dialog)
+        tools_menu.addAction(_("Rutanio-Electrum preferences") if sys.platform == 'darwin' else _("Preferences"), self.settings_dialog)
         tools_menu.addAction(_("&Network"), lambda: self.gui_object.show_network_dialog(self))
         tools_menu.addAction(_("&Plugins"), self.plugins_dialog)
         tools_menu.addSeparator()
@@ -632,9 +632,9 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, Logger):
         help_menu = menubar.addMenu(_("&Help"))
         help_menu.addAction(_("&About"), self.show_about)
         help_menu.addAction(_("&Check for updates"), self.show_update_check)
-        help_menu.addAction(_("&Official website"), lambda: webopen("https://economy.openexo.com"))
+        help_menu.addAction(_("&Official website"), lambda: webopen("https://rutanio.com"))
         help_menu.addSeparator()
-        help_menu.addAction(_("&Documentation"), lambda: webopen("https://economy.openexo.com/docs")).setShortcut(QKeySequence.HelpContents)
+        help_menu.addAction(_("&Documentation"), lambda: webopen("https://rutanio.com/docs")).setShortcut(QKeySequence.HelpContents)
         help_menu.addAction(_("&Report Bug"), self.show_report_bug)
         help_menu.addSeparator()
         help_menu.addAction(_("&Donate to server"), self.donate_to_server)
@@ -645,18 +645,18 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, Logger):
         d = self.network.get_donation_address()
         if d:
             host = self.network.get_parameters().host
-            self.pay_to_URI('exos:%s?message=donation for %s'%(d, host))
+            self.pay_to_URI('rutanio:%s?message=donation for %s'%(d, host))
         else:
             self.show_error(_('No donation address for this server'))
 
     def show_about(self):
-        QMessageBox.about(self, "EXOS-Electrum",
+        QMessageBox.about(self, "Rutanio-Electrum",
                           (_("Version")+" %s" % ELECTRUM_BUILD + "\n\n" +
-                           _("EXOS-Electrum's focus is speed, with low resource usage and simplicity.") + " " +
+                           _("Rutanio-Electrum's focus is speed, with low resource usage and simplicity.") + " " +
                            _("You do not need to perform regular backups, because your wallet can be "
                               "recovered from a secret phrase that you can memorize or write on paper.") + " " +
                            _("Startup times are fast because it operates in conjunction with high-performance "
-                              "servers that handle the many complicated parts of the EXOS system.") + "\n\n" +
+                              "servers that handle the many complicated parts of the Rutanio system.") + "\n\n" +
                            _("This software uses icons from the Icons8 icon pack (icons8.com).")))
 
     def show_update_check(self, version=None):
@@ -665,11 +665,11 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, Logger):
     def show_report_bug(self):
         msg = ' '.join([
             _("Please report any bugs as issues on github:<br/>"),
-            "<a href=\"https://github.com/exoeconomy/exos-electrum/issues\">https://github.com/exoeconomy/EXOS-electrum/issues</a><br/><br/>",
-            _("Before reporting a bug, please upgrade to the most recent version of EXOS-Electrum (latest release or git HEAD), and include the version number in your report."),
+            "<a href=\"https://github.com/rutanio/rutanio-electrum/issues\">https://github.com/rutanio/Rutanio-electrum/issues</a><br/><br/>",
+            _("Before reporting a bug, please upgrade to the most recent version of Rutanio-Electrum (latest release or git HEAD), and include the version number in your report."),
             _("Try to explain not only what the bug is, but how it occurs. The more detail you provide, the better the team will be able to help.")
          ])
-        self.show_message(msg, title="EXOS-Electrum - " + _("Reporting Bugs"), rich_text=True)
+        self.show_message(msg, title="Rutanio-Electrum - " + _("Reporting Bugs"), rich_text=True)
 
     def notify_transactions(self):
         if self.tx_notification_queue.qsize() == 0:
@@ -709,9 +709,9 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, Logger):
         if self.tray:
             try:
                 # this requires Qt 5.9
-                self.tray.showMessage("EXOS-Electrum", message, read_QIcon("electrum_dark_icon"), 20000)
+                self.tray.showMessage("Rutanio-Electrum", message, read_QIcon("electrum_dark_icon"), 20000)
             except TypeError:
-                self.tray.showMessage("EXOS-Electrum", message, QSystemTrayIcon.Information, 20000)
+                self.tray.showMessage("Rutanio-Electrum", message, QSystemTrayIcon.Information, 20000)
 
 
 
@@ -759,8 +759,8 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, Logger):
         return text
 
     def format_fee_rate(self, fee_rate):
-        # fee_rate is in exo/kB
-        return format_fee_satoshis(fee_rate/1000, num_zeros=self.num_zeros) + ' exo/byte'
+        # fee_rate is in rutax/kB
+        return format_fee_satoshis(fee_rate/1000, num_zeros=self.num_zeros) + ' rutax/byte'
 
     def get_decimal_point(self):
         return self.decimal_point
@@ -902,7 +902,7 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, Logger):
         self.receive_address_e = ButtonsLineEdit()
         self.receive_address_e.addCopyButton(self.app)
         self.receive_address_e.setReadOnly(True)
-        msg = _('EXOS address where the payment should be received. Note that each payment request uses a different EXOS address.')
+        msg = _('Rutanio address where the payment should be received. Note that each payment request uses a different Rutanio address.')
         self.receive_address_label = HelpLabel(_('Receiving address'), msg)
         self.receive_address_e.textChanged.connect(self.update_receive_qr)
         self.receive_address_e.textChanged.connect(self.update_receive_address_styling)
@@ -933,8 +933,8 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, Logger):
         msg = ' '.join([
             _('Expiration date of your request.'),
             _('This information is seen by the recipient if you send them a signed payment request.'),
-            _('Expired requests have to be deleted manually from your list, in order to free the corresponding EXOS addresses.'),
-            _('The EXOS address never expires and will always be part of this EXOS-Electrum wallet.'),
+            _('Expired requests have to be deleted manually from your list, in order to free the corresponding Rutanio addresses.'),
+            _('The Rutanio address never expires and will always be part of this Rutanio-Electrum wallet.'),
         ])
         grid.addWidget(HelpLabel(_('Request expires'), msg), 3, 0)
         grid.addWidget(self.expires_combo, 3, 1)
@@ -1162,7 +1162,7 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, Logger):
             self.receive_address_e.setToolTip("")
 
     def set_feerounding_text(self, num_satoshis_added):
-        self.feerounding_text = (_('Additional {} exos are going to be added.')
+        self.feerounding_text = (_('Additional {} rutanio are going to be added.')
                                  .format(num_satoshis_added))
 
     def create_send_tab(self):
@@ -1176,7 +1176,7 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, Logger):
         self.amount_e = BTCAmountEdit(self.get_decimal_point)
         self.payto_e = PayToEdit(self)
         msg = _('Recipient of the funds.') + '\n\n'\
-              + _('You may enter a EXOS address, a label from your list of contacts (a list of completions will be proposed), or an alias (email-like address that forwards to a EXOS address)')
+              + _('You may enter a Rutanio address, a label from your list of contacts (a list of completions will be proposed), or an alias (email-like address that forwards to a Rutanio address)')
         payto_label = HelpLabel(_('Pay to'), msg)
         grid.addWidget(payto_label, 1, 0)
         grid.addWidget(self.payto_e, 1, 1, 1, -1)
@@ -1222,8 +1222,8 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, Logger):
         hbox.addStretch(1)
         grid.addLayout(hbox, 4, 4)
 
-        msg = _('EXOS transactions are not free. A transaction fee is paid by the sender of the funds. The fee is collected by the staker who forges the block containing the transaction.') + '\n\n'\
-              + _('The amount of fee can be decided freely by the sender. However, transactions with low fees take more time to be processed. Transactions with fees less that 0.0001 EXOS will be rejected.') + '\n\n'\
+        msg = _('Rutanio transactions are not free. A transaction fee is paid by the sender of the funds. The fee is collected by the staker who forges the block containing the transaction.') + '\n\n'\
+              + _('The amount of fee can be decided freely by the sender. However, transactions with low fees take more time to be processed. Transactions with fees less that 0.0001 Rutanio will be rejected.') + '\n\n'\
               + _('A suggested fee is automatically added to this field. You may override it. The suggested fee increases with the size, in bytes, of the transaction.')
         self.fee_e_label = HelpLabel(_('Fee'), msg)
 
@@ -1284,8 +1284,8 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, Logger):
 
         def feerounding_onclick():
             text = (self.feerounding_text + '\n\n' +
-                    _('To somewhat protect your privacy, EXOS-Electrum tries to create change with similar precision to other outputs.') + ' ' +
-                    _('At most 100 exos might be lost due to this rounding.') + ' ' +
+                    _('To somewhat protect your privacy, Rutanio-Electrum tries to create change with similar precision to other outputs.') + ' ' +
+                    _('At most 100 rutax might be lost due to this rounding.') + ' ' +
                     _("You can disable this setting in '{}'.").format(_('Preferences')) + '\n' +
                     _('Also, dust is not kept as change, but added to the fee.')  + '\n' +
                     _('Also, when batching RBF transactions, BIP 125 imposes a lower bound on the fee.'))
@@ -1578,8 +1578,8 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, Logger):
         if self.is_send_fee_frozen():
             fee_estimator = self.fee_e.get_amount()
         elif self.is_send_feerate_frozen():
-            amount = self.feerate_e.get_amount()  # exo/byte feerate
-            amount = 0 if amount is None else amount * 1000  # exo/kilobyte feerate
+            amount = self.feerate_e.get_amount()  # rutax/byte feerate
+            amount = 0 if amount is None else amount * 1000  # rutax/kilobyte feerate
             fee_estimator = partial(
                 simple_config.SimpleConfig.estimate_fee_for_feerate, amount)
         else:
@@ -1626,10 +1626,10 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, Logger):
 
         for o in outputs:
             if o.address is None:
-                self.show_error(_('EXOS Address is None'))
+                self.show_error(_('Rutanio Address is None'))
                 return True
             if o.type == TYPE_ADDRESS and not bitcoin.is_address(o.address):
-                self.show_error(_('Invalid EXOS Address'))
+                self.show_error(_('Invalid Rutanio Address'))
                 return True
             if o.value is None:
                 self.show_error(_('Invalid Amount'))
@@ -2078,7 +2078,7 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, Logger):
             'plugins': self.gui_object.plugins,
             'window': self,
             'config': self.config,
-            'electrum': electrum_exos,
+            'electrum': electrum_rutanio,
             'daemon': self.gui_object.daemon,
             'util': util,
             'bitcoin': bitcoin,
@@ -2137,7 +2137,7 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, Logger):
         self.send_button.setVisible(not self.wallet.is_watching_only())
 
     def change_password_dialog(self):
-        from electrum_exos.storage import STO_EV_XPUB_PW
+        from electrum_rutanio.storage import STO_EV_XPUB_PW
         if self.wallet.get_available_storage_encryption_version() == STO_EV_XPUB_PW:
             from .password_dialog import ChangePasswordDialogForHW
             d = ChangePasswordDialogForHW(self, self.wallet)
@@ -2333,14 +2333,14 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, Logger):
                 "private key, and verifying with the corresponding public key. The "
                 "address you have entered does not have a unique public key, so these "
                 "operations cannot be performed.") + '\n\n' + \
-               _('The operation is undefined. Not just in EXOS-Electrum, but in general.')
+               _('The operation is undefined. Not just in Rutanio-Electrum, but in general.')
 
     @protected
     def do_sign(self, address, message, signature, password):
         address  = address.text().strip()
         message = message.toPlainText().strip()
         if not bitcoin.is_address(address):
-            self.show_message(_('Invalid EXOS address.'))
+            self.show_message(_('Invalid Rutanio address.'))
             return
         if self.wallet.is_watching_only():
             self.show_message(_('This is a watching-only wallet.'))
@@ -2368,7 +2368,7 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, Logger):
         address  = address.text().strip()
         message = message.toPlainText().strip().encode('utf-8')
         if not bitcoin.is_address(address):
-            self.show_message(_('Invalid EXOS address.'))
+            self.show_message(_('Invalid Rutanio address.'))
             return
         try:
             # This can throw on invalid base64
@@ -2497,16 +2497,16 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, Logger):
         return d.run()
 
     def tx_from_text(self, txt):
-        from electrum_exos.transaction import tx_from_str
+        from electrum_rutanio.transaction import tx_from_str
         try:
             tx = tx_from_str(txt)
             return Transaction(tx)
         except BaseException as e:
-            self.show_critical(_("EXOS-Electrum was unable to parse your transaction") + ":\n" + str(e))
+            self.show_critical(_("Rutanio-Electrum was unable to parse your transaction") + ":\n" + str(e))
             return
 
     def read_tx_from_qrcode(self):
-        from electrum_exos import qrscanner
+        from electrum_rutanio import qrscanner
         try:
             data = qrscanner.scan_barcode(self.config.get_video_device())
         except BaseException as e:
@@ -2514,8 +2514,8 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, Logger):
             return
         if not data:
             return
-        # if the user scanned a EXOS URI
-        if str(data).startswith("exos:"):
+        # if the user scanned a Rutanio URI
+        if str(data).startswith("rutanio:"):
             self.pay_to_URI(data)
             return
         # else if the user scanned an offline signed tx
@@ -2537,7 +2537,7 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, Logger):
             with open(fileName, "r") as f:
                 file_content = f.read()
         except (ValueError, IOError, os.error) as reason:
-            self.show_critical(_("EXOS-Electrum was unable to open your transaction file") + "\n" + str(reason), title=_("Unable to read file or no transaction found"))
+            self.show_critical(_("Rutanio-Electrum was unable to open your transaction file") + "\n" + str(reason), title=_("Unable to read file or no transaction found"))
             return
         return self.tx_from_text(file_content)
 
@@ -2555,7 +2555,7 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, Logger):
             self.show_transaction(tx)
 
     def do_process_from_txid(self):
-        from electrum_exos import transaction
+        from electrum_rutanio import transaction
         txid, ok = QInputDialog.getText(self, _('Lookup transaction'), _('Transaction ID') + ':')
         if ok and txid:
             txid = str(txid).strip()
@@ -2591,7 +2591,7 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, Logger):
         e.setReadOnly(True)
         vbox.addWidget(e)
 
-        defaultname = 'exos-electrum-private-keys.csv'
+        defaultname = 'rutanio-electrum-private-keys.csv'
         select_msg = _('Select file and location to export your private keys to')
         hbox, filename_e, csv_button = filename_field(self, self.config, defaultname, select_msg)
         vbox.addLayout(hbox)
@@ -2649,7 +2649,7 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, Logger):
             self.do_export_privkeys(filename, private_keys, csv_button.isChecked())
         except (IOError, os.error) as reason:
             txt = "\n".join([
-                _("EXOS-Electrum was unable to produce a private key-export."),
+                _("Rutanio-Electrum was unable to produce a private key-export."),
                 str(reason)
             ])
             self.show_critical(txt, title=_("Unable to create csv"))
@@ -2822,7 +2822,7 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, Logger):
         lang_help = _('Select which language is used in the GUI (after restart).')
         lang_label = HelpLabel(_('Language') + ':', lang_help)
         lang_combo = QComboBox()
-        from electrum_exos.i18n import languages
+        from electrum_rutanio.i18n import languages
         lang_combo.addItems(list(languages.values()))
         lang_keys = list(languages.keys())
         lang_cur_setting = self.config.get("language", '')
@@ -2960,7 +2960,7 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, Logger):
 
         units = base_units_list
         msg = (_('Base unit of your wallet.')
-               + '\n1 EXOS = 1000 mEXOS. \n1 mEXOS = 1000 µEXOS. \n1 µEXOS = 100 exo.\n\n'
+               + '\n1 RUTA = 1000 mRUTA. \n1 mRUTA = 1000 µRUTA. \n1 µRUTA = 100 rutax.\n\n'
                + _('This setting affects the Send tab, and all balance related fields.'))
         unit_label = HelpLabel(_('Base unit') + ':', msg)
         unit_combo = QComboBox()
@@ -2996,7 +2996,7 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, Logger):
         block_ex_combo.currentIndexChanged.connect(on_be)
         gui_widgets.append((block_ex_label, block_ex_combo))
 
-        from electrum_exos import qrscanner
+        from electrum_rutanio import qrscanner
         system_cameras = qrscanner._find_system_cameras()
         qr_combo = QComboBox()
         qr_combo.addItem("Default","default")
@@ -3106,7 +3106,7 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, Logger):
         outrounding_cb.setToolTip(
             _('Set the value of the change output so that it has similar precision to the other outputs.') + '\n' +
             _('This might improve your privacy somewhat by obfuscating your actual transaction amount.') + '\n' +
-            _('If enabled, at most 100 additional exo could be spent per transaction.'))
+            _('If enabled, at most 100 additional rutax could be spent per transaction.'))
         outrounding_cb.setChecked(enable_outrounding)
         outrounding_cb.stateChanged.connect(on_outrounding)
         tx_widgets.append((outrounding_cb, None))
@@ -3246,7 +3246,7 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, Logger):
 
         run_hook('close_settings_dialog')
         if self.need_restart:
-            self.show_warning(_('Please restart EXOS-Electrum to activate the new GUI settings'), title=_('Success'))
+            self.show_warning(_('Please restart Rutanio-Electrum to activate the new GUI settings'), title=_('Success'))
 
 
     def closeEvent(self, event):
@@ -3277,7 +3277,7 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, Logger):
         self.gui_object.close_window(self)
 
     def plugins_dialog(self):
-        self.pluginsdialog = d = WindowModalDialog(self, _('EXOS-Electrum Plugins'))
+        self.pluginsdialog = d = WindowModalDialog(self, _('Rutanio-Electrum Plugins'))
 
         plugins = self.gui_object.plugins
 

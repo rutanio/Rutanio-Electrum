@@ -24,11 +24,11 @@
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-from electrum_exos.plugin import BasePlugin, hook
-from electrum_exos.i18n import _
-from electrum_exos.bitcoin import is_address, TYPE_SCRIPT, opcodes
-from electrum_exos.util import bfh, versiontuple, UserFacingException
-from electrum_exos.transaction import TxOutput, Transaction
+from electrum_rutanio.plugin import BasePlugin, hook
+from electrum_rutanio.i18n import _
+from electrum_rutanio.bitcoin import is_address, TYPE_SCRIPT, opcodes
+from electrum_rutanio.util import bfh, versiontuple, UserFacingException
+from electrum_rutanio.transaction import TxOutput, Transaction
 
 
 class HW_PluginBase(BasePlugin):
@@ -72,7 +72,7 @@ class HW_PluginBase(BasePlugin):
         if keystore is None:
             keystore = wallet.get_keystore()
         if not is_address(address):
-            keystore.handler.show_error(_('Invalid EXOS Address'))
+            keystore.handler.show_error(_('Invalid Rutanio Address'))
             return False
         if not wallet.is_mine(address):
             keystore.handler.show_error(_('Address not in wallet.'))

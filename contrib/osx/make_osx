@@ -2,14 +2,14 @@
 
 # Parameterize
 PYTHON_VERSION=3.6.6
-BUILDDIR=/tmp/exos-electrum-build
-PACKAGE=EXOS-Electrum
-DMG_BACKGROUND_IMG="exos-electrum-background-dmg.png"
-PKG_ICON="exos-electrum.icns"
-IDENTIFIER="com.openexo.economy.exos-electrum"
+BUILDDIR=/tmp/rutanio-electrum-build
+PACKAGE=Rutanio-Electrum
+DMG_BACKGROUND_IMG="rutanio-electrum-background-dmg.png"
+PKG_ICON="rutanio-electrum.icns"
+IDENTIFIER="co.rutax.rutanio-electrum"
 APPLE_DEV_INSTALLER_CERT="Developer ID Installer: "
 APPLE_DEV_APPLICATION_CERT="Developer ID Application: "
-GIT_REPO=https://github.com/exoeconomy/exos-electrum
+GIT_REPO=https://github.com/rutanio/rutanio-electrum
 LIBSECP_VERSION="b408c6a8b287003d1ade5709e6f7bc3c7f1d5be7"
 
 . $(dirname "$0")/base.sh
@@ -85,7 +85,7 @@ info "generating locale"
         brew install gettext
         brew link --force gettext
     fi
-    cd "$CONTRIB"/deterministic-build/exos-electrum-locale
+    cd "$CONTRIB"/deterministic-build/rutanio-electrum-locale
     for i in ./locale/*; do
         dir="$ROOT_FOLDER"/electrum/$i/LC_MESSAGES
         mkdir -p $dir
@@ -144,9 +144,9 @@ done
 info "Building binary"
 APP_SIGN="$APP_SIGN" pyinstaller --noconfirm --ascii --clean --name $VERSION contrib/osx/osx.spec || fail "Could not build binary"
 
-info "Adding EXOS URI types to Info.plist"
+info "Adding Rutanio URI types to Info.plist"
 plutil -insert 'CFBundleURLTypes' \
-	-xml '<array><dict> <key>CFBundleURLName</key> <string>EXOS</string> <key>CFBundleURLSchemes</key> <array><string>EXOS</string></array> </dict></array>' \
+	-xml '<array><dict> <key>CFBundleURLName</key> <string>Rutanio</string> <key>CFBundleURLSchemes</key> <array><string>Rutanio</string></array> </dict></array>' \
 	-- dist/$PACKAGE.app/Contents/Info.plist \
 	|| fail "Could not add keys to Info.plist. Make sure the program 'plutil' exists and is installed."
 

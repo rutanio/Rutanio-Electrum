@@ -23,7 +23,7 @@
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-from electrum_exos.i18n import _
+from electrum_rutanio.i18n import _
 
 from PyQt5.QtWidgets import QVBoxLayout, QLabel
 

@@ -8,14 +8,14 @@ import getpass
 import logging
 
 import electrum
-from electrum_exos.util import format_satoshis
-from electrum_exos.bitcoin import is_address, COIN, TYPE_ADDRESS
-from electrum_exos.transaction import TxOutput
-from electrum_exos.wallet import Wallet
-from electrum_exos.storage import WalletStorage
-from electrum_exos.network import NetworkParameters, TxBroadcastError, BestEffortRequestFailed
-from electrum_exos.interface import deserialize_server
-from electrum_exos.logging import console_stderr_handler
+from electrum_rutanio.util import format_satoshis
+from electrum_rutanio.bitcoin import is_address, COIN, TYPE_ADDRESS
+from electrum_rutanio.transaction import TxOutput
+from electrum_rutanio.wallet import Wallet
+from electrum_rutanio.storage import WalletStorage
+from electrum_rutanio.network import NetworkParameters, TxBroadcastError, BestEffortRequestFailed
+from electrum_rutanio.interface import deserialize_server
+from electrum_rutanio.logging import console_stderr_handler
 
 _ = lambda x:x  # i18n
 
@@ -339,7 +339,7 @@ class ElectrumGui:
 
     def do_send(self):
         if not is_address(self.str_recipient):
-            self.show_message(_('Invalid EXOS address'))
+            self.show_message(_('Invalid Rutanio address'))
             return
         try:
             amount = int(Decimal(self.str_amount) * COIN)
@@ -416,7 +416,7 @@ class ElectrumGui:
                         self.show_message("Error:" + server + "\nIn doubt, type \"auto-connect\"")
                         return False
             if out.get('server') or out.get('proxy'):
-                proxy = electrum_exos.network.deserialize_proxy(out.get('proxy')) if out.get('proxy') else proxy_config
+                proxy = electrum_rutanio.network.deserialize_proxy(out.get('proxy')) if out.get('proxy') else proxy_config
                 net_params = NetworkParameters(host, port, protocol, proxy, auto_connect)
                 self.network.run_from_another_thread(self.network.set_parameters(net_params))
 

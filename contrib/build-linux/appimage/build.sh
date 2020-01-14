@@ -18,7 +18,7 @@ SQUASHFSKIT_COMMIT="ae0d656efa2d0df2fcac795b6823b44462f19386"
 
 
 VERSION=`git describe --tags`
-APPIMAGE="$DISTDIR/EXOS-Electrum-$VERSION-x86_64.AppImage"
+APPIMAGE="$DISTDIR/Rutanio-Electrum-$VERSION-x86_64.AppImage"
 
 rm -rf "$BUILDDIR"
 mkdir -p "$APPDIR" "$CACHEDIR" "$DISTDIR"
@@ -112,12 +112,12 @@ info "installing pip."
 "$python" -m ensurepip
 
 
-info "preparing exos-electrum-locale."
+info "preparing rutanio-electrum-locale."
 (
     cd "$PROJECT_ROOT"
     git submodule update --init
 
-    pushd "$CONTRIB"/deterministic-build/exos-electrum-locale
+    pushd "$CONTRIB"/deterministic-build/rutanio-electrum-locale
     if ! which msgfmt > /dev/null 2>&1; then
         fail "Please install gettext"
     fi
@@ -130,7 +130,7 @@ info "preparing exos-electrum-locale."
 )
 
 
-info "installing EXOS-Electrum and its dependencies."
+info "installing Rutanio-Electrum and its dependencies."
 mkdir -p "$CACHEDIR/pip_cache"
 "$python" -m pip install --no-warn-script-location --cache-dir "$CACHEDIR/pip_cache" -r "$CONTRIB/deterministic-build/requirements.txt"
 "$python" -m pip install --no-warn-script-location --cache-dir "$CACHEDIR/pip_cache" -r "$CONTRIB/deterministic-build/requirements-binaries.txt"
@@ -143,8 +143,8 @@ cp "/usr/lib/libzbar.so.0" "$APPDIR/usr/lib/libzbar.so.0"
 
 
 info "desktop integration."
-cp "$PROJECT_ROOT/exos-electrum.desktop" "$APPDIR/exos-electrum.desktop"
-cp "$PROJECT_ROOT/electrum/gui/icons/exos-electrum.png" "$APPDIR/exos-electrum.png"
+cp "$PROJECT_ROOT/rutanio-electrum.desktop" "$APPDIR/rutanio-electrum.desktop"
+cp "$PROJECT_ROOT/electrum/gui/icons/rutanio-electrum.png" "$APPDIR/rutanio-electrum.png"
 
 
 # add launcher

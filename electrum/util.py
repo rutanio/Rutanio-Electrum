@@ -65,18 +65,18 @@ def inv_dict(d):
 
 ca_path = certifi.where()
 
-base_units = {'EXOS':8, 'mEXOS':5, 'uEXOS':2, 'exo':0}
+base_units = {'RUTA':8, 'mRUTA':5, 'uRUTA':2, 'rutax':0}
 base_units_inverse = inv_dict(base_units)
-base_units_list = ['EXOS', 'mEXOS', 'uEXOS', 'exo']  # list(dict) does not guarantee order
+base_units_list = ['RUTA', 'mRUTA', 'uRUTA', 'rutax']  # list(dict) does not guarantee order
 
-DECIMAL_POINT_DEFAULT = 8  # EXOS
+DECIMAL_POINT_DEFAULT = 8  # RUTA
 
 
 class UnknownBaseUnit(Exception): pass
 
 
 def decimal_point_to_base_unit_name(dp: int) -> str:
-    # e.g. 8 -> "EXOS"
+    # e.g. 8 -> "RUTA"
     try:
         return base_units_inverse[dp]
     except KeyError:
@@ -84,7 +84,7 @@ def decimal_point_to_base_unit_name(dp: int) -> str:
 
 
 def base_unit_name_to_decimal_point(unit_name: str) -> int:
-    # e.g. "EXOS" -> 8
+    # e.g. "RUTA" -> 8
     try:
         return base_units[unit_name]
     except KeyError:
@@ -152,7 +152,7 @@ class Satoshis(object):
         return 'Satoshis(%d)'%self.value
 
     def __str__(self):
-        return format_satoshis(self.value) + " EXOS"
+        return format_satoshis(self.value) + " Rutanio"
 
     def __eq__(self, other):
         return self.value == other.value
@@ -382,7 +382,7 @@ def assert_datadir_available(config_path):
         return
     else:
         raise FileNotFoundError(
-            'EXOS-Electrum datadir does not exist. Was it deleted while running?' + '\n' +
+            'Rutanio-Electrum datadir does not exist. Was it deleted while running?' + '\n' +
             'Should be at {}'.format(path))
 
 
@@ -472,11 +472,11 @@ def user_dir():
     if 'ANDROID_DATA' in os.environ:
         return android_data_dir()
     elif os.name == 'posix':
-        return os.path.join(os.environ["HOME"], ".exos-electrum")
+        return os.path.join(os.environ["HOME"], ".rutanio-electrum")
     elif "APPDATA" in os.environ:
-        return os.path.join(os.environ["APPDATA"], "EXOS-Electrum")
+        return os.path.join(os.environ["APPDATA"], "Rutanio-Electrum")
     elif "LOCALAPPDATA" in os.environ:
-        return os.path.join(os.environ["LOCALAPPDATA"], "EXOS-Electrum")
+        return os.path.join(os.environ["LOCALAPPDATA"], "Rutanio-Electrum")
     else:
         #raise Exception("No home directory found in environment variables.")
         return
@@ -566,7 +566,7 @@ def format_satoshis(x, num_zeros=0, decimal_point=8, precision=None, is_diff=Fal
     return result
 
 
-FEERATE_PRECISION = 1  # num fractional decimal places for exo/byte fee rates
+FEERATE_PRECISION = 1  # num fractional decimal places for rutax/byte fee rates
 _feerate_quanta = Decimal(10) ** (-FEERATE_PRECISION)
 
 
@@ -578,7 +578,7 @@ def format_fee_satoshis(fee, *, num_zeros=0, precision=None):
 
 
 def quantize_feerate(fee):
-    """Strip exo/byte fee rate of excess precision."""
+    """Strip rutax/byte fee rate of excess precision."""
     if fee is None:
         return None
     return Decimal(fee).quantize(_feerate_quanta, rounding=decimal.ROUND_HALF_DOWN)
@@ -648,16 +648,16 @@ def time_difference(distance_in_time, include_seconds):
         return "over %d years" % (round(distance_in_minutes / 525600))
 
 mainnet_block_explorers = {
-    'BlockEXOS': ('https://blockexplorer.exos.to/#exos/',
+    'BlockRutanio': ('https://blockexplorer.rutax.co/#ruta/',
                         {'tx': 'transactions/', 'addr': 'addresses/'}),
-    'cryptoID.info': ('https://chainz.cryptoid.info/exos/',
+    'cryptoID.info': ('https://chainz.cryptoid.info/ruta/',
                         {'tx': 'tx.dws?', 'addr': 'address.dws?'}),
     'system default': ('blockchain:/',
                         {'tx': 'tx/', 'addr': 'address/'}),
 }
 
 testnet_block_explorers = {
-    'BlockEXOS': ('https://blockexplorer.exos.to/#/texos/',
+    'BlockRutanio': ('https://blockexplorer.rutax.co/#/truta/',
                         {'tx': 'transactions/', 'addr': 'addresses/'}),
     'system default': ('blockchain://0000059bb2c2048493efcb0f1a034972b3ce4089d54c93b69aaab212fb369887/',
                        {'tx': 'tx/', 'addr': 'address/'}),
@@ -669,7 +669,7 @@ def block_explorer_info():
 
 def block_explorer(config: 'SimpleConfig') -> str:
     from . import constants
-    default_ = 'BlockEXOS'
+    default_ = 'BlockRutanio'
     be_key = config.get('block_explorer', default_)
     be = block_explorer_info().get(be_key)
     return be_key if be is not None else default_
@@ -705,12 +705,12 @@ def parse_URI(uri: str, on_pr: Callable = None, *, loop=None) -> dict:
 
     if ':' not in uri:
         if not bitcoin.is_address(uri):
-            raise InvalidBitcoinURI("Not an EXOS address")
+            raise InvalidBitcoinURI("Not an Rutanio address")
         return {'address': uri}
 
     u = urllib.parse.urlparse(uri)
-    if u.scheme != 'exos':
-        raise InvalidBitcoinURI("Not an EXOS URI")
+    if u.scheme != 'rutanio':
+        raise InvalidBitcoinURI("Not an Rutanio URI")
     address = u.path
 
     # python for android fails to parse query
@@ -727,7 +727,7 @@ def parse_URI(uri: str, on_pr: Callable = None, *, loop=None) -> dict:
     out = {k: v[0] for k, v in pq.items()}
     if address:
         if not bitcoin.is_address(address):
-            raise InvalidBitcoinURI(f"Invalid EXOS address: {address}")
+            raise InvalidBitcoinURI(f"Invalid Rutanio address: {address}")
         out['address'] = address
     if 'amount' in out:
         am = out['amount']
@@ -797,7 +797,7 @@ def create_bip21_uri(addr, amount_sat: Optional[int], message: Optional[str],
             raise Exception(f"illegal key for URI: {repr(k)}")
         v = urllib.parse.quote(v)
         query.append(f"{k}={v}")
-    p = urllib.parse.ParseResult(scheme='exos', netloc='', path=addr, params='', query='&'.join(query), fragment='')
+    p = urllib.parse.ParseResult(scheme='rutanio', netloc='', path=addr, params='', query='&'.join(query), fragment='')
     return str(urllib.parse.urlunparse(p))
 
 
@@ -937,7 +937,8 @@ def make_aiohttp_session(proxy: Optional[dict], headers=None, timeout=None):
     elif isinstance(timeout, (int, float)):
         timeout = aiohttp.ClientTimeout(total=timeout)
     alt_context = ssl.create_default_context(purpose=ssl.Purpose.SERVER_AUTH, cafile=ca_path)
-    ssl_context = SSLContextSafe.get_context(alt_context=alt_context)
+    ssl_context = SSLContextSafe.get_context(alt_context=alt_context)    
+
     if proxy:
         connector = SocksConnector(
             socks_ver=SocksVer.SOCKS5 if proxy['mode'] == 'socks5' else SocksVer.SOCKS4,
@@ -1113,6 +1114,7 @@ def multisig_type(wallet_type):
     if match:
         match = [int(x) for x in match.group(1, 2)]
     return match
+
 
 class SSLContextSafe:
     """ Returns a known path for cert trust store on platforms with

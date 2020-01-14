@@ -1,4 +1,4 @@
-from electrum_exos.i18n import _
+from electrum_rutanio.i18n import _
 
 fullname = 'Digital Bitbox'
 description = _('Provides support for Digital Bitbox hardware wallet')

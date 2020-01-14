@@ -1,12 +1,12 @@
 import time
 from struct import pack
 
-from electrum_exos import ecc
-from electrum_exos.i18n import _
-from electrum_exos.util import UserCancelled
-from electrum_exos.keystore import bip39_normalize_passphrase
-from electrum_exos.bip32 import BIP32Node, convert_bip32_path_to_list_of_uint32
-from electrum_exos.logging import Logger
+from electrum_rutanio import ecc
+from electrum_rutanio.i18n import _
+from electrum_rutanio.util import UserCancelled
+from electrum_rutanio.keystore import bip39_normalize_passphrase
+from electrum_rutanio.bip32 import BIP32Node, convert_bip32_path_to_list_of_uint32
+from electrum_rutanio.logging import Logger
 
 
 class GuiMixin(object):
@@ -64,7 +64,7 @@ class GuiMixin(object):
             msg = _("Enter a passphrase to generate this wallet.  Each time "
                     "you use this wallet your {} will prompt you for the "
                     "passphrase.  If you forget the passphrase you cannot "
-                    "access the exos in the wallet.").format(self.device)
+                    "access the rutanio in the wallet.").format(self.device)
         else:
             msg = _("Enter the passphrase to unlock this wallet:")
         passphrase = self.handler.get_passphrase(msg, self.creating_wallet)
@@ -124,8 +124,8 @@ class KeepKeyClientBase(GuiMixin, Logger):
 
     def has_usable_connection_with_device(self):
         try:
-            res = self.ping("exos-electrum pinging device")
-            assert res == "exos-electrum pinging device"
+            res = self.ping("rutanio-electrum pinging device")
+            assert res == "rutanio-electrum pinging device"
         except BaseException:
             return False
         return True

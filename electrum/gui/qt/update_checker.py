@@ -10,26 +10,26 @@ from PyQt5.QtCore import Qt, QThread, pyqtSignal
 from PyQt5.QtWidgets import (QWidget, QVBoxLayout, QLabel, QProgressBar,
                              QHBoxLayout, QPushButton)
 
-from electrum_exos import version
-from electrum_exos import constants
-from electrum_exos import ecc
-from electrum_exos.i18n import _
-from electrum_exos.util import make_aiohttp_session
-from electrum_exos.logging import Logger
+from electrum_rutanio import version
+from electrum_rutanio import constants
+from electrum_rutanio import ecc
+from electrum_rutanio.i18n import _
+from electrum_rutanio.util import make_aiohttp_session
+from electrum_rutanio.logging import Logger
 
 
 class UpdateCheck(QWidget, Logger):
-    url = "https://github.com/exoeconomy/EXOS-Electrum-version/raw/master/version"
-    download_url = "https://github.com/exoeconomy/EXOS-Electrum/releases/"
+    url = "https://github.com/rutanio/Rutanio-Electrum-version/raw/master/version"
+    download_url = "https://github.com/rutanio/Rutanio-Electrum/releases/"
 
     VERSION_ANNOUNCEMENT_SIGNING_KEYS = (
-        "CPvQvHN6e9mZyUSxZtmaX1E17wj9MbjKET",
+        "RUtX6UrzdR6yS4VmYva4reZbGfpjTXTnMx",
     )
 
     def __init__(self, main_window, latest_version=None):
         self.main_window = main_window
         QWidget.__init__(self)
-        self.setWindowTitle('EXOS-Electrum - ' + _('Update Check'))
+        self.setWindowTitle('Rutanio-Electrum - ' + _('Update Check'))
         self.content = QVBoxLayout()
         self.content.setContentsMargins(*[10]*4)
 
@@ -87,10 +87,10 @@ class UpdateCheck(QWidget, Logger):
                 self.detail_label.setText(_("You can download the new version from {}.").format(url))
             else:
                 self.heading_label.setText('<h2>' + _("Already up to date") + '</h2>')
-                self.detail_label.setText(_("You are already on the latest version of EXOS-Electrum."))
+                self.detail_label.setText(_("You are already on the latest version of Rutanio-Electrum."))
         else:
             self.heading_label.setText('<h2>' + _("Checking for updates...") + '</h2>')
-            self.detail_label.setText(_("Please wait while EXOS-Electrum checks for available updates."))
+            self.detail_label.setText(_("Please wait while Rutanio-Electrum checks for available updates."))
 
 
 class UpdateCheckThread(QThread, Logger):

@@ -12,7 +12,7 @@ else:
 
 PYHOME = 'c:/python3'
 
-home = 'C:\\exos-electrum\\'
+home = 'C:\\rutanio-electrum\\'
 
 # see https://github.com/pyinstaller/pyinstaller/issues/2005
 hiddenimports = []
@@ -38,12 +38,12 @@ binaries += [b for b in collect_dynamic_libs('PyQt5') if 'qwindowsvista' in b[0]
 binaries += [('C:/tmp/libsecp256k1.dll', '.')]
 
 datas = [
-    (home+'electrum/*.json', 'electrum_exos'),
-    (home+'electrum/wordlist/english.txt', 'electrum_exos/wordlist'),
-    (home+'electrum/locale', 'electrum_exos/locale'),
-    (home+'electrum/plugins', 'electrum_exos/plugins'),
+    (home+'electrum/*.json', 'electrum_rutanio'),
+    (home+'electrum/wordlist/english.txt', 'electrum_rutanio/wordlist'),
+    (home+'electrum/locale', 'electrum_rutanio/locale'),
+    (home+'electrum/plugins', 'electrum_rutanio/plugins'),
     ('C:\\Program Files (x86)\\ZBar\\bin\\', '.'),
-    (home+'electrum/gui/icons', 'electrum_exos/gui/icons'),
+    (home+'electrum/gui/icons', 'electrum_rutanio/gui/icons'),
 ]
 datas += collect_data_files('trezorlib')
 datas += collect_data_files('safetlib')
@@ -116,7 +116,7 @@ exe_standalone = EXE(
     a.scripts,
     a.binaries,
     a.datas,
-    name=os.path.join('build\\pyi.win32\\exos-electrum', cmdline_name + ".exe"),
+    name=os.path.join('build\\pyi.win32\\rutanio-electrum', cmdline_name + ".exe"),
     debug=False,
     strip=None,
     upx=False,
@@ -129,7 +129,7 @@ exe_portable = EXE(
     a.scripts,
     a.binaries,
     a.datas + [ ('is_portable', 'README.md', 'DATA' ) ],
-    name=os.path.join('build\\pyi.win32\\exos-electrum', cmdline_name + "-portable.exe"),
+    name=os.path.join('build\\pyi.win32\\rutanio-electrum', cmdline_name + "-portable.exe"),
     debug=False,
     strip=None,
     upx=False,
@@ -143,7 +143,7 @@ exe_dependent = EXE(
     pyz,
     a.scripts,
     exclude_binaries=True,
-    name=os.path.join('build\\pyi.win32\\exos-electrum', cmdline_name),
+    name=os.path.join('build\\pyi.win32\\rutanio-electrum', cmdline_name),
     debug=False,
     strip=None,
     upx=False,
@@ -160,4 +160,4 @@ coll = COLLECT(
     debug=False,
     icon=home+'electrum/gui/icons/electrum.ico',
     console=False,
-    name=os.path.join('dist', 'exos-electrum'))
+    name=os.path.join('dist', 'rutanio-electrum'))

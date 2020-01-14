@@ -18,7 +18,7 @@ install:
 cache:
   - pip: true
   - directories:
-    - /tmp/exos-electrum-build
+    - /tmp/rutanio-electrum-build
 script:
     - tox
 after_success:
@@ -56,7 +56,7 @@ jobs:
       install:
         - sudo docker build --no-cache -t electrum-wine-builder-img ./contrib/build-wine/
       script:
-        - sudo docker run --name exos-electrum-wine-builder-cont -v $PWD:/opt/wine64/drive_c/exos-electrum --rm --workdir /opt/wine64/drive_c/exos-electrum/contrib/build-wine electrum-wine-builder-img ./build.sh
+        - sudo docker run --name rutanio-electrum-wine-builder-cont -v $PWD:/opt/wine64/drive_c/rutanio-electrum --rm --workdir /opt/wine64/drive_c/rutanio-electrum/contrib/build-wine electrum-wine-builder-img ./build.sh
       after_success: true
     - if: branch = master
       name: "Android build"
@@ -97,9 +97,9 @@ jobs:
       services:
         - docker
       install:
-        - sudo docker build --no-cache -t exos-electrum-appimage-builder-img ./contrib/build-linux/appimage/
+        - sudo docker build --no-cache -t rutanio-electrum-appimage-builder-img ./contrib/build-linux/appimage/
       script:
-        - sudo docker run --name exos-electrum-appimage-builder-cont -v $PWD:/opt/exos-electrum --rm --workdir /opt/exos-electrum/contrib/build-linux/appimage exos-electrum-appimage-builder-img ./build.sh
+        - sudo docker run --name rutanio-electrum-appimage-builder-cont -v $PWD:/opt/rutanio-electrum --rm --workdir /opt/rutanio-electrum/contrib/build-linux/appimage rutanio-electrum-appimage-builder-img ./build.sh
       after_success: true
     - stage: release check
       install:

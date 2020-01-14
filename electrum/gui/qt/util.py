@@ -22,10 +22,10 @@ from PyQt5.QtWidgets import (QPushButton, QLabel, QMessageBox, QHBoxLayout,
                              QFileDialog, QWidget, QToolButton, QTreeView, QPlainTextEdit,
                              QHeaderView, QApplication, QToolTip, QTreeWidget, QStyledItemDelegate)
 
-from electrum_exos.i18n import _, languages
-from electrum_exos.util import (FileImportFailed, FileExportFailed,
+from electrum_rutanio.i18n import _, languages
+from electrum_rutanio.util import (FileImportFailed, FileExportFailed,
                            resource_path)
-from electrum_exos.paymentrequest import PR_UNPAID, PR_PAID, PR_EXPIRED
+from electrum_rutanio.paymentrequest import PR_UNPAID, PR_PAID, PR_EXPIRED
 
 if TYPE_CHECKING:
     from .main_window import ElectrumWindow

@@ -54,8 +54,8 @@ console_formatter = LogFormatterForConsole(fmt="%(asctime)26s | %(levelname).1s 
 def _shorten_name_of_logrecord(record: logging.LogRecord) -> logging.LogRecord:
     record = copy.copy(record)  # avoid mutating arg
     # strip the main module name from the logger name
-    if record.name.startswith("exos-electrum."):
-        record.name = record.name[14:]
+    if record.name.startswith("rutanio-electrum."):
+        record.name = record.name[17:]
     # manual map to shorten common module names
     record.name = record.name.replace("interface.Interface", "interface", 1)
     record.name = record.name.replace("network.Network", "network", 1)
@@ -76,12 +76,12 @@ console_stderr_handler.setLevel(logging.WARNING)
 root_logger.addHandler(console_stderr_handler)
 
 # creates a logger specifically for electrum library
-electrum_logger = logging.getLogger("exos-electrum")
+electrum_logger = logging.getLogger("rutanio-electrum")
 electrum_logger.setLevel(logging.DEBUG)
 
 
 def _delete_old_logs(path, keep=10):
-    files = sorted(list(pathlib.Path(path).glob("exos-electrum_log_*.log")), reverse=True)
+    files = sorted(list(pathlib.Path(path).glob("rutanio-electrum_log_*.log")), reverse=True)
     for f in files[keep:]:
         os.remove(str(f))
 
@@ -96,7 +96,7 @@ def _configure_file_logging(log_directory: pathlib.Path):
 
     timestamp = datetime.datetime.utcnow().strftime("%Y%m%dT%H%M%SZ")
     PID = os.getpid()
-    _logfile_path = log_directory / f"exos-electrum_log_{timestamp}_{PID}.log"
+    _logfile_path = log_directory / f"rutanio-electrum_log_{timestamp}_{PID}.log"
 
     file_handler = logging.FileHandler(_logfile_path)
     file_handler.setFormatter(file_formatter)
@@ -195,7 +195,7 @@ class ShortcutFilteringFilter(logging.Filter):
 # --- External API
 
 def get_logger(name: str) -> logging.Logger:
-    if name.startswith("exos-electrum."):
+    if name.startswith("rutanio-electrum."):
         name = name[9:]
     return electrum_logger.getChild(name)
 
@@ -251,7 +251,7 @@ def configure_logging(config):
 
     from .version import ELECTRUM_BUILD
     from .constants import GIT_REPO_URL
-    _logger.info(f"EXOS-Electrum version: {ELECTRUM_BUILD} - https://economy.openexo.com - {GIT_REPO_URL}")
+    _logger.info(f"Rutanio-Electrum version: {ELECTRUM_BUILD} - https://rutanio.com - {GIT_REPO_URL}")
     _logger.info(f"Python version: {sys.version}. On platform: {describe_os_version()}")
     _logger.info(f"Logging to file: {str(_logfile_path)}")
     _logger.info(f"Log filters: verbosity {repr(verbosity)}, verbosity_shortcuts {repr(verbosity_shortcuts)}")

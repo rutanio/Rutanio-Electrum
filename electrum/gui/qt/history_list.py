@@ -38,27 +38,27 @@ from PyQt5.QtWidgets import (QMenu, QHeaderView, QLabel, QMessageBox,
                              QPushButton, QComboBox, QVBoxLayout, QCalendarWidget,
                              QGridLayout)
 
-from electrum_exos.address_synchronizer import TX_HEIGHT_LOCAL
-from electrum_exos.i18n import _
-from electrum_exos.util import (block_explorer_URL, profiler, TxMinedInfo,
+from electrum_rutanio.address_synchronizer import TX_HEIGHT_LOCAL
+from electrum_rutanio.i18n import _
+from electrum_rutanio.util import (block_explorer_URL, profiler, TxMinedInfo,
                            OrderedDictWithIndex, timestamp_to_datetime)
-from electrum_exos.logging import get_logger, Logger
+from electrum_rutanio.logging import get_logger, Logger
 
 from .util import (read_QIcon, MONOSPACE_FONT, Buttons, CancelButton, OkButton,
                    filename_field, MyTreeView, AcceptFileDragDrop, WindowModalDialog,
                    CloseButton, webopen)
 
 if TYPE_CHECKING:
-    from electrum_exos.wallet import Abstract_Wallet
+    from electrum_rutanio.wallet import Abstract_Wallet
 
 
 _logger = get_logger(__name__)
 
 
 try:
-    from electrum_exos.plot import plot_history, NothingToPlotException
+    from electrum_rutanio.plot import plot_history, NothingToPlotException
 except:
-    _logger.info("could not import electrum_exos.plot. This feature needs matplotlib to be installed.")
+    _logger.info("could not import electrum_rutanio.plot. This feature needs matplotlib to be installed.")
     plot_history = None
 
 # note: this list needs to be kept in sync with another in kivy
@@ -693,7 +693,7 @@ class HistoryList(MyTreeView, AcceptFileDragDrop):
                 for line in lines:
                     transaction.writerow(line)
             else:
-                from electrum_exos.util import json_encode
+                from electrum_rutanio.util import json_encode
                 f.write(json_encode(txns))
 
     def text_txid_from_coordinate(self, row, col):

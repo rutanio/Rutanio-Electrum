@@ -3,16 +3,16 @@ import hashlib
 import sys
 import traceback
 
-from electrum_exos import ecc
-from electrum_exos.bitcoin import TYPE_ADDRESS, int_to_hex, var_int, is_segwit_script_type
-from electrum_exos.bip32 import BIP32Node
-from electrum_exos.i18n import _
-from electrum_exos.keystore import Hardware_KeyStore
-from electrum_exos.transaction import Transaction
-from electrum_exos.wallet import Standard_Wallet
-from electrum_exos.util import bfh, bh2u, versiontuple, UserFacingException
-from electrum_exos.base_wizard import ScriptTypeNotSupported
-from electrum_exos.logging import get_logger
+from electrum_rutanio import ecc
+from electrum_rutanio.bitcoin import TYPE_ADDRESS, int_to_hex, var_int, is_segwit_script_type
+from electrum_rutanio.bip32 import BIP32Node
+from electrum_rutanio.i18n import _
+from electrum_rutanio.keystore import Hardware_KeyStore
+from electrum_rutanio.transaction import Transaction
+from electrum_rutanio.wallet import Standard_Wallet
+from electrum_rutanio.util import bfh, bh2u, versiontuple, UserFacingException
+from electrum_rutanio.base_wizard import ScriptTypeNotSupported
+from electrum_rutanio.logging import get_logger
 
 from ..hw_wallet import HW_PluginBase
 from ..hw_wallet.plugin import is_any_tx_output_on_change_branch
@@ -36,7 +36,7 @@ except ImportError:
 
 MSG_NEEDS_FW_UPDATE_GENERIC = _('Firmware version too old. Please update at') + \
                       ' https://www.ledgerwallet.com'
-MSG_NEEDS_FW_UPDATE_SEGWIT = _('Firmware version (or "EXOS" app) too old for Segwit support. Please update at') + \
+MSG_NEEDS_FW_UPDATE_SEGWIT = _('Firmware version (or "Rutanio" app) too old for Segwit support. Please update at') + \
                       ' https://www.ledgerwallet.com'
 MULTI_OUTPUT_SUPPORT = '1.1.4'
 SEGWIT_SUPPORT = '1.1.10'

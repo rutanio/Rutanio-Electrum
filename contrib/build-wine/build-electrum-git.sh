@@ -1,6 +1,6 @@
 #!/bin/bash
 
-NAME_ROOT=exos-electrum
+NAME_ROOT=rutanio-electrum
 
 # These settings probably don't need any change
 export WINEPREFIX=/opt/wine64
@@ -19,7 +19,7 @@ here="$(dirname "$(readlink -e "$0")")"
 
 . "$CONTRIB"/build_tools_util.sh
 
-pushd $WINEPREFIX/drive_c/exos-electrum
+pushd $WINEPREFIX/drive_c/rutanio-electrum
 
 VERSION=`git describe --tags`
 info "Last commit: $VERSION"
@@ -27,7 +27,7 @@ info "Last commit: $VERSION"
 # Load electrum-locale for this release
 git submodule update --init
 
-pushd ./contrib/deterministic-build/exos-electrum-locale
+pushd ./contrib/deterministic-build/rutanio-electrum-locale
 if ! which msgfmt > /dev/null 2>&1; then
     fail "Please install gettext"
 fi
@@ -45,7 +45,7 @@ popd
 $PYTHON -m pip install --no-warn-script-location -r "$CONTRIB"/deterministic-build/requirements.txt
 $PYTHON -m pip install --no-warn-script-location -r "$CONTRIB"/deterministic-build/requirements-hw.txt
 
-pushd $WINEPREFIX/drive_c/exos-electrum
+pushd $WINEPREFIX/drive_c/rutanio-electrum
 # see https://github.com/pypa/pip/issues/2195 -- pip makes a copy of the entire directory
 info "Pip installing Electrum. This might take a long time if the project folder is large."
 $PYTHON -m pip install --no-warn-script-location .
@@ -111,4 +111,4 @@ EOF
     done
 )
 
-sha256sum dist/exos-electrum*.exe
+sha256sum dist/rutanio-electrum*.exe

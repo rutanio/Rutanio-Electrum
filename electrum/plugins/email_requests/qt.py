@@ -41,13 +41,13 @@ from PyQt5.QtCore import QObject, pyqtSignal, QThread
 from PyQt5.QtWidgets import (QVBoxLayout, QLabel, QGridLayout, QLineEdit,
                              QInputDialog)
 
-from electrum_exos.gui.qt.util import (EnterButton, Buttons, CloseButton, OkButton,
+from electrum_rutanio.gui.qt.util import (EnterButton, Buttons, CloseButton, OkButton,
                                   WindowModalDialog, get_parent_main_window)
 
-from electrum_exos.plugin import BasePlugin, hook
-from electrum_exos.paymentrequest import PaymentRequest
-from electrum_exos.i18n import _
-from electrum_exos.logging import Logger
+from electrum_rutanio.plugin import BasePlugin, hook
+from electrum_rutanio.paymentrequest import PaymentRequest
+from electrum_rutanio.i18n import _
+from electrum_rutanio.logging import Logger
 
 
 class Processor(threading.Thread, Logger):
@@ -176,7 +176,7 @@ class Plugin(BasePlugin):
         menu.addAction(_("Send via e-mail"), lambda: self.send(window, addr))
 
     def send(self, window, addr):
-        from electrum_exos import paymentrequest
+        from electrum_rutanio import paymentrequest
         r = window.wallet.receive_requests.get(addr)
         message = r.get('memo', '')
         if r.get('signature'):

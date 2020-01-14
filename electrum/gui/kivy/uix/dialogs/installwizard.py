@@ -15,8 +15,8 @@ from kivy.core.window import Window
 from kivy.clock import Clock
 from kivy.utils import platform
 
-from electrum_exos.base_wizard import BaseWizard
-from electrum_exos.util import is_valid_email
+from electrum_rutanio.base_wizard import BaseWizard
+from electrum_rutanio.util import is_valid_email
 
 
 from . import EventsDialog
@@ -31,15 +31,15 @@ test_xpub = "xpub661MyMwAqRbcEbvVtRRSjqxVnaWVUMewVzMiURAKyYratih4TtBpMypzzefmv8z
 
 Builder.load_string('''
 #:import Window kivy.core.window.Window
-#:import _ electrum_exos.gui.kivy.i18n._
+#:import _ electrum_rutanio.gui.kivy.i18n._
 
 
 <WizardTextInput@TextInput>
     border: 4, 4, 4, 4
     font_size: '15sp'
     padding: '15dp', '15dp'
-    background_color: (1, 1, 1, 1) if self.focus else (1, 1, 0, 1)
-    foreground_color: (0, 1, 0, 1) if self.focus else (0.835, 0.909, 0.972, 1)
+    background_color: (1, 1, 1, 1) if self.focus else (0.454, 0.698, 0.909, 1)
+    foreground_color: (0.31, 0.31, 0.31, 1) if self.focus else (0.835, 0.909, 0.972, 1)
     hint_text_color: self.foreground_color
     background_active: 'atlas://electrum/gui/kivy/theming/light/create_act_text_active'
     background_normal: 'atlas://electrum/gui/kivy/theming/light/create_act_text_active'
@@ -52,8 +52,6 @@ Builder.load_string('''
     height: '48sp'
     on_press: if self.root: self.root.dispatch('on_press', self)
     on_release: if self.root: self.root.dispatch('on_release', self)
-    background_normal: ''
-    background_color: 0.173, 0.294, 0.455, 1
 
 <BigLabel@Label>
     color: .854, .925, .984, 1
@@ -69,7 +67,7 @@ Builder.load_string('''
     size_hint: None, None
     canvas.before:
         Color:
-            rgba: 0, .118, .278, 1
+            rgba: .239, .588, .882, 1
         Rectangle:
             size: Window.size
 
@@ -89,7 +87,7 @@ Builder.load_string('''
             height: self.minimum_height
             Label:
                 color: root.text_color
-                text: 'EXOS-Electrum'
+                text: 'Rutanio-Electrum'
                 size_hint: 1, None
                 height: self.texture_size[1] if self.opacity else 0
                 font_size: '33sp'
@@ -139,7 +137,7 @@ Builder.load_string('''
             text: _('From {} cosigners').format(n.value)
         Slider:
             id: n
-            range: 2, 8
+            range: 2, 5
             step: 1
             value: 2
         Label:
@@ -301,7 +299,7 @@ Builder.load_string('''
     valign: 'top'
     font_size: '18dp'
     text_size: self.width - dp(24), self.height - dp(12)
-    color: 1, 0, 0, 1
+    color: .1, .1, .1, 1
     background_normal: 'atlas://electrum/gui/kivy/theming/light/white_bg_round_top'
     background_down: self.background_normal
     size_hint_y: None
@@ -760,8 +758,8 @@ class RestoreSeedDialog(WizardDialog):
     def __init__(self, wizard, **kwargs):
         super(RestoreSeedDialog, self).__init__(wizard, **kwargs)
         self._test = kwargs['test']
-        from electrum_exos.mnemonic import Mnemonic
-        from electrum_exos.old_mnemonic import words as old_wordlist
+        from electrum_rutanio.mnemonic import Mnemonic
+        from electrum_rutanio.old_mnemonic import words as old_wordlist
         self.words = set(Mnemonic('en').wordlist).union(set(old_wordlist))
         self.ids.text_input_seed.text = test_seed if is_test else ''
         self.message = _('Please type your seed phrase using the virtual keyboard.')

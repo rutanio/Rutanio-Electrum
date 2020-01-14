@@ -1,50 +1,44 @@
 {
-    "electrum01-testnet.oexo.cloud": {
+    "electrum01-testnet.rutax.cloud": {
         "pruning": "-",
         "s": "51002",
         "t": "51001",
-        "version": "1.2"
+        "version": "1.4"
     },
-    "electrum02-testnet.oexo.net": {
+    "electrum02-testnet.rutax.network": {
         "pruning": "-",
         "s": "51002",
         "t": "51001",
-        "version": "1.2"
+        "version": "1.4"
     },
-    "electrum03-testnet.oexo.cloud": {
+    "electrum03-testnet.rutax.cloud": {
         "pruning": "-",
         "s": "51002",
         "t": "51001",
-        "version": "1.2"
+        "version": "1.4"
     },
-    "electrum04-testnet.oexo.net": {
+    "electrum04-testnet.rutax.network": {
         "pruning": "-",
         "s": "51002",
         "t": "51001",
-        "version": "1.2"
+        "version": "1.4"
     },
-    "electrum05-testnet.oexo.cloud": {
+    "electrum05-testnet.rutax.cloud": {
         "pruning": "-",
         "s": "51002",
         "t": "51001",
-        "version": "1.2"
+        "version": "1.4"
     },
-    "electrum06-testnet.oexo.net": {
+    "electrum06-testnet.rutax.network": {
         "pruning": "-",
         "s": "51002",
         "t": "51001",
-        "version": "1.2"
+        "version": "1.4"
     },
-    "electrum07-testnet.oexo.cloud": {
+    "electrum07-testnet.rutax.cloud": {
         "pruning": "-",
         "s": "51002",
         "t": "51001",
-        "version": "1.2"
-    },
-    "electrum08-testnet.oexo.net": {
-        "pruning": "-",
-        "s": "51002",
-        "t": "51001",
-        "version": "1.2"
+        "version": "1.4"
     }
 }

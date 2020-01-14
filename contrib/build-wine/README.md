@@ -35,18 +35,18 @@ folder.
         sudo rm -rf $FRESH_CLONE && \
         mkdir -p $FRESH_CLONE && \
         cd $FRESH_CLONE  && \
-        git clone https://github.com/exoeconomy/EXOS-Electrum.git && \
-        cd EXOS-Electrum
+        git clone https://github.com/rutanio/Rutanio-Electrum.git && \
+        cd Rutanio-Electrum
     ```
 
     And then build from this directory:
     ```
     $ git checkout $REV
     $ sudo docker run -it \
-        --name exos-electrum-wine-builder-cont \
-        -v $PWD:/opt/wine64/drive_c/exos-electrum \
+        --name rutanio-electrum-wine-builder-cont \
+        -v $PWD:/opt/wine64/drive_c/rutanio-electrum \
         --rm \
-        --workdir /opt/wine64/drive_c/exos-electrum/contrib/build-wine \
+        --workdir /opt/wine64/drive_c/rutanio-electrum/contrib/build-wine \
         electrum-wine-builder-img \
         ./build.sh
     ```
@@ -57,10 +57,10 @@ folder.
 Code Signing
 ============
 
-EXOS-Electrum Windows builds are signed with a Microsoft Authenticode™ code signing
+Rutanio-Electrum Windows builds are signed with a Microsoft Authenticode™ code signing
 certificate in addition to the GPG-based signatures.
 
-The advantage of using Authenticode is that EXOS-Electrum users won't receive a 
+The advantage of using Authenticode is that Rutanio-Electrum users won't receive a 
 Windows SmartScreen warning when starting it.
 
 The release signing procedure involves a signer (the holder of the

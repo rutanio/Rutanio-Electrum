@@ -28,11 +28,11 @@ from decimal import Decimal
 
 from PyQt5.QtGui import QFontMetrics
 
-from electrum_exos import bitcoin
-from electrum_exos.util import bfh
-from electrum_exos.transaction import TxOutput, push_script
-from electrum_exos.bitcoin import opcodes
-from electrum_exos.logging import Logger
+from electrum_rutanio import bitcoin
+from electrum_rutanio.util import bfh
+from electrum_rutanio.transaction import TxOutput, push_script
+from electrum_rutanio.bitcoin import opcodes
+from electrum_rutanio.logging import Logger
 
 from .qrtextedit import ScanQRTextEdit
 from .completion_text_edit import CompletionTextEdit
@@ -129,7 +129,7 @@ class PayToEdit(CompletionTextEdit, ScanQRTextEdit, Logger):
         self.payto_address = None
         if len(lines) == 1:
             data = lines[0]
-            if data.startswith("exos:"):
+            if data.startswith("rutanio:"):
                 self.scan_f(data)
                 return
             try:

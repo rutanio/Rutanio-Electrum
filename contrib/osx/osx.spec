@@ -4,11 +4,11 @@ from PyInstaller.utils.hooks import collect_data_files, collect_submodules, coll
 
 import sys, os
 
-PACKAGE='EXOS-Electrum'
+PACKAGE='Rutanio-Electrum'
 PYPKG='electrum'
-ALIASPKGPATH='electrum_exos'
+ALIASPKGPATH='electrum_rutanio'
 MAIN_SCRIPT='run_electrum'
-ICONS_FILE=PYPKG + '/gui/icons/exos-electrum.icns'
+ICONS_FILE=PYPKG + '/gui/icons/rutanio-electrum.icns'
 APP_SIGN = os.environ.get('APP_SIGN', '')
 
 def fail(*msg):

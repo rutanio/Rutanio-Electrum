@@ -38,7 +38,7 @@ if sys.version_info[:3] < _min_python_version_tuple:
 
 script_dir = os.path.dirname(os.path.realpath(__file__))
 is_bundle = getattr(sys, 'frozen', False)
-is_local = not is_bundle and os.path.exists(os.path.join(script_dir, "exos-electrum.desktop"))
+is_local = not is_bundle and os.path.exists(os.path.join(script_dir, "rutanio-electrum.desktop"))
 is_android = 'ANDROID_DATA' in os.environ
 
 if is_local:  # running from source
@@ -81,20 +81,20 @@ if not is_android:
 if is_local or is_android:
     sys.path.insert(0, os.path.join(script_dir, 'packages'))
     import imp
-    imp.load_module('electrum_exos', *imp.find_module('electrum'))
+    imp.load_module('electrum_rutanio', *imp.find_module('electrum'))
 
 
-from electrum_exos.logging import get_logger, configure_logging
-from electrum_exos import util
-from electrum_exos import constants
-from electrum_exos import SimpleConfig
-from electrum_exos.wallet import Wallet
-from electrum_exos.storage import WalletStorage, get_derivation_used_for_hw_device_encryption
-from electrum_exos.util import print_msg, print_stderr, json_encode, json_decode, UserCancelled
-from electrum_exos.util import InvalidPassword
-from electrum_exos.commands import get_parser, known_commands, Commands, config_variables
-from electrum_exos import daemon
-from electrum_exos import keystore
+from electrum_rutanio.logging import get_logger, configure_logging
+from electrum_rutanio import util
+from electrum_rutanio import constants
+from electrum_rutanio import SimpleConfig
+from electrum_rutanio.wallet import Wallet
+from electrum_rutanio.storage import WalletStorage, get_derivation_used_for_hw_device_encryption
+from electrum_rutanio.util import print_msg, print_stderr, json_encode, json_decode, UserCancelled
+from electrum_rutanio.util import InvalidPassword
+from electrum_rutanio.commands import get_parser, known_commands, Commands, config_variables
+from electrum_rutanio import daemon
+from electrum_rutanio import keystore
 
 _logger = get_logger(__name__)
 
@@ -117,7 +117,7 @@ def init_daemon(config_options):
     storage = WalletStorage(config.get_wallet_path())
     if not storage.file_exists():
         print_msg("Error: Wallet file not found.")
-        print_msg("Type 'exos-electrum create' to create a new wallet, or provide a path to a wallet with the -w option")
+        print_msg("Type 'rutanio-electrum create' to create a new wallet, or provide a path to a wallet with the -w option")
         sys.exit(0)
     if storage.is_encrypted():
         if storage.is_encrypted_with_hw_device():
@@ -155,7 +155,7 @@ def init_cmdline(config_options, server):
 
     if cmd.requires_wallet and not storage.file_exists():
         print_msg("Error: Wallet file not found.")
-        print_msg("Type 'exos-electrum create' to create a new wallet, or provide a path to a wallet with the -w option")
+        print_msg("Type 'rutanio-electrum create' to create a new wallet, or provide a path to a wallet with the -w option")
         sys.exit(0)
 
     # important warning
@@ -269,7 +269,7 @@ def run_offline_command(config, config_options, plugins):
 
 
 def init_plugins(config, gui_name):
-    from electrum_exos.plugin import Plugins
+    from electrum_rutanio.plugin import Plugins
     return Plugins(config, gui_name)
 
 
@@ -341,7 +341,7 @@ if __name__ == '__main__':
     # check uri
     uri = config_options.get('url')
     if uri:
-        if not uri.startswith('exos:'):
+        if not uri.startswith('rutanio:'):
             print_stderr('unknown command:', uri)
             sys.exit(1)
         config_options['url'] = uri
@@ -396,13 +396,13 @@ if __name__ == '__main__':
                 init_plugins(config, 'cmdline')
                 d = daemon.Daemon(config, fd)
                 if config.get('websocket_server'):
-                    from electrum_exos import websockets
+                    from electrum_rutanio import websockets
                     websockets.WebSocketServer(config, d.network)
                 if config.get('requests_dir'):
                     path = os.path.join(config.get('requests_dir'), 'index.html')
                     if not os.path.exists(path):
                         print("Requests directory not configured.")
-                        print("You can configure it using https://github.com/exofoundation/exos-electrum-merchant")
+                        print("You can configure it using https://github.com/rutanio/rutanio-electrum-merchant")
                         sys.exit(1)
                 d.join()
                 sys.exit(0)
@@ -424,7 +424,7 @@ if __name__ == '__main__':
         else:
             cmd = known_commands[cmdname]
             if cmd.requires_network:
-                print_msg("Daemon not running; try 'exos-electrum daemon start'")
+                print_msg("Daemon not running; try 'rutanio-electrum daemon start'")
                 sys.exit(1)
             else:
                 plugins = init_plugins(config, 'cmdline')

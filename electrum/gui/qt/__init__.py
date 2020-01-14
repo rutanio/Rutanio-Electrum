@@ -42,13 +42,13 @@ from PyQt5.QtWidgets import (QApplication, QSystemTrayIcon, QWidget, QMenu,
 from PyQt5.QtCore import QObject, pyqtSignal, QTimer
 import PyQt5.QtCore as QtCore
 
-from electrum_exos.i18n import _, set_language
-from electrum_exos.plugin import run_hook
-from electrum_exos.base_wizard import GoBack
-from electrum_exos.util import (UserCancelled, profiler,
+from electrum_rutanio.i18n import _, set_language
+from electrum_rutanio.plugin import run_hook
+from electrum_rutanio.base_wizard import GoBack
+from electrum_rutanio.util import (UserCancelled, profiler,
                            WalletFileException, BitcoinException, get_new_wallet_name)
-from electrum_exos.wallet import Wallet, Abstract_Wallet
-from electrum_exos.logging import Logger
+from electrum_rutanio.wallet import Wallet, Abstract_Wallet
+from electrum_rutanio.logging import Logger
 
 from .installwizard import InstallWizard, WalletAlreadyOpenInMemory
 
@@ -94,7 +94,7 @@ class ElectrumGui(Logger):
         if hasattr(QtCore.Qt, "AA_ShareOpenGLContexts"):
             QtCore.QCoreApplication.setAttribute(QtCore.Qt.AA_ShareOpenGLContexts)
         if hasattr(QGuiApplication, 'setDesktopFileName'):
-            QGuiApplication.setDesktopFileName('exos-electrum.desktop')
+            QGuiApplication.setDesktopFileName('rutanio-electrum.desktop')
         self.gui_thread = threading.current_thread()
         self.config = config
         self.daemon = daemon
@@ -103,7 +103,7 @@ class ElectrumGui(Logger):
         self.efilter = OpenFileEventFilter(self.windows)
         self.app = QElectrumApplication(sys.argv)
         self.app.installEventFilter(self.efilter)
-        self.app.setWindowIcon(read_QIcon("exos-electrum.png"))
+        self.app.setWindowIcon(read_QIcon("rutanio-electrum.png"))
         # timer
         self.timer = QTimer(self.app)
         self.timer.setSingleShot(False)

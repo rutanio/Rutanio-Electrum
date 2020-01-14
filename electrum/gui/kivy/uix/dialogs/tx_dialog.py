@@ -11,11 +11,11 @@ from kivy.uix.dropdown import DropDown
 from kivy.uix.button import Button
 
 from .question import Question
-from electrum_exos.gui.kivy.i18n import _
+from electrum_rutanio.gui.kivy.i18n import _
 
-from electrum_exos.util import InvalidPassword
-from electrum_exos.address_synchronizer import TX_HEIGHT_LOCAL
-from electrum_exos.wallet import CannotBumpFee
+from electrum_rutanio.util import InvalidPassword
+from electrum_rutanio.address_synchronizer import TX_HEIGHT_LOCAL
+from electrum_rutanio.wallet import CannotBumpFee
 
 
 Builder.load_string('''
@@ -247,7 +247,7 @@ class TxDialog(Factory.Popup):
         self.app.broadcast(self.tx)
 
     def show_qr(self):
-        from electrum_exos.bitcoin import base_encode, bfh
+        from electrum_rutanio.bitcoin import base_encode, bfh
         raw_tx = str(self.tx)
         text = bfh(raw_tx)
         text = base_encode(text, base=43)

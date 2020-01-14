@@ -1,72 +1,41 @@
 {
-    "electrum01.oexo.cloud": {
+    "electrum01.rutax.cloud": {
         "pruning": "-",
         "s": "50002",
         "t": "50001",
         "version": "1.4"
-    },
-       
-    "electrum02.oexo.net": {
+    },  
+    "electrum02.rutax.network": {
         "pruning": "-",
         "s": "50002",
         "t": "50001",
         "version": "1.2"
     },
-    "electrum03.oexo.cloud": {
+    "electrum03.rutax.cloud": {
         "pruning": "-",
         "s": "50002",
         "t": "50001",
         "version": "1.4"
     },
-    "electrum04.oexo.net": {
+    "electrum04.rutax.network": {
         "pruning": "-",
         "s": "50002",
         "t": "50001",
         "version": "1.4"
     },
-    "electrum05.oexo.cloud": {
+    "electrum05.rutax.cloud": {
         "pruning": "-",
         "s": "50002",
         "t": "50001",
         "version": "1.4"
     },
-    "electrum06.oexo.net": {
+    "electrum06.rutax.network": {
         "pruning": "-",
         "s": "50002",
         "t": "50001",
         "version": "1.4"
     },
-    "electrum07.oexo.cloud": {
-        "pruning": "-",
-        "s": "50002",
-        "t": "50001",
-        "version": "1.4"
-    },
-    "electrum08.oexo.net": {
-        "pruning": "-",
-        "s": "50002",
-        "t": "50001",
-        "version": "1.4"
-    },
-    "electrum09.oexo.cloud": {
-        "pruning": "-",
-        "s": "50002",
-        "t": "50001",
-        "version": "1.4"
-    },
-    "electrum10.oexo.net": {
-        "pruning": "-",
-        "s": "50002",
-        "t": "50001",
-        "version": "1.4"
-    },
-    "electrum11.oexo.cloud": {
-        "pruning": "-",
-        "s": "50002",
-        "t": "50001",
-        "version": "1.4"
-    },
-    "electrum12.oexo.net": {
+    "electrum07.rutax.cloud": {
         "pruning": "-",
         "s": "50002",
         "t": "50001",

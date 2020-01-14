@@ -6,8 +6,8 @@ import PyQt5.QtGui as QtGui
 from PyQt5.QtWidgets import (
     QApplication, QVBoxLayout, QTextEdit, QHBoxLayout, QPushButton, QWidget)
 
-import electrum_exos
-from electrum_exos.i18n import _
+import electrum_rutanio
+from electrum_rutanio.i18n import _
 from .util import WindowModalDialog
 
 
@@ -102,7 +102,7 @@ class QRDialog(WindowModalDialog):
         hbox = QHBoxLayout()
         hbox.addStretch(1)
 
-        config = electrum_exos.get_config()
+        config = electrum_rutanio.get_config()
         if config:
             filename = os.path.join(config.path, "qrcode.png")
 

@@ -29,13 +29,13 @@ def rpc(method, params):
     data_json = dumps(data)
     username = argv[1]
     password = argv[2]
-    port = 4561
+    port = 6781
     if len(argv) > 3:
         port = argv[3]
     url = "http://127.0.0.1:{}/".format(port)
     req = urllib.request.Request(url, data_json.encode("utf-8"), {'content-type': 'application/json'})
 
-    base64string = base64.encodestring(('%s:%s' % (username, password)).encode()).decode().replace('\n', '')
+    base64string = base64.encodebytes(('%s:%s' % (username, password)).encode()).decode().replace('\n', '')
     req.add_header("Authorization", "Basic %s" % base64string)
 
     response_stream = urllib.request.urlopen(req)

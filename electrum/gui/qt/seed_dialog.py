@@ -28,9 +28,9 @@ from PyQt5.QtGui import QPixmap, QPalette
 from PyQt5.QtWidgets import (QVBoxLayout, QCheckBox, QHBoxLayout, QLineEdit,
                              QLabel, QCompleter, QDialog, QStyledItemDelegate)
 
-from electrum_exos.i18n import _
-from electrum_exos.mnemonic import Mnemonic, seed_type
-import electrum_exos.old_mnemonic
+from electrum_rutanio.i18n import _
+from electrum_rutanio.mnemonic import Mnemonic, seed_type
+import electrum_rutanio.old_mnemonic
 
 from .util import (Buttons, OkButton, WWLabel, ButtonsTextEdit, icon_path,
                    EnterButton, CloseButton, WindowModalDialog, ColorScheme)
@@ -71,10 +71,10 @@ class SeedLayout(QVBoxLayout):
                 if b:
                     msg = ' '.join([
                         '<b>' + _('Warning') + ':</b>  ',
-                        _('BIP39 seeds can be imported in EXOS-Electrum, so that users can access funds locked in other wallets.'),
+                        _('BIP39 seeds can be imported in Rutanio-Electrum, so that users can access funds locked in other wallets.'),
                         _('However, we do not generate BIP39 seeds, because they do not meet our safety standard.'),
                         _('BIP39 seeds do not include a version number, which compromises compatibility with future software.'),
-                        _('We do not guarantee that BIP39 imports will always be supported in EXOS-Electrum.'),
+                        _('We do not guarantee that BIP39 imports will always be supported in Rutanio-Electrum.'),
                     ])
                 else:
                     msg = ''
@@ -150,7 +150,7 @@ class SeedLayout(QVBoxLayout):
 
     def initialize_completer(self):
         bip39_english_list = Mnemonic('en').wordlist
-        old_list = electrum_exos.old_mnemonic.words
+        old_list = electrum_rutanio.old_mnemonic.words
         only_old_list = set(old_list) - set(bip39_english_list)
         self.wordlist = bip39_english_list + list(only_old_list)  # concat both lists
         self.wordlist.sort()
@@ -182,7 +182,7 @@ class SeedLayout(QVBoxLayout):
             t = seed_type(s)
             label = _('Seed Type') + ': ' + t if t else ''
         else:
-            from electrum_exos.keystore import bip39_is_checksum_valid
+            from electrum_rutanio.keystore import bip39_is_checksum_valid
             is_checksum, is_wordlist = bip39_is_checksum_valid(s)
             status = ('checksum: ' + ('ok' if is_checksum else 'failed')) if is_wordlist else 'unknown wordlist'
             label = 'BIP39' + ' (%s)'%status
@@ -226,7 +226,7 @@ class KeysLayout(QVBoxLayout):
 class SeedDialog(WindowModalDialog):
 
     def __init__(self, parent, seed, passphrase):
-        WindowModalDialog.__init__(self, parent, ('EXOS-Electrum - ' + _('Seed')))
+        WindowModalDialog.__init__(self, parent, ('Rutanio-Electrum - ' + _('Seed')))
         self.setMinimumWidth(400)
         vbox = QVBoxLayout(self)
         title =  _("Your wallet generation seed is:")

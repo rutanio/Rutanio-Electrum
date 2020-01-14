@@ -6,9 +6,9 @@
 ;--------------------------------
 ;Variables
 
-  !define PRODUCT_NAME "EXOS-Electrum"
-  !define PRODUCT_WEB_SITE "https://github.com/exoeconomy/exos-electrum"
-  !define PRODUCT_PUBLISHER "OpenExO Developers"
+  !define PRODUCT_NAME "Rutanio-Electrum"
+  !define PRODUCT_WEB_SITE "https://github.com/rutanio/rutanio-electrum"
+  !define PRODUCT_PUBLISHER "Fluid Chains Developers"
   !define PRODUCT_UNINST_KEY "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_NAME}"
 
 ;--------------------------------
@@ -16,7 +16,7 @@
 
   ;Name and file
   Name "${PRODUCT_NAME}"
-  OutFile "dist/exos-electrum-setup.exe"
+  OutFile "dist/rutanio-electrum-setup.exe"
 
   ;Default installation folder
   InstallDir "$PROGRAMFILES\${PRODUCT_NAME}"
@@ -72,7 +72,7 @@
   !define MUI_ABORTWARNING
   !define MUI_ABORTWARNING_TEXT "Are you sure you wish to abort the installation of ${PRODUCT_NAME}?"
   
-  !define MUI_ICON "c:\exos-electrum\electrum\gui\icons\electrum.ico"
+  !define MUI_ICON "c:\rutanio-electrum\electrum\gui\icons\electrum.ico"
   
 ;--------------------------------
 ;Pages
@@ -110,8 +110,8 @@ Section
   Delete "$SMPROGRAMS\${PRODUCT_NAME}\*.*"
   
   ;Files to pack into the installer
-  File /r "dist\exos-electrum\*.*"
-  File "c:\exos-electrum\electrum\gui\icons\electrum.ico"
+  File /r "dist\rutanio-electrum\*.*"
+  File "c:\rutanio-electrum\electrum\gui\icons\electrum.ico"
 
   ;Store installation folder
   WriteRegStr HKCU "Software\${PRODUCT_NAME}" "" $INSTDIR
@@ -122,21 +122,21 @@ Section
 
   ;Create desktop shortcut
   DetailPrint "Creating desktop shortcut..."
-  CreateShortCut "$DESKTOP\${PRODUCT_NAME}.lnk" "$INSTDIR\exos-electrum-${PRODUCT_VERSION}.exe" ""
+  CreateShortCut "$DESKTOP\${PRODUCT_NAME}.lnk" "$INSTDIR\rutanio-electrum-${PRODUCT_VERSION}.exe" ""
 
   ;Create start-menu items
   DetailPrint "Creating start-menu items..."
   CreateDirectory "$SMPROGRAMS\${PRODUCT_NAME}"
   CreateShortCut "$SMPROGRAMS\${PRODUCT_NAME}\Uninstall.lnk" "$INSTDIR\Uninstall.exe" "" "$INSTDIR\Uninstall.exe" 0
-  CreateShortCut "$SMPROGRAMS\${PRODUCT_NAME}\${PRODUCT_NAME}.lnk" "$INSTDIR\exos-electrum-${PRODUCT_VERSION}.exe" "" "$INSTDIR\exos-electrum-${PRODUCT_VERSION}.exe" 0
-  CreateShortCut "$SMPROGRAMS\${PRODUCT_NAME}\${PRODUCT_NAME} Testnet.lnk" "$INSTDIR\exos-electrum-${PRODUCT_VERSION}.exe" "--testnet" "$INSTDIR\exos-electrum-${PRODUCT_VERSION}.exe" 0
+  CreateShortCut "$SMPROGRAMS\${PRODUCT_NAME}\${PRODUCT_NAME}.lnk" "$INSTDIR\rutanio-electrum-${PRODUCT_VERSION}.exe" "" "$INSTDIR\rutanio-electrum-${PRODUCT_VERSION}.exe" 0
+  CreateShortCut "$SMPROGRAMS\${PRODUCT_NAME}\${PRODUCT_NAME} Testnet.lnk" "$INSTDIR\rutanio-electrum-${PRODUCT_VERSION}.exe" "--testnet" "$INSTDIR\rutanio-electrum-${PRODUCT_VERSION}.exe" 0
 
 
-  ;Links exos: URI's to Electrum
-  WriteRegStr HKCU "Software\Classes\exos" "" "URL:exos Protocol"
-  WriteRegStr HKCU "Software\Classes\exos" "URL Protocol" ""
-  WriteRegStr HKCU "Software\Classes\exos" "DefaultIcon" "$\"$INSTDIR\electrum.ico, 0$\""
-  WriteRegStr HKCU "Software\Classes\exos\shell\open\command" "" "$\"$INSTDIR\exos-electrum-${PRODUCT_VERSION}.exe$\" $\"%1$\""
+  ;Links rutanio: URI's to Electrum
+  WriteRegStr HKCU "Software\Classes\rutanio" "" "URL:rutanio Protocol"
+  WriteRegStr HKCU "Software\Classes\rutanio" "URL Protocol" ""
+  WriteRegStr HKCU "Software\Classes\rutanio" "DefaultIcon" "$\"$INSTDIR\electrum.ico, 0$\""
+  WriteRegStr HKCU "Software\Classes\rutanio\shell\open\command" "" "$\"$INSTDIR\rutanio-electrum-${PRODUCT_VERSION}.exe$\" $\"%1$\""
 
   ;Adds an uninstaller possibility to Windows Uninstall or change a program section
   WriteRegStr HKCU "${PRODUCT_UNINST_KEY}" "DisplayName" "$(^Name)"
@@ -167,7 +167,7 @@ Section "Uninstall"
   Delete "$SMPROGRAMS\${PRODUCT_NAME}\*.*"
   RMDir  "$SMPROGRAMS\${PRODUCT_NAME}"
   
-  DeleteRegKey HKCU "Software\Classes\exos"
+  DeleteRegKey HKCU "Software\Classes\rutanio"
   DeleteRegKey HKCU "Software\${PRODUCT_NAME}"
   DeleteRegKey HKCU "${PRODUCT_UNINST_KEY}"
 SectionEnd

@@ -2,9 +2,9 @@ import shutil
 import tempfile
 import os
 
-from electrum_exos.storage import WalletStorage
-from electrum_exos.wallet import Wallet
-from electrum_exos import constants
+from electrum_rutanio.storage import WalletStorage
+from electrum_rutanio.wallet import Wallet
+from electrum_rutanio import constants
 
 from .test_wallet import WalletTestCase
 
@@ -275,8 +275,8 @@ class TestStorageUpgrade(WalletTestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        from electrum_exos.plugin import Plugins
-        from electrum_exos.simple_config import SimpleConfig
+        from electrum_rutanio.plugin import Plugins
+        from electrum_rutanio.simple_config import SimpleConfig
 
         cls.electrum_path = tempfile.mkdtemp()
         config = SimpleConfig({'electrum_path': cls.electrum_path})

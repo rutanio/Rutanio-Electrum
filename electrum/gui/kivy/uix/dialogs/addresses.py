@@ -98,8 +98,8 @@ Builder.load_string('''
 ''')
 
 
-from electrum_exos.gui.kivy.i18n import _
-from electrum_exos.gui.kivy.uix.context_menu import ContextMenu
+from electrum_rutanio.gui.kivy.i18n import _
+from electrum_rutanio.gui.kivy.uix.context_menu import ContextMenu
 
 
 class AddressesDialog(Factory.Popup):

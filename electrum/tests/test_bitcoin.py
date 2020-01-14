@@ -1,7 +1,7 @@
 import base64
 import sys
 
-from electrum_exos.bitcoin import (public_key_to_p2pkh, address_from_private_key,
+from electrum_rutanio.bitcoin import (public_key_to_p2pkh, address_from_private_key,
                               is_address, is_private_key,
                               var_int, _op_push, address_to_script,
                               deserialize_privkey, serialize_privkey, is_segwit_address,
@@ -9,18 +9,18 @@ from electrum_exos.bitcoin import (public_key_to_p2pkh, address_from_private_key
                               is_compressed_privkey, EncodeBase58Check, DecodeBase58Check,
                               script_num_to_hex, push_script, add_number_to_script, int_to_hex,
                               opcodes, base_encode, base_decode, BitcoinException)
-from electrum_exos.bip32 import (BIP32Node, convert_bip32_intpath_to_strpath,
+from electrum_rutanio.bip32 import (BIP32Node, convert_bip32_intpath_to_strpath,
                             xpub_from_xprv, xpub_type, is_xprv, is_bip32_derivation,
                             is_xpub, convert_bip32_path_to_list_of_uint32,
                             normalize_bip32_derivation)
-from electrum_exos.crypto import sha256d, SUPPORTED_PW_HASH_VERSIONS
-from electrum_exos import ecc, crypto, constants
-from electrum_exos.ecc import number_to_string, string_to_number
-from electrum_exos.util import bfh, bh2u, InvalidPassword
-from electrum_exos.storage import WalletStorage
-from electrum_exos.keystore import xtype_from_derivation
+from electrum_rutanio.crypto import sha256d, SUPPORTED_PW_HASH_VERSIONS
+from electrum_rutanio import ecc, crypto, constants
+from electrum_rutanio.ecc import number_to_string, string_to_number
+from electrum_rutanio.util import bfh, bh2u, InvalidPassword
+from electrum_rutanio.storage import WalletStorage
+from electrum_rutanio.keystore import xtype_from_derivation
 
-from electrum_exos import ecc_fast
+from electrum_rutanio import ecc_fast
 
 from . import SequentialTestCase
 from . import TestCaseForTestnet
@@ -156,7 +156,7 @@ class Test_bitcoin(SequentialTestCase):
     @needs_test_with_all_ecc_implementations
     def test_msg_signing(self):
         msg1 = b'The Global Transformation Economy'
-        msg2 = b'EXOS-Electrum'
+        msg2 = b'Rutanio-Electrum'
 
         def sign_message_with_wif_privkey(wif_privkey, msg):
             txin_type, privkey, compressed = deserialize_privkey(wif_privkey)

@@ -1,8 +1,8 @@
 from functools import partial
 
-from electrum_exos.i18n import _
-from electrum_exos.plugin import hook
-from electrum_exos.wallet import Standard_Wallet
+from electrum_rutanio.i18n import _
+from electrum_rutanio.plugin import hook
+from electrum_rutanio.wallet import Standard_Wallet
 
 from ..hw_wallet.qt import QtHandlerBase, QtPluginBase
 from ..hw_wallet.plugin import only_hook_if_libraries_available

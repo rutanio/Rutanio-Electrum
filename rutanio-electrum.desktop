@@ -1,0 +1,21 @@
+# If you want Rutanio-Electrum to appear in a Linux app launcher ("start menu"), install this by doing:
+# sudo desktop-file-install rutanio-electrum.desktop
+
+[Desktop Entry]
+Comment=Rutanio Lightweight Client
+Exec=sh -c "PATH=\"\\$HOME/.local/bin:\\$PATH\" rutanio-electrum %u"
+GenericName[en_US]=Rutanio Wallet
+GenericName=Rutanio Wallet
+Icon=rutanio-electrum
+Name[en_US]=Rutanio Electrum Wallet
+Name=Rutanio Electrum Wallet
+Categories=Finance;Network;
+StartupNotify=false
+Terminal=false
+Type=Application
+MimeType=x-scheme-handler/rutanio;
+Actions=Testnet;
+
+[Desktop Action Testnet]
+Exec=sh -c "PATH=\"\\$HOME/.local/bin:\\$PATH\" rutanio-electrum --testnet %u"
+Name=Testnet mode

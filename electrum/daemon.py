@@ -234,9 +234,9 @@ class Daemon(DaemonThread):
                 self.gui.new_window(path, config.get('url'))
                 response = "ok"
             else:
-                response = "error: EXOS-Electrum current GUI does not support multiple windows"
+                response = "error: Rutanio-Electrum current GUI does not support multiple windows"
         else:
-            response = "Error: EXOS-Electrum is running in daemon mode. Please stop the daemon first."
+            response = "Error: Rutanio-Electrum is running in daemon mode. Please stop the daemon first."
         return response
 
     def load_wallet(self, path, password) -> Optional[Abstract_Wallet]:
@@ -300,7 +300,7 @@ class Daemon(DaemonThread):
             path = standardize_path(path)
             wallet = self.wallets.get(path)
             if wallet is None:
-                return {'error': 'Wallet "%s" is not loaded. Use "exos-electrum daemon load_wallet"'%os.path.basename(path) }
+                return {'error': 'Wallet "%s" is not loaded. Use "rutanio-electrum daemon load_wallet"'%os.path.basename(path) }
         else:
             wallet = None
         # arguments passed to function
@@ -345,7 +345,7 @@ class Daemon(DaemonThread):
         gui_name = config.get('gui', 'qt')
         if gui_name in ['lite', 'classic']:
             gui_name = 'qt'
-        gui = __import__('electrum_exos.gui.' + gui_name, fromlist=['electrum'])
+        gui = __import__('electrum_rutanio.gui.' + gui_name, fromlist=['electrum'])
         self.gui = gui.ElectrumGui(config, self, plugins)
         try:
             self.gui.main()

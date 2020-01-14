@@ -2,10 +2,10 @@
 import json
 import asyncio
 
-from electrum_exos.simple_config import SimpleConfig
-from electrum_exos.network import filter_version, Network
-from electrum_exos.util import create_and_start_event_loop, log_exceptions
-from electrum_exos import constants
+from electrum_rutanio.simple_config import SimpleConfig
+from electrum_rutanio.network import filter_version, Network
+from electrum_rutanio.util import create_and_start_event_loop, log_exceptions
+from electrum_rutanio import constants
 
 # testnet?
 #constants.set_testnet()

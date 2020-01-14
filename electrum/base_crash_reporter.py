@@ -35,7 +35,7 @@ from .logging import describe_os_version, Logger
 
 
 class BaseCrashReporter(Logger):
-    report_server = "https://crashhub.exos.to"
+    report_server = "https://crashhub.rutax.co"
     config_key = "show_crash_reporter"
     issue_template = """<h2>Traceback</h2>
 <pre>
@@ -44,14 +44,14 @@ class BaseCrashReporter(Logger):
 
 <h2>Additional information</h2>
 <ul>
-  <li>EXOS-Electrum version: {app_version}</li>
+  <li>Rutanio-Electrum version: {app_version}</li>
   <li>Python version: {python_version}</li>
   <li>Operating system: {os}</li>
   <li>Wallet type: {wallet_type}</li>
   <li>Locale: {locale}</li>
 </ul>
     """
-    CRASH_MESSAGE = _('Something went wrong while executing EXOS-Electrum.')
+    CRASH_MESSAGE = _('Something went wrong while executing Rutanio-Electrum.')
     CRASH_TITLE = _('Sorry!')
     REQUEST_HELP_MESSAGE = _('To help us diagnose and fix the problem, you can send us a bug report that contains '
                              'useful debug information:')

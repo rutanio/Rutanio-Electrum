@@ -35,20 +35,20 @@ from urllib.parse import urljoin
 from urllib.parse import quote
 from aiohttp import ClientResponse
 
-from electrum_exos import ecc, constants, keystore, version, bip32, bitcoin
-from electrum_exos.bitcoin import TYPE_ADDRESS
-from electrum_exos.bip32 import BIP32Node, xpub_type
-from electrum_exos.crypto import sha256
-from electrum_exos.transaction import TxOutput
-from electrum_exos.mnemonic import Mnemonic, seed_type, is_any_2fa_seed_type
-from electrum_exos.wallet import Multisig_Wallet, Deterministic_Wallet
-from electrum_exos.i18n import _
-from electrum_exos.plugin import BasePlugin, hook
-from electrum_exos.util import NotEnoughFunds, UserFacingException
-from electrum_exos.storage import STO_EV_USER_PW
-from electrum_exos.network import Network
-from electrum_exos.base_wizard import BaseWizard
-from electrum_exos.logging import Logger
+from electrum_rutanio import ecc, constants, keystore, version, bip32, bitcoin
+from electrum_rutanio.bitcoin import TYPE_ADDRESS
+from electrum_rutanio.bip32 import BIP32Node, xpub_type
+from electrum_rutanio.crypto import sha256
+from electrum_rutanio.transaction import TxOutput
+from electrum_rutanio.mnemonic import Mnemonic, seed_type, is_any_2fa_seed_type
+from electrum_rutanio.wallet import Multisig_Wallet, Deterministic_Wallet
+from electrum_rutanio.i18n import _
+from electrum_rutanio.plugin import BasePlugin, hook
+from electrum_rutanio.util import NotEnoughFunds, UserFacingException
+from electrum_rutanio.storage import STO_EV_USER_PW
+from electrum_rutanio.network import Network
+from electrum_rutanio.base_wizard import BaseWizard
+from electrum_rutanio.logging import Logger
 
 
 def get_signing_xpub(xtype):

@@ -5,16 +5,16 @@ import tempfile
 from typing import Sequence
 import asyncio
 
-from electrum_exos import storage, bitcoin, keystore, bip32
-from electrum_exos import Transaction
-from electrum_exos import SimpleConfig
-from electrum_exos.address_synchronizer import TX_HEIGHT_UNCONFIRMED, TX_HEIGHT_UNCONF_PARENT
-from electrum_exos.wallet import sweep, Multisig_Wallet, Standard_Wallet, Imported_Wallet, restore_wallet_from_text
-from electrum_exos.util import bfh, bh2u
-from electrum_exos.transaction import TxOutput
-from electrum_exos.mnemonic import seed_type
+from electrum_rutanio import storage, bitcoin, keystore, bip32
+from electrum_rutanio import Transaction
+from electrum_rutanio import SimpleConfig
+from electrum_rutanio.address_synchronizer import TX_HEIGHT_UNCONFIRMED, TX_HEIGHT_UNCONF_PARENT
+from electrum_rutanio.wallet import sweep, Multisig_Wallet, Standard_Wallet, Imported_Wallet, restore_wallet_from_text
+from electrum_rutanio.util import bfh, bh2u
+from electrum_rutanio.transaction import TxOutput
+from electrum_rutanio.mnemonic import seed_type
 
-from electrum_exos.plugins.trustedcoin import trustedcoin
+from electrum_rutanio.plugins.trustedcoin import trustedcoin
 
 from . import TestCaseForTestnet
 from . import SequentialTestCase

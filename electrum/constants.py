@@ -39,8 +39,8 @@ def read_json(filename, default):
     return r
 
 
-GIT_REPO_URL = "https://github.com/exoeconomy/EXOS-Electrum"
-GIT_REPO_ISSUES_URL = "https://github.com/exoeconomy/EXOS-Electrum/issues"
+GIT_REPO_URL = "https://github.com/rutanio/Rutanio-Electrum"
+GIT_REPO_ISSUES_URL = "https://github.com/rutanio/Rutanio-Electrum/issues"
 
 
 class AbstractNet:
@@ -53,11 +53,11 @@ class AbstractNet:
 class BitcoinMainnet(AbstractNet):
 
     TESTNET = False
-    WIF_PREFIX = 0x9C
-    ADDRTYPE_P2PKH = 28
-    ADDRTYPE_P2SH = 87
-    SEGWIT_HRP = "exos"
-    GENESIS = "00000036090a68c523471da7a4f0f958c1b4403fef74a003be7f71877699cab7"
+    WIF_PREFIX = 0xBC
+    ADDRTYPE_P2PKH = 60
+    ADDRTYPE_P2SH = 122
+    SEGWIT_HRP = "rutanio"
+    GENESIS = "00000347c656a618f9bfef80a14fa66cf26e34ed4caeba0e3f072eb8b9408ee6"
     DEFAULT_PORTS = {'t': '50001', 's': '50002'}
     DEFAULT_SERVERS = read_json('servers.json', {})
     CHECKPOINTS = read_json('checkpoints.json', [])
@@ -78,16 +78,16 @@ class BitcoinMainnet(AbstractNet):
         'p2wsh':       0x02aa7ed3,  # Zpub
     }
     XPUB_HEADERS_INV = inv_dict(XPUB_HEADERS)
-    BIP44_COIN_TYPE = 248
+    BIP44_COIN_TYPE = 462
 
 
 class BitcoinTestnet(AbstractNet):
 
     TESTNET = True
-    WIF_PREFIX = 0xcb
-    ADDRTYPE_P2PKH = 75
-    ADDRTYPE_P2SH = 206
-    SEGWIT_HRP = "texos"
+    WIF_PREFIX = 0xC4
+    ADDRTYPE_P2PKH = 68
+    ADDRTYPE_P2SH = 199
+    SEGWIT_HRP = "truta"
     GENESIS = "0000059bb2c2048493efcb0f1a034972b3ce4089d54c93b69aaab212fb369887"
     DEFAULT_PORTS = {'t': '51001', 's': '51002'}
     DEFAULT_SERVERS = read_json('servers_testnet.json', {})
@@ -114,7 +114,7 @@ class BitcoinTestnet(AbstractNet):
 
 class BitcoinRegtest(BitcoinTestnet):
 
-    SEGWIT_HRP = "exosrt"
+    SEGWIT_HRP = "rutaniort"
     GENESIS = "00000755a53922ad3443a7609ee700ca246a547783116f2085fff1e486e56085"
     DEFAULT_SERVERS = read_json('servers_regtest.json', {})
     CHECKPOINTS = []

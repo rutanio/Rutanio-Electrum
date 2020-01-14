@@ -3,7 +3,7 @@ import re
 import os
 import sys
 
-from electrum_exos.version import ELECTRUM_VERSION, APK_VERSION
+from electrum_rutanio.version import ELECTRUM_VERSION, APK_VERSION
 print("version", ELECTRUM_VERSION)
 
 dirname = sys.argv[1]
@@ -24,17 +24,17 @@ string = string.replace("##VERSION_APK##", APK_VERSION)
 
 files = {
     'tgz': "Electrum-%s.tar.gz" % version,
-    'appimage': "EXOS-Electrum-%s-x86_64.AppImage" % version,
-    'zip': "EXOS-Electrum-%s.zip" % version,
-    'mac': "EXOS-Electrum-%s.dmg" % version_mac,
-    'win': "EXOS-Electrum-%s.exe" % version_win,
+    'appimage': "Rutanio-Electrum-%s-x86_64.AppImage" % version,
+    'zip': "Rutanio-Electrum-%s.zip" % version,
+    'mac': "Rutanio-Electrum-%s.dmg" % version_mac,
+    'win': "Rutanio-Electrum-%s.exe" % version_win,
     'win_setup': "electrum-%s-setup.exe" % version_win,
     'win_portable': "electrum-%s-portable.exe" % version_win,
 }
 
 for k, n in files.items():
     path = "dist/%s"%n
-    link = "https://download.openexo.com/%s/%s"%(version,n)
+    link = "https://download.rutax.co/%s/%s"%(version,n)
     if not os.path.exists(path):
         os.system("wget -q %s -O %s" % (link, path))
     if not os.path.getsize(path):

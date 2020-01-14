@@ -15,22 +15,22 @@ import struct
 import sys
 import time
 
-from electrum_exos.crypto import sha256d, EncodeAES_base64, EncodeAES_bytes, DecodeAES_bytes, hmac_oneshot
-from electrum_exos.bitcoin import (TYPE_ADDRESS, push_script, var_int, public_key_to_p2pkh,
+from electrum_rutanio.crypto import sha256d, EncodeAES_base64, EncodeAES_bytes, DecodeAES_bytes, hmac_oneshot
+from electrum_rutanio.bitcoin import (TYPE_ADDRESS, push_script, var_int, public_key_to_p2pkh,
                               is_address)
-from electrum_exos.bip32 import BIP32Node
-from electrum_exos import ecc
-from electrum_exos.ecc import msg_magic
-from electrum_exos.wallet import Standard_Wallet
-from electrum_exos import constants
-from electrum_exos.transaction import Transaction
-from electrum_exos.i18n import _
-from electrum_exos.keystore import Hardware_KeyStore
+from electrum_rutanio.bip32 import BIP32Node
+from electrum_rutanio import ecc
+from electrum_rutanio.ecc import msg_magic
+from electrum_rutanio.wallet import Standard_Wallet
+from electrum_rutanio import constants
+from electrum_rutanio.transaction import Transaction
+from electrum_rutanio.i18n import _
+from electrum_rutanio.keystore import Hardware_KeyStore
 from ..hw_wallet import HW_PluginBase
-from electrum_exos.util import to_string, UserCancelled, UserFacingException
-from electrum_exos.base_wizard import ScriptTypeNotSupported, HWD_SETUP_NEW_WALLET
-from electrum_exos.network import Network
-from electrum_exos.logging import get_logger
+from electrum_rutanio.util import to_string, UserCancelled, UserFacingException
+from electrum_rutanio.base_wizard import ScriptTypeNotSupported, HWD_SETUP_NEW_WALLET
+from electrum_rutanio.network import Network
+from electrum_rutanio.logging import get_logger
 
 
 _logger = get_logger(__name__)

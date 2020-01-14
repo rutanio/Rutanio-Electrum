@@ -4,8 +4,8 @@ import asyncio
 from statistics import median
 from numbers import Number
 
-from electrum_exos.network import filter_protocol, Network
-from electrum_exos.util import create_and_start_event_loop, log_exceptions
+from electrum_rutanio.network import filter_protocol, Network
+from electrum_rutanio.util import create_and_start_event_loop, log_exceptions
 
 
 loop, stopping_fut, loop_thread = create_and_start_event_loop()

@@ -5,8 +5,8 @@
 import time
 import asyncio
 
-from electrum_exos.network import Network
-from electrum_exos.util import print_msg, json_encode, create_and_start_event_loop, log_exceptions
+from electrum_rutanio.network import Network
+from electrum_rutanio.util import print_msg, json_encode, create_and_start_event_loop, log_exceptions
 
 # start network
 loop, stopping_fut, loop_thread = create_and_start_event_loop()

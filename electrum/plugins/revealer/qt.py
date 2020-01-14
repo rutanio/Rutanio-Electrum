@@ -24,13 +24,13 @@ from PyQt5.QtGui import (QPixmap, QImage, QBitmap, QPainter, QFontDatabase, QPen
 from PyQt5.QtWidgets import (QGridLayout, QVBoxLayout, QHBoxLayout, QLabel,
                              QPushButton, QLineEdit)
 
-from electrum_exos.plugin import hook
-from electrum_exos.i18n import _
-from electrum_exos.util import make_dir, InvalidPassword, UserCancelled
-from electrum_exos.gui.qt.util import (read_QIcon, EnterButton, WWLabel, icon_path,
+from electrum_rutanio.plugin import hook
+from electrum_rutanio.i18n import _
+from electrum_rutanio.util import make_dir, InvalidPassword, UserCancelled
+from electrum_rutanio.gui.qt.util import (read_QIcon, EnterButton, WWLabel, icon_path,
                                   WindowModalDialog, Buttons, CloseButton, OkButton)
-from electrum_exos.gui.qt.qrtextedit import ScanQRTextEdit
-from electrum_exos.gui.qt.main_window import StatusBarButton
+from electrum_rutanio.gui.qt.qrtextedit import ScanQRTextEdit
+from electrum_rutanio.gui.qt.main_window import StatusBarButton
 
 from .revealer import RevealerPlugin
 
@@ -73,7 +73,7 @@ class Plugin(RevealerPlugin):
         return EnterButton(_('Printer Calibration'), partial(self.calibration_dialog, window))
 
     def password_dialog(self, msg=None, parent=None):
-        from electrum_exos.gui.qt.password_dialog import PasswordDialog
+        from electrum_rutanio.gui.qt.password_dialog import PasswordDialog
         parent = parent or self
         d = PasswordDialog(parent, msg)
         return d.run()

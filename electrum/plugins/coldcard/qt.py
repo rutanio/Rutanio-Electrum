@@ -4,10 +4,10 @@ from functools import partial
 from PyQt5.QtCore import Qt, pyqtSignal
 from PyQt5.QtWidgets import QPushButton, QLabel, QVBoxLayout, QWidget, QGridLayout
 
-from electrum_exos.i18n import _
-from electrum_exos.plugin import hook
-from electrum_exos.wallet import Standard_Wallet
-from electrum_exos.gui.qt.util import WindowModalDialog, CloseButton, get_parent_main_window
+from electrum_rutanio.i18n import _
+from electrum_rutanio.plugin import hook
+from electrum_rutanio.wallet import Standard_Wallet
+from electrum_rutanio.gui.qt.util import WindowModalDialog, CloseButton, get_parent_main_window
 
 from .coldcard import ColdcardPlugin
 from ..hw_wallet.qt import QtHandlerBase, QtPluginBase

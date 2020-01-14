@@ -18,19 +18,19 @@ from kivy.lang import Builder
 from kivy.factory import Factory
 from kivy.utils import platform
 
-from electrum_exos.util import profiler, parse_URI, format_time, InvalidPassword, NotEnoughFunds, Fiat
-from electrum_exos import bitcoin
-from electrum_exos.transaction import TxOutput, Transaction, tx_from_str
-from electrum_exos.util import send_exception_to_crash_reporter, parse_URI, InvalidBitcoinURI
-from electrum_exos.paymentrequest import PR_UNPAID, PR_PAID, PR_UNKNOWN, PR_EXPIRED
-from electrum_exos.plugin import run_hook
-from electrum_exos.wallet import InternalAddressCorruption
-from electrum_exos import simple_config
+from electrum_rutanio.util import profiler, parse_URI, format_time, InvalidPassword, NotEnoughFunds, Fiat
+from electrum_rutanio import bitcoin
+from electrum_rutanio.transaction import TxOutput, Transaction, tx_from_str
+from electrum_rutanio.util import send_exception_to_crash_reporter, parse_URI, InvalidBitcoinURI
+from electrum_rutanio.paymentrequest import PR_UNPAID, PR_PAID, PR_UNKNOWN, PR_EXPIRED
+from electrum_rutanio.plugin import run_hook
+from electrum_rutanio.wallet import InternalAddressCorruption
+from electrum_rutanio import simple_config
 
 from .context_menu import ContextMenu
 
 
-from electrum_exos.gui.kivy.i18n import _
+from electrum_rutanio.gui.kivy.i18n import _
 
 class HistoryRecycleView(RecycleView):
     pass
@@ -217,7 +217,7 @@ class SendScreen(CScreen):
             # it should be already saved
             return
         # save address as invoice
-        from electrum_exos.paymentrequest import make_unsigned_request, PaymentRequest
+        from electrum_rutanio.paymentrequest import make_unsigned_request, PaymentRequest
         req = {'address':self.screen.address, 'memo':self.screen.message}
         amount = self.app.get_amount(self.screen.amount) if self.screen.amount else 0
         req['amount'] = amount
@@ -259,10 +259,10 @@ class SendScreen(CScreen):
         else:
             address = str(self.screen.address)
             if not address:
-                self.app.show_error(_('Recipient not specified.') + ' ' + _('Please scan a EXOS address or a payment request'))
+                self.app.show_error(_('Recipient not specified.') + ' ' + _('Please scan a Rutanio address or a payment request'))
                 return
             if not bitcoin.is_address(address):
-                self.app.show_error(_('Invalid EXOS Address') + ':\n' + address)
+                self.app.show_error(_('Invalid Rutanio Address') + ':\n' + address)
                 return
             try:
                 amount = self.app.get_amount(self.screen.amount)
@@ -375,7 +375,7 @@ class ReceiveScreen(CScreen):
         Clock.schedule_once(lambda dt: self.update_qr())
 
     def get_URI(self):
-        from electrum_exos.util import create_bip21_uri
+        from electrum_rutanio.util import create_bip21_uri
         amount = self.screen.amount
         if amount:
             a, u = self.screen.amount.split()
@@ -391,7 +391,7 @@ class ReceiveScreen(CScreen):
 
     def do_share(self):
         uri = self.get_URI()
-        self.app.do_share(uri, _("Share EXOS Request"))
+        self.app.do_share(uri, _("Share Rutanio Request"))
 
     def do_copy(self):
         uri = self.get_URI()

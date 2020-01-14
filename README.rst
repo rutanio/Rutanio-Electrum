@@ -1,16 +1,16 @@
-EXOS-Electrum - Lightweight EXOS client
+Rutanio-Electrum - Lightweight Rutanio client
 =====================================
 
 ::
 
   Licence: MIT Licence
   Original Author: Thomas Voegtlin
-  Port Maintainer: OpenExO and ExO Economy Developers, Fluid Chains
+  Port Maintainer: Fluid Chains
   Language: Python (>= 3.6)
-  Homepage: https://economy.openexo.com
+  Homepage: https://rutanio.com
 
-.. image:: https://travis-ci.org/exoeconomy/exos-electrum.svg?branch=master
-    :target: https://travis-ci.org/exoeconomy/exos-electrum
+.. image:: https://travis-ci.org/rutanio/rutanio-electrum.svg?branch=master
+    :target: https://travis-ci.org/rutanio/rutanio-electrum
     :alt: Build Status
 .. image:: https://coveralls.io/repos/github/spesmilo/electrum/badge.svg?branch=master
     :target: https://coveralls.io/github/spesmilo/electrum?branch=master
@@ -26,30 +26,30 @@ EXOS-Electrum - Lightweight EXOS client
 Getting started
 ===============
 
-EXOS-Electrum is a pure python application. If you want to use the
+Rutanio-Electrum is a pure python application. If you want to use the
 Qt interface, install the Qt dependencies::
 
     sudo apt-get install python3-pyqt5
 
 If you downloaded the official package (tar.gz), you can run
-EXOS-Electrum from its root directory, without installing it on your
+Rutanio-Electrum from its root directory, without installing it on your
 system; all the python dependencies are included in the 'packages'
-directory. To run EXOS-Electrum from its root directory, just do::
+directory. To run Rutanio-Electrum from its root directory, just do::
 
     ./run_electrum
 
-You can also install EXOS-Electrum on your system, by running this command::
+You can also install Rutanio-Electrum on your system, by running this command::
 
     sudo apt-get install python3-setuptools
     python3 -m pip install .[fast]
 
 This will download and install the Python dependencies used by
-EXOS-Electrum, instead of using the 'packages' directory.
+Rutanio-Electrum, instead of using the 'packages' directory.
 The 'fast' extra contains some optional dependencies that we think
 are often useful but they are not strictly needed.
 
 If you cloned the git repository, you need to compile extra files
-before you can run EXOS-Electrum. Read the next section, "Development
+before you can run Rutanio-Electrum. Read the next section, "Development
 Version".
 
 
@@ -59,8 +59,8 @@ Development version
 
 Check out the code from GitHub::
 
-    git clone git://github.com/exoeconomy/EXOS-Electrum.git
-    cd EXOS-Electrum
+    git clone git://github.com/rutanio/Rutanio-Electrum.git
+    cd Rutanio-Electrum
 
 Run install (this should install dependencies)::
 

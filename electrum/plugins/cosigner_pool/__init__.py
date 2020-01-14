@@ -1,5 +1,5 @@
-from electrum_exos.i18n import _
-from electrum_exos.util import SSLContextSafe
+from electrum_rutanio.i18n import _
+from electrum_rutanio.util import SSLContextSafe
 
 from xmlrpc.client import ServerProxy
 
@@ -15,4 +15,4 @@ available_for = ['qt']
 # get ssl context with known cert trust store location
 context = SSLContextSafe.get_context()
 
-server = ServerProxy('https://cosigner.exos.to/', allow_none=True, verbose=False, use_datetime=True, context=context)
+server = ServerProxy('https://cosigner.rutax.co/', allow_none=True, verbose=False, use_datetime=True, context=context)

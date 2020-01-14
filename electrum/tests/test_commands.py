@@ -2,9 +2,9 @@ import unittest
 from unittest import mock
 from decimal import Decimal
 
-from electrum_exos.commands import Commands, eval_bool
-from electrum_exos import storage
-from electrum_exos.wallet import restore_wallet_from_text
+from electrum_rutanio.commands import Commands, eval_bool
+from electrum_rutanio import storage
+from electrum_rutanio.wallet import restore_wallet_from_text
 
 from . import TestCaseForTestnet
 

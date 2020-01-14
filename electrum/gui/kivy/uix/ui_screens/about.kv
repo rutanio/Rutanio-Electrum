@@ -1,7 +1,7 @@
-#:import BUILD electrum_exos.version.ELECTRUM_BUILD
+#:import BUILD electrum_rutanio.version.ELECTRUM_BUILD
 
 Popup:
-    title: _("About EXOS Electrum")
+    title: _("About Rutanio Electrum")
     BoxLayout:
         orientation: 'vertical'
         spacing: '10dp'
@@ -26,19 +26,19 @@ Popup:
                 size_hint_x: 0.4
             TopLabel:
                 markup: True
-                text: '[color=6666ff][ref=x]https://economy.openexo.com[/ref][/color]'
+                text: '[color=6666ff][ref=x]https://rutanio.com[/ref][/color]'
                 on_ref_press:
                     import webbrowser
-                    webbrowser.open("https://economy.openexo.com")
+                    webbrowser.open("https://rutanio.com")
                 size_hint_x: 0.6
             TopLabel:
                 text: _('Developers')
                 size_hint_x: 0.4
             TopLabel:
-                text: '\n'.join(['OpenExO and ExO Economy Developers', 'Fluid Chains'])
+                text: '\n'.join(['Fluid Chains'])
                 size_hint_x: 0.6
         TopLabel:
-            text: _('Distributed by OpenExO and ExO Economy')
+            text: _('Distributed by Organizacion Rutanio')
             padding: '0dp', '20dp'
         Widget:
             size_hint: None, 0.5

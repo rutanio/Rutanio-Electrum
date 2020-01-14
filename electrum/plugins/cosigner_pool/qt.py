@@ -38,18 +38,18 @@ from xmlrpc.client import ServerProxy
 from PyQt5.QtCore import Qt, QObject, pyqtSignal
 from PyQt5.QtWidgets import QDialog, QLabel, QPushButton, QVBoxLayout, QTextEdit, QGridLayout, QLineEdit
 
-from electrum_exos import util, keystore, ecc, crypto
-from electrum_exos import transaction
-from electrum_exos.bip32 import BIP32Node
-from electrum_exos.plugin import BasePlugin, hook, run_hook
+from electrum_rutanio import util, keystore, ecc, crypto
+from electrum_rutanio import transaction
+from electrum_rutanio.bip32 import BIP32Node
+from electrum_rutanio.plugin import BasePlugin, hook, run_hook
 
-from electrum_exos.i18n import _
-from electrum_exos.wallet import Multisig_Wallet
-from electrum_exos.util import bh2u, bfh
+from electrum_rutanio.i18n import _
+from electrum_rutanio.wallet import Multisig_Wallet
+from electrum_rutanio.util import bh2u, bfh
 
-from electrum_exos.gui.qt.transaction_dialog import show_transaction_timeout, TxDialogTimeout
-from electrum_exos.gui.qt.transaction_wait_dialog import show_timeout_wait_dialog, TimeoutWaitDialog
-from electrum_exos.gui.qt.util import WaitingDialog, EnterButton, Buttons, WindowModalDialog, CloseButton, OkButton, read_QIcon
+from electrum_rutanio.gui.qt.transaction_dialog import show_transaction_timeout, TxDialogTimeout
+from electrum_rutanio.gui.qt.transaction_wait_dialog import show_timeout_wait_dialog, TimeoutWaitDialog
+from electrum_rutanio.gui.qt.util import WaitingDialog, EnterButton, Buttons, WindowModalDialog, CloseButton, OkButton, read_QIcon
 
 from . import server
 
@@ -243,6 +243,9 @@ class Plugin(BasePlugin):
         vbox.addLayout(Buttons(CloseButton(d)))
         d.setModal(True)
         d.show()
+        
+        if not d.exec_():
+            return
 
     def correct_shutdown_state(self, _hash):
         shutdown_flag = server.get(_hash+'_shutdown')
@@ -319,7 +322,7 @@ class Plugin(BasePlugin):
             d.cosigner_send_button.hide()
 
     def cosigner_can_sign(self, tx, cosigner_xpub):
-        from electrum_exos.keystore import is_xpubkey, parse_xpubkey
+        from electrum_rutanio.keystore import is_xpubkey, parse_xpubkey
         xpub_set = set([])
         for txin in tx.inputs():
             for x_pubkey in txin['x_pubkeys']:

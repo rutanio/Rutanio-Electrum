@@ -46,8 +46,8 @@ if platform.system() in ['Linux', 'FreeBSD', 'DragonFly']:
         else:
             usr_share = os.path.expanduser('~/.local/share')
     data_files += [
-        (os.path.join(usr_share, 'applications/'), ['exos-electrum.desktop']),
-        (os.path.join(usr_share, icons_dirname), ['electrum/gui/icons/exos-electrum.png']),
+        (os.path.join(usr_share, 'applications/'), ['rutanio-electrum.desktop']),
+        (os.path.join(usr_share, icons_dirname), ['electrum/gui/icons/rutanio-electrum.png']),
     ]
 
 extras_require = {
@@ -59,36 +59,36 @@ extras_require['full'] = [pkg for sublist in list(extras_require.values()) for p
 
 
 setup(
-    name="EXOS-Electrum",
+    name="Rutanio-Electrum",
     version=version.ELECTRUM_VERSION,
     python_requires='>={}'.format(MIN_PYTHON_VERSION),
     install_requires=requirements,
     extras_require=extras_require,
     packages=[
-        'electrum_exos',
-        'electrum_exos.gui',
-        'electrum_exos.gui.qt',
-        'electrum_exos.plugins',
-    ] + [('electrum_exos.plugins.'+pkg) for pkg in find_packages('electrum/plugins')],
+        'electrum_rutanio',
+        'electrum_rutanio.gui',
+        'electrum_rutanio.gui.qt',
+        'electrum_rutanio.plugins',
+    ] + [('electrum_rutanio.plugins.'+pkg) for pkg in find_packages('electrum/plugins')],
     package_dir={
-        'electrum_exos': 'electrum'
+        'electrum_rutanio': 'electrum'
     },
     package_data={
         '': ['*.txt', '*.json', '*.ttf', '*.otf'],
-        'electrum_exos': [
+        'electrum_rutanio': [
             'wordlist/*.txt',
             'locale/*/LC_MESSAGES/electrum.mo',
         ],
-        'electrum_exos.gui': [
+        'electrum_rutanio.gui': [
             'icons/*',
         ],
     },
-    scripts=['electrum/exos-electrum'],
+    scripts=['electrum/rutanio-electrum'],
     data_files=data_files,
-    description="Lightweight EXOS Wallet",
-    author="OpenExO and ExO Economy Developers, Fluid Chains Devs",
+    description="Lightweight Rutanio Wallet",
+    author="Fluid Chains Devs",
     author_email="nayib@fluidchains.com",
     license="MIT Licence",
-    url="https://economy.openexo.com",
-    long_description="""Lightweight EXOS Wallet""",
+    url="https://rutanio.com",
+    long_description="""Lightweight Rutanio Wallet""",
 )

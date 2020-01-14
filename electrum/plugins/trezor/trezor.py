@@ -2,16 +2,16 @@ import traceback
 import sys
 from typing import NamedTuple, Any
 
-from electrum_exos.util import bfh, bh2u, versiontuple, UserCancelled, UserFacingException
-from electrum_exos.bitcoin import TYPE_ADDRESS, TYPE_SCRIPT
-from electrum_exos.bip32 import BIP32Node, convert_bip32_path_to_list_of_uint32 as parse_path
-from electrum_exos import constants
-from electrum_exos.i18n import _
-from electrum_exos.plugin import Device
-from electrum_exos.transaction import deserialize, Transaction
-from electrum_exos.keystore import Hardware_KeyStore, is_xpubkey, parse_xpubkey
-from electrum_exos.base_wizard import ScriptTypeNotSupported, HWD_SETUP_NEW_WALLET
-from electrum_exos.logging import get_logger
+from electrum_rutanio.util import bfh, bh2u, versiontuple, UserCancelled, UserFacingException
+from electrum_rutanio.bitcoin import TYPE_ADDRESS, TYPE_SCRIPT
+from electrum_rutanio.bip32 import BIP32Node, convert_bip32_path_to_list_of_uint32 as parse_path
+from electrum_rutanio import constants
+from electrum_rutanio.i18n import _
+from electrum_rutanio.plugin import Device
+from electrum_rutanio.transaction import deserialize, Transaction
+from electrum_rutanio.keystore import Hardware_KeyStore, is_xpubkey, parse_xpubkey
+from electrum_rutanio.base_wizard import ScriptTypeNotSupported, HWD_SETUP_NEW_WALLET
+from electrum_rutanio.logging import get_logger
 
 from ..hw_wallet import HW_PluginBase
 from ..hw_wallet.plugin import (is_any_tx_output_on_change_branch, trezor_validate_op_return_output_and_get_data,
@@ -183,7 +183,7 @@ class TrezorPlugin(HW_PluginBase):
         return client
 
     def get_coin_name(self):
-        return "EXOS Testnet" if constants.net.TESTNET else "EXOS"
+        return "Rutanio Testnet" if constants.net.TESTNET else "Rutanio"
 
     def initialize_device(self, device_id, wizard, handler):
         # Initialization method

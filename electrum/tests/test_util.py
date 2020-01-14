@@ -1,6 +1,6 @@
 from decimal import Decimal
 
-from electrum_exos.util import (format_satoshis, format_fee_satoshis, parse_URI,
+from electrum_rutanio.util import (format_satoshis, format_fee_satoshis, parse_URI,
                            is_hash256_str, chunks)
 
 from . import SequentialTestCase
@@ -50,7 +50,7 @@ class TestUtil(SequentialTestCase):
         self.assertEqual(expected, result)
 
     def test_parse_URI_address(self):
-        self._do_test_parse_URI('exos:CaEnKKCdfRChUL7zLz6Ur1S4fYoT3pajmn',
+        self._do_test_parse_URI('rutanio:CaEnKKCdfRChUL7zLz6Ur1S4fYoT3pajmn',
                                 {'address': 'CaEnKKCdfRChUL7zLz6Ur1S4fYoT3pajmn'})
 
     def test_parse_URI_only_address(self):
@@ -59,41 +59,41 @@ class TestUtil(SequentialTestCase):
 
 
     def test_parse_URI_address_label(self):
-        self._do_test_parse_URI('exos:CaEnKKCdfRChUL7zLz6Ur1S4fYoT3pajmn?label=exos-electrum%20test',
-                                {'address': 'CaEnKKCdfRChUL7zLz6Ur1S4fYoT3pajmn', 'label': 'exos-electrum test'})
+        self._do_test_parse_URI('rutanio:CaEnKKCdfRChUL7zLz6Ur1S4fYoT3pajmn?label=rutanio-electrum%20test',
+                                {'address': 'CaEnKKCdfRChUL7zLz6Ur1S4fYoT3pajmn', 'label': 'rutanio-electrum test'})
 
     def test_parse_URI_address_message(self):
-        self._do_test_parse_URI('exos:CaEnKKCdfRChUL7zLz6Ur1S4fYoT3pajmn?message=exos-electrum%20test',
-                                {'address': 'CaEnKKCdfRChUL7zLz6Ur1S4fYoT3pajmn', 'message': 'exos-electrum test', 'memo': 'exos-electrum test'})
+        self._do_test_parse_URI('rutanio:CaEnKKCdfRChUL7zLz6Ur1S4fYoT3pajmn?message=rutanio-electrum%20test',
+                                {'address': 'CaEnKKCdfRChUL7zLz6Ur1S4fYoT3pajmn', 'message': 'rutanio-electrum test', 'memo': 'rutanio-electrum test'})
 
     def test_parse_URI_address_amount(self):
-        self._do_test_parse_URI('exos:CaEnKKCdfRChUL7zLz6Ur1S4fYoT3pajmn?amount=0.0003',
+        self._do_test_parse_URI('rutanio:CaEnKKCdfRChUL7zLz6Ur1S4fYoT3pajmn?amount=0.0003',
                                 {'address': 'CaEnKKCdfRChUL7zLz6Ur1S4fYoT3pajmn', 'amount': 30000})
 
     def test_parse_URI_address_request_url(self):
-        self._do_test_parse_URI('exos:CaEnKKCdfRChUL7zLz6Ur1S4fYoT3pajmn?r=http://domain.tld/page?h%3D2a8628fc2fbe',
+        self._do_test_parse_URI('rutanio:CaEnKKCdfRChUL7zLz6Ur1S4fYoT3pajmn?r=http://domain.tld/page?h%3D2a8628fc2fbe',
                                 {'address': 'CaEnKKCdfRChUL7zLz6Ur1S4fYoT3pajmn', 'r': 'http://domain.tld/page?h=2a8628fc2fbe'})
 
     def test_parse_URI_ignore_args(self):
-        self._do_test_parse_URI('exos:CaEnKKCdfRChUL7zLz6Ur1S4fYoT3pajmn?test=test',
+        self._do_test_parse_URI('rutanio:CaEnKKCdfRChUL7zLz6Ur1S4fYoT3pajmn?test=test',
                                 {'address': 'CaEnKKCdfRChUL7zLz6Ur1S4fYoT3pajmn', 'test': 'test'})
 
     def test_parse_URI_multiple_args(self):
-        self._do_test_parse_URI('exos:CaEnKKCdfRChUL7zLz6Ur1S4fYoT3pajmn?amount=0.00004&label=exos-electrum-test&message=exos-electrum%20test&test=none&r=http://domain.tld/page',
-                                {'address': 'CaEnKKCdfRChUL7zLz6Ur1S4fYoT3pajmn', 'amount': 4000, 'label': 'exos-electrum-test', 'message': u'exos-electrum test', 'memo': u'exos-electrum test', 'r': 'http://domain.tld/page', 'test': 'none'})
+        self._do_test_parse_URI('rutanio:CaEnKKCdfRChUL7zLz6Ur1S4fYoT3pajmn?amount=0.00004&label=rutanio-electrum-test&message=rutanio-electrum%20test&test=none&r=http://domain.tld/page',
+                                {'address': 'CaEnKKCdfRChUL7zLz6Ur1S4fYoT3pajmn', 'amount': 4000, 'label': 'rutanio-electrum-test', 'message': u'rutanio-electrum test', 'memo': u'rutanio-electrum test', 'r': 'http://domain.tld/page', 'test': 'none'})
 
     def test_parse_URI_no_address_request_url(self):
-        self._do_test_parse_URI('exos:?r=http://domain.tld/page?h%3D2a8628fc2fbe',
+        self._do_test_parse_URI('rutanio:?r=http://domain.tld/page?h%3D2a8628fc2fbe',
                                 {'r': 'http://domain.tld/page?h=2a8628fc2fbe'})
 
     def test_parse_URI_invalid_address(self):
-        self.assertRaises(BaseException, parse_URI, 'exos:invalidaddress')
+        self.assertRaises(BaseException, parse_URI, 'rutanio:invalidaddress')
 
     def test_parse_URI_invalid(self):
-        self.assertRaises(BaseException, parse_URI, 'notexos:CaEnKKCdfRChUL7zLz6Ur1S4fYoT3pajmn')
+        self.assertRaises(BaseException, parse_URI, 'notruta:CaEnKKCdfRChUL7zLz6Ur1S4fYoT3pajmn')
 
     def test_parse_URI_parameter_polution(self):
-        self.assertRaises(Exception, parse_URI, 'exos:CaEnKKCdfRChUL7zLz6Ur1S4fYoT3pajmn?amount=0.0003&label=test&amount=30.0')
+        self.assertRaises(Exception, parse_URI, 'rutanio:CaEnKKCdfRChUL7zLz6Ur1S4fYoT3pajmn?amount=0.0003&label=test&amount=30.0')
 
     def test_is_hash256_str(self):
         self.assertTrue(is_hash256_str('09a4c03e3bdf83bbe3955f907ee52da4fc12f4813d459bc75228b64ad08617c7'))

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
-# EXOS-Electrum - lightweight Bitcoin client
-# Copyright (C) 2012 karim.boucher@fluidchains.com
+# Rutanio-Electrum - lightweight Bitcoin client
+# Copyright (C) 2019 karim.boucher@fluidchains.com
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation files
@@ -35,15 +35,15 @@ from PyQt5.QtWidgets import (QDialog, QLabel, QPushButton, QHBoxLayout, QVBoxLay
 
 from PyQt5.QtGui import QFont
 
-from electrum_exos import crypto
-from electrum_exos.bip32 import BIP32Node
-from electrum_exos.i18n import _
-from electrum_exos.plugin import run_hook
-from electrum_exos.util import bh2u
-from electrum_exos.transaction import SerializationError
-from electrum_exos.wallet import Multisig_Wallet
+from electrum_rutanio import crypto
+from electrum_rutanio.bip32 import BIP32Node
+from electrum_rutanio.i18n import _
+from electrum_rutanio.plugin import run_hook
+from electrum_rutanio.util import bh2u
+from electrum_rutanio.transaction import SerializationError
+from electrum_rutanio.wallet import Multisig_Wallet
 
-from electrum_exos.plugins.cosigner_pool import server	
+from electrum_rutanio.plugins.cosigner_pool import server	
 
 from .util import (MessageBoxMixin, MONOSPACE_FONT, Buttons, ButtonsLineEdit)
 
@@ -56,7 +56,7 @@ def show_timeout_wait_dialog(tx, parent, desc=None, prompt_if_unsaved=False):
         d = TimeoutWaitDialog(tx, parent, desc, prompt_if_unsaved)
     except SerializationError as e:
         traceback.print_exc(file=sys.stderr)
-        parent.show_critical(_("EXOS-Electrum was unable to deserialize the transaction:") + "\n" + str(e))
+        parent.show_critical(_("Rutanio-Electrum was unable to deserialize the transaction:") + "\n" + str(e))
     else:
         dialogs.append(d)
         d.show()

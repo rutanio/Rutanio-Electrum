@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- mode: python -*-
 #
-# Electrum - lightweight EXOS client
+# Electrum - lightweight Rutanio client
 # Copyright (C) 2016  The Electrum developers
 #
 # Permission is hereby granted, free of charge, to any person
@@ -30,12 +30,12 @@ from functools import partial
 from PyQt5.QtCore import QObject, pyqtSignal
 from PyQt5.QtWidgets import QVBoxLayout, QLineEdit, QHBoxLayout, QLabel
 
-from electrum_exos.gui.qt.password_dialog import PasswordLayout, PW_PASSPHRASE
-from electrum_exos.gui.qt.util import (read_QIcon, WWLabel, OkButton, WindowModalDialog,
+from electrum_rutanio.gui.qt.password_dialog import PasswordLayout, PW_PASSPHRASE
+from electrum_rutanio.gui.qt.util import (read_QIcon, WWLabel, OkButton, WindowModalDialog,
                                   Buttons, CancelButton, TaskThread, char_width_in_lineedit)
 
-from electrum_exos.i18n import _
-from electrum_exos.logging import Logger
+from electrum_rutanio.i18n import _
+from electrum_rutanio.logging import Logger
 
 from .plugin import OutdatedHwFirmwareException
 
@@ -190,9 +190,9 @@ class QtHandlerBase(QObject, Logger):
 
 
 
-from electrum_exos.plugin import hook
-from electrum_exos.util import UserCancelled
-from electrum_exos.gui.qt.main_window import StatusBarButton
+from electrum_rutanio.plugin import hook
+from electrum_rutanio.util import UserCancelled
+from electrum_rutanio.gui.qt.main_window import StatusBarButton
 
 class QtPluginBase(object):
 

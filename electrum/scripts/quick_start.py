@@ -1,14 +1,14 @@
 import os
 
-from electrum_exos.simple_config import SimpleConfig
-from electrum_exos import constants
-from electrum_exos.daemon import Daemon
-from electrum_exos.storage import WalletStorage
-from electrum_exos.wallet import Wallet, create_new_wallet
-from electrum_exos.commands import Commands
+from electrum_rutanio.simple_config import SimpleConfig
+from electrum_rutanio import constants
+from electrum_rutanio.daemon import Daemon
+from electrum_rutanio.storage import WalletStorage
+from electrum_rutanio.wallet import Wallet, create_new_wallet
+from electrum_rutanio.commands import Commands
 
 
-config = SimpleConfig({"testnet": True})  # to use ~/.exos-electrum/testnet as datadir
+config = SimpleConfig({"testnet": True})  # to use ~/.rutanio-electrum/testnet as datadir
 constants.set_testnet()  # to set testnet magic bytes
 daemon = Daemon(config, listen_jsonrpc=False)
 network = daemon.network

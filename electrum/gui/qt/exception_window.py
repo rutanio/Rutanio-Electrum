@@ -30,10 +30,10 @@ import PyQt5.QtCore as QtCore
 from PyQt5.QtWidgets import (QWidget, QLabel, QPushButton, QTextEdit,
                              QMessageBox, QHBoxLayout, QVBoxLayout)
 
-from electrum_exos.i18n import _
-from electrum_exos.base_crash_reporter import BaseCrashReporter
-from electrum_exos.logging import Logger
-from electrum_exos import constants
+from electrum_rutanio.i18n import _
+from electrum_rutanio.base_crash_reporter import BaseCrashReporter
+from electrum_rutanio.logging import Logger
+from electrum_rutanio import constants
 
 from .util import MessageBoxMixin, read_QIcon, WaitingDialog
 

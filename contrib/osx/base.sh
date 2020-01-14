@@ -68,7 +68,7 @@ function CreateDMG() {   # ARGS: PACKAGE_NAME VERSION DMG_BACKGROUND
     info "Adding background image and setup icons" 
     mkdir /Volumes/"${VOL_NAME}"/.background
     cp "contrib/osx/${DMG_BACKGROUND}" /Volumes/"${VOL_NAME}"/.background/
-    cp "dist/${PACKAGE_NAME}.app/Contents/Resources/exos-electrum.icns" /Volumes/"${VOL_NAME}"/.VolumeIcon.icns
+    cp "dist/${PACKAGE_NAME}.app/Contents/Resources/rutanio-electrum.icns" /Volumes/"${VOL_NAME}"/.VolumeIcon.icns
     SetFile -c icnC /Volumes/"${VOL_NAME}"/.VolumeIcon.icns
     SetFile -a C /Volumes/"${VOL_NAME}"
 

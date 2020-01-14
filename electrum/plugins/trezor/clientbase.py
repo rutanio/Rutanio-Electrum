@@ -1,13 +1,13 @@
 import time
 from struct import pack
 
-from electrum_exos import ecc
-from electrum_exos.i18n import _
-from electrum_exos.util import UserCancelled, UserFacingException
-from electrum_exos.keystore import bip39_normalize_passphrase
-from electrum_exos.bip32 import BIP32Node, convert_bip32_path_to_list_of_uint32 as parse_path
-from electrum_exos.logging import Logger
-from electrum_exos.plugins.hw_wallet.plugin import OutdatedHwFirmwareException
+from electrum_rutanio import ecc
+from electrum_rutanio.i18n import _
+from electrum_rutanio.util import UserCancelled, UserFacingException
+from electrum_rutanio.keystore import bip39_normalize_passphrase
+from electrum_rutanio.bip32 import BIP32Node, convert_bip32_path_to_list_of_uint32 as parse_path
+from electrum_rutanio.logging import Logger
+from electrum_rutanio.plugins.hw_wallet.plugin import OutdatedHwFirmwareException
 
 from trezorlib.client import TrezorClient
 from trezorlib.exceptions import TrezorFailure, Cancelled, OutdatedFirmwareError
@@ -101,8 +101,8 @@ class TrezorClientBase(Logger):
             return True
 
         try:
-            res = self.client.ping("EXOS-electrum pinging device")
-            assert res == "EXOS-electrum pinging device"
+            res = self.client.ping("Rutanio-electrum pinging device")
+            assert res == "Rutanio-electrum pinging device"
         except BaseException:
             return False
         return True

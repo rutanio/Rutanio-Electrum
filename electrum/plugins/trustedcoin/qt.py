@@ -33,17 +33,17 @@ from PyQt5.QtCore import QObject, pyqtSignal
 from PyQt5.QtWidgets import (QTextEdit, QVBoxLayout, QLabel, QGridLayout, QHBoxLayout,
                              QRadioButton, QCheckBox, QLineEdit)
 
-from electrum_exos.gui.qt.util import (read_QIcon, WindowModalDialog, WaitingDialog, OkButton,
+from electrum_rutanio.gui.qt.util import (read_QIcon, WindowModalDialog, WaitingDialog, OkButton,
                                   CancelButton, Buttons, icon_path, WWLabel, CloseButton)
-from electrum_exos.gui.qt.qrcodewidget import QRCodeWidget
-from electrum_exos.gui.qt.amountedit import AmountEdit
-from electrum_exos.gui.qt.main_window import StatusBarButton
-from electrum_exos.gui.qt.installwizard import InstallWizard
-from electrum_exos.i18n import _
-from electrum_exos.plugin import hook
-from electrum_exos.util import is_valid_email
-from electrum_exos.logging import Logger
-from electrum_exos.base_wizard import GoBack
+from electrum_rutanio.gui.qt.qrcodewidget import QRCodeWidget
+from electrum_rutanio.gui.qt.amountedit import AmountEdit
+from electrum_rutanio.gui.qt.main_window import StatusBarButton
+from electrum_rutanio.gui.qt.installwizard import InstallWizard
+from electrum_rutanio.i18n import _
+from electrum_rutanio.plugin import hook
+from electrum_rutanio.util import is_valid_email
+from electrum_rutanio.logging import Logger
+from electrum_rutanio.base_wizard import GoBack
 
 from .trustedcoin import TrustedCoinPlugin, server
 

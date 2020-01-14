@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Electrum - lightweight EXOS client
+# Electrum - lightweight Rutanio client
 # Copyright (C) 2012 thomasv@gitorious
 #
 # Permission is hereby granted, free of charge, to any person
@@ -34,11 +34,11 @@ from PyQt5.QtWidgets import (QTreeWidget, QTreeWidgetItem, QMenu, QGridLayout, Q
                              QTabWidget, QWidget, QLabel)
 from PyQt5.QtGui import QFontMetrics
 
-from electrum_exos.i18n import _
-from electrum_exos import constants, blockchain
-from electrum_exos.interface import serialize_server, deserialize_server
-from electrum_exos.network import Network
-from electrum_exos.logging import get_logger
+from electrum_rutanio.i18n import _
+from electrum_rutanio import constants, blockchain
+from electrum_rutanio.interface import serialize_server, deserialize_server
+from electrum_rutanio.network import Network
+from electrum_rutanio.logging import get_logger
 
 from .util import Buttons, CloseButton, HelpButton, read_QIcon, char_width_in_lineedit
 
@@ -235,8 +235,8 @@ class NetworkChoiceLayout(object):
         self.autoconnect_cb.clicked.connect(self.update)
 
         msg = ' '.join([
-            _("If auto-connect is enabled, EXOS-Electrum will always use a server that is on the longest blockchain."),
-            _("If it is disabled, you have to choose a server you want to use. EXOS-Electrum will warn you if your server is lagging.")
+            _("If auto-connect is enabled, Rutanio-Electrum will always use a server that is on the longest blockchain."),
+            _("If it is disabled, you have to choose a server you want to use. Rutanio-Electrum will warn you if your server is lagging.")
         ])
         grid.addWidget(self.autoconnect_cb, 0, 0, 1, 3)
         grid.addWidget(HelpButton(msg), 0, 4)

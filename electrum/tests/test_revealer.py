@@ -1,4 +1,4 @@
-from electrum_exos.plugins.revealer.revealer import RevealerPlugin
+from electrum_rutanio.plugins.revealer.revealer import RevealerPlugin
 
 from . import SequentialTestCase
 

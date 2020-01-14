@@ -17,15 +17,15 @@ export PATH=$PATH:~/bin
 . $(dirname "$0")/base.sh
 
 if [ -z "$1" ]; then
-    echo "Usage: $0 EXOS-Electrum.app"
+    echo "Usage: $0 Rutanio-Electrum.app"
     exit -127
 fi
 
 mkdir -p ~/bin
 
 if ! which ${genisoimage} > /dev/null 2>&1; then
-	mkdir -p /tmp/exos-electrum-macos
-	cd /tmp/exos-electrum-macos
+	mkdir -p /tmp/rutanio-electrum-macos
+	cd /tmp/rutanio-electrum-macos
 	info "Downloading cdrkit $cdrkit_version"
 	wget -nc ${cdrkit_download_path}/${cdrkit_file_name}
 	tar xvf ${cdrkit_file_name}
@@ -41,8 +41,8 @@ if ! which ${genisoimage} > /dev/null 2>&1; then
 fi
 
 if ! which dmg > /dev/null 2>&1; then
-    mkdir -p /tmp/exos-electrum-macos
-	cd /tmp/exos-electrum-macos
+    mkdir -p /tmp/rutanio-electrum-macos
+	cd /tmp/rutanio-electrum-macos
 	info "Downloading libdmg"
     LD_PRELOAD= git clone ${libdmg_url}
     cd libdmg-hfsplus
@@ -60,9 +60,9 @@ test -f "$plist" || fail "Info.plist not found"
 VERSION=$(grep -1 ShortVersionString $plist |tail -1|gawk 'match($0, /<string>(.*)<\/string>/, a) {print a[1]}')
 echo $VERSION
 
-rm -rf /tmp/exos-electrum-macos/image > /dev/null 2>&1
-mkdir /tmp/exos-electrum-macos/image/
-cp -r $1 /tmp/exos-electrum-macos/image/
+rm -rf /tmp/rutanio-electrum-macos/image > /dev/null 2>&1
+mkdir /tmp/rutanio-electrum-macos/image/
+cp -r $1 /tmp/rutanio-electrum-macos/image/
 
 build_dir=$(dirname "$1")
 test -n "$build_dir" -a -d "$build_dir" || exit
@@ -73,16 +73,16 @@ ${genisoimage} \
     -D \
     -l \
     -probe \
-    -V "EXOS-Electrum" \
+    -V "Rutanio-Electrum" \
     -no-pad \
     -r \
     -dir-mode 0755 \
     -apple \
-    -o EXOS-Electrum_uncompressed.dmg \
-    /tmp/exos-electrum-macos/image || fail "Unable to create uncompressed dmg"
+    -o Rutanio-Electrum_uncompressed.dmg \
+    /tmp/rutanio-electrum-macos/image || fail "Unable to create uncompressed dmg"
 
-dmg dmg EXOS-Electrum_uncompressed.dmg EXOS-Electrum-$VERSION.dmg || fail "Unable to create compressed dmg"
-rm EXOS-Electrum_uncompressed.dmg
+dmg dmg Rutanio-Electrum_uncompressed.dmg Rutanio-Electrum-$VERSION.dmg || fail "Unable to create compressed dmg"
+rm Rutanio-Electrum_uncompressed.dmg
 
 echo "Done."
-sha256sum EXOS-Electrum-$VERSION.dmg
+sha256sum Rutanio-Electrum-$VERSION.dmg

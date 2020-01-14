@@ -123,7 +123,7 @@ class SimpleConfig(Logger):
             path = os.path.join(path, 'simnet')
             make_dir(path, allow_symlink=False)
 
-        self.logger.info(f"exos-electrum directory {path}")
+        self.logger.info(f"rutanio-electrum directory {path}")
         return path
 
     def rename_config_keys(self, config, keypairs, deprecation_warning=False):
@@ -206,7 +206,7 @@ class SimpleConfig(Logger):
         base_unit = self.user_config.get('base_unit')
         if isinstance(base_unit, str):
             self._set_key_in_user_config('base_unit', None)
-            map_ = {'exos':8, 'mexos':5, 'uexos':2, 'uexos':2, 'exo':0}
+            map_ = {'ruta':8, 'mruta':5, 'uruta':2, 'uruta':2, 'rutax':0}
             decimal_point = map_.get(base_unit.lower())
             self._set_key_in_user_config('decimal_point', decimal_point)
 
@@ -308,7 +308,7 @@ class SimpleConfig(Logger):
         return get_fee_within_limits
 
     def eta_to_fee(self, slider_pos) -> Optional[int]:
-        """Returns fee in exo/kbyte."""
+        """Returns fee in rutax/kbyte."""
         slider_pos = max(slider_pos, 0)
         slider_pos = min(slider_pos, len(FEE_ETA_TARGETS))
         if slider_pos < len(FEE_ETA_TARGETS):
@@ -320,7 +320,7 @@ class SimpleConfig(Logger):
 
     @impose_hard_limits_on_fee
     def eta_target_to_fee(self, num_blocks: int) -> Optional[int]:
-        """Returns fee in exo/kbyte."""
+        """Returns fee in rutax/kbyte."""
         if num_blocks == 1:
             fee = self.fee_estimates.get(2)
             if fee is not None:
@@ -331,7 +331,7 @@ class SimpleConfig(Logger):
         return fee
 
     def fee_to_depth(self, target_fee: Real) -> int:
-        """For a given exo/vbyte fee, returns an estimate of how deep
+        """For a given rutax/vbyte fee, returns an estimate of how deep
         it would be in the current mempool in vbytes.
         Pessimistic == overestimates the depth.
         """
@@ -343,13 +343,13 @@ class SimpleConfig(Logger):
         return depth
 
     def depth_to_fee(self, slider_pos) -> int:
-        """Returns fee in exo/kbyte."""
+        """Returns fee in rutax/kbyte."""
         target = self.depth_target(slider_pos)
         return self.depth_target_to_fee(target)
 
     @impose_hard_limits_on_fee
     def depth_target_to_fee(self, target: int) -> int:
-        """Returns fee in exo/kbyte.
+        """Returns fee in rutax/kbyte.
         target: desired mempool depth in vbytes
         """
         depth = 0
@@ -359,10 +359,10 @@ class SimpleConfig(Logger):
                 break
         else:
             return 0
-        # add one exo/byte as currently that is
+        # add one rutax/byte as currently that is
         # the max precision of the histogram
         fee += 1
-        # convert to exo/kbyte
+        # convert to rutax/kbyte
         return fee * 1000
 
     def depth_target(self, slider_pos):
@@ -408,13 +408,13 @@ class SimpleConfig(Logger):
         text is what we target: static fee / num blocks to confirm in / mempool depth
         tooltip is the corresponding estimate (e.g. num blocks for a static fee)
 
-        fee_rate is in exo/kbyte
+        fee_rate is in rutax/kbyte
         """
         if fee_rate is None:
             rate_str = 'unknown'
         else:
             fee_rate = fee_rate/1000
-            rate_str = format_fee_satoshis(fee_rate) + ' exo/byte'
+            rate_str = format_fee_satoshis(fee_rate) + ' rutax/byte'
 
         if dyn:
             if mempool:
@@ -502,7 +502,7 @@ class SimpleConfig(Logger):
         return fee_rate
 
     def fee_per_kb(self, dyn: bool=None, mempool: bool=None, fee_level: float=None) -> Union[int, None]:
-        """Returns exo/kvB fee to pay for a txn.
+        """Returns rutax/kvB fee to pay for a txn.
         Note: might return None.
 
         fee_level: float between 0.0 and 1.0, representing fee slider position
@@ -526,7 +526,7 @@ class SimpleConfig(Logger):
         return fee_rate
 
     def fee_per_byte(self):
-        """Returns exo/vB fee to pay for a txn.
+        """Returns rutax/vB fee to pay for a txn.
         Note: might return None.
         """
         fee_per_kb = self.fee_per_kb()
@@ -571,7 +571,7 @@ class SimpleConfig(Logger):
 
 
 def read_user_config(path):
-    """Parse and store the user config settings in exos-electrum.conf into user_config[]."""
+    """Parse and store the user config settings in rutanio-electrum.conf into user_config[]."""
     if not path:
         return {}
     config_path = os.path.join(path, "config")

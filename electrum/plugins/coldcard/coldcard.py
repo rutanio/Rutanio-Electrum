@@ -6,16 +6,16 @@ from struct import pack, unpack
 import os, sys, time, io
 import traceback
 
-from electrum_exos.bip32 import BIP32Node, InvalidMasterKeyVersionBytes
-from electrum_exos.i18n import _
-from electrum_exos.plugin import Device
-from electrum_exos.keystore import Hardware_KeyStore, xpubkey_to_pubkey, Xpub
-from electrum_exos.transaction import Transaction
-from electrum_exos.wallet import Standard_Wallet
-from electrum_exos.crypto import hash_160
-from electrum_exos.util import bfh, bh2u, versiontuple, UserFacingException
-from electrum_exos.base_wizard import ScriptTypeNotSupported
-from electrum_exos.logging import get_logger
+from electrum_rutanio.bip32 import BIP32Node, InvalidMasterKeyVersionBytes
+from electrum_rutanio.i18n import _
+from electrum_rutanio.plugin import Device
+from electrum_rutanio.keystore import Hardware_KeyStore, xpubkey_to_pubkey, Xpub
+from electrum_rutanio.transaction import Transaction
+from electrum_rutanio.wallet import Standard_Wallet
+from electrum_rutanio.crypto import hash_160
+from electrum_rutanio.util import bfh, bh2u, versiontuple, UserFacingException
+from electrum_rutanio.base_wizard import ScriptTypeNotSupported
+from electrum_rutanio.logging import get_logger
 
 from ..hw_wallet import HW_PluginBase
 from ..hw_wallet.plugin import LibraryFoundButUnusable

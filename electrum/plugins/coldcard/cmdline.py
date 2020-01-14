@@ -1,6 +1,6 @@
-from electrum_exos.plugin import hook
-from electrum_exos.util import print_msg, raw_input, print_stderr
-from electrum_exos.logging import get_logger
+from electrum_rutanio.plugin import hook
+from electrum_rutanio.util import print_msg, raw_input, print_stderr
+from electrum_rutanio.logging import get_logger
 
 from .coldcard import ColdcardPlugin
 
