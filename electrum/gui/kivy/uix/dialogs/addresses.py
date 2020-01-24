@@ -77,9 +77,6 @@ Builder.load_string('''
                 size_hint: 1, None
                 height: self.minimum_height
                 spacing: '5dp'
-                canvas.before:
-                    Color:
-                        rgba: 0.9, 0.9, 0.9, 1
                 AddressButton:
                     id: change
                     text: root.message if root.message else _('Search')
