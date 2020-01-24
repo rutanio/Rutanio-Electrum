@@ -67,7 +67,7 @@ Builder.load_string('''
     size_hint: None, None
     canvas.before:
         Color:
-            rgba: .239, .588, .882, 1
+            rgba: .157, .051, .176, 1
         Rectangle:
             size: Window.size
 
@@ -87,7 +87,7 @@ Builder.load_string('''
             height: self.minimum_height
             Label:
                 color: root.text_color
-                text: 'Rutanio-Electrum'
+                text: 'Rutanio Electrum'
                 size_hint: 1, None
                 height: self.texture_size[1] if self.opacity else 0
                 font_size: '33sp'
@@ -137,7 +137,7 @@ Builder.load_string('''
             text: _('From {} cosigners').format(n.value)
         Slider:
             id: n
-            range: 2, 5
+            range: 2, 10
             step: 1
             value: 2
         Label:
