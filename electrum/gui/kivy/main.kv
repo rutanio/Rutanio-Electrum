@@ -28,7 +28,7 @@
 <Carousel>:
     canvas.before:
         Color:
-            rgba: 0.1, 0.1, 0.1, 1
+            rgba: 0.157, 0.051, 0.176, 1
         Rectangle:
             size: self.size
             pos: self.pos
@@ -36,7 +36,7 @@
 <ActionView>:
     canvas.before:
         Color:
-            rgba: 0.1, 0.1, 0.1, 1
+            rgba: 0.157, 0.051, 0.176, 1
         Rectangle:
             size: self.size
             pos: self.pos
@@ -124,7 +124,7 @@
         padding: '10dp'
         canvas.before:
             Color:
-                rgb: .3, .3, .3
+                rgb: 0.239, 0.125, 0.259
             Rectangle:
                 size: self.size
                 pos: self.pos
@@ -142,7 +142,7 @@
         else: self.touched = False
     canvas.before:
         Color:
-            rgb: .3, .3, .3
+            rgb: 0.239, 0.125, 0.259
         Rectangle:
             size: self.size
             pos: self.pos
@@ -187,7 +187,7 @@
     padding: '12dp', 0
     canvas.before:
         Color:
-            rgba: 0.192, .498, 0.745, 1
+            rgba: 0.314, .188, 0.337, 1
         BorderImage:
             source: 'atlas://electrum/gui/kivy/theming/light/card_bottom'
             size: self.size
@@ -201,7 +201,7 @@
 	cols: 1
 	canvas.before:
 		Color:
-			rgba: 0.192, .498, 0.745, 1
+			rgba: 0.314, .188, 0.337, 1
 		BorderImage:
 			source: 'atlas://electrum/gui/kivy/theming/light/card_bottom'
 			size: self.size
@@ -214,7 +214,7 @@
 	padding: '12dp', 0
 	canvas.before:
 		Color:
-			rgba: 0.192, .498, 0.745, 1
+			rgba: 0.314, .188, 0.337, 1
         BorderImage:
             source: 'atlas://electrum/gui/kivy/theming/light/card_bottom'
             size: self.size
@@ -242,7 +242,7 @@
         self.screen.show_menu(args[0]) if self.state == 'down' else self.screen.hide_menu()
     canvas.before:
         Color:
-            rgba: (0.192, .498, 0.745, 1) if self.state == 'down' else (0.15, 0.15, 0.17, 1)
+            rgba: (1, .282, 0.392, 1) if self.state == 'down' else (0.157, 0.051, 0.176, 1)
         Rectangle:
             size: self.size
             pos: self.pos
@@ -261,7 +261,7 @@
     foreground_color: 1, 1, 1, 1
     canvas.before:
         Color:
-            rgba: (0.9, .498, 0.745, 1) if self.state == 'down' else self.background_color
+            rgba: (1, 0.282, 0.392, 1) if self.state == 'down' else self.background_color
         Rectangle:
             size: self.size
             pos: self.pos
@@ -281,7 +281,7 @@
 	foreground_color: 1, 1, 1, 1
 	canvas.before:
 		Color:
-			rgba: (0.9, .498, 0.745, 1) if self.state == 'down' else self.background_color
+			rgba: (1, 0.282, 0.392) if self.state == 'down' else self.background_color
 		Rectangle:
 			size: self.size
 			pos: self.pos
@@ -347,7 +347,7 @@
     height: '60dp'
     canvas.before:
         Color:
-            rgba: (0.192, .498, 0.745, 1) if self.state == 'down' else (0.3, 0.3, 0.3, 0)
+            rgba: (1, 0.282, 0.392, 1) if self.state == 'down' else (0.3, 0.3, 0.3, 0)
         Rectangle:
             size: self.size
             pos: self.pos
