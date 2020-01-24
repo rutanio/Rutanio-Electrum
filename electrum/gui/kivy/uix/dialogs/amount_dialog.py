@@ -54,6 +54,7 @@ Builder.load_string('''
                 size_hint: 1, None
                 update_amount: popup.update_amount
                 height: '300dp'
+                spacing: '2dp'
                 cols: 3
                 KButton:
                     text: '1'
