@@ -161,6 +161,7 @@
 
 
 <TreeViewNode>:
+    color_selected: 1, 0.282, 0.392, 0.5
     canvas.before:
         Color:
             rgba: self.color_selected if self.is_selected else self.odd_color if self.odd else self.even_color
@@ -451,6 +452,7 @@
             text_size: self.width - dp(16), None
             font_size: root.title_size
             font_name: root.title_font
+            bold: True
             halign: root.title_align
 
         Widget:
@@ -458,7 +460,7 @@
             height: dp(4)
             canvas:
                 Color:
-                    rgba: root.separator_color
+                    rgba: 1, 0.282, 0.392, 1
                 Rectangle:
                     pos: self.x, self.y + root.separator_height / 2.
                     size: self.width, root.separator_height
