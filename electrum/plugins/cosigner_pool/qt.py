@@ -51,7 +51,7 @@ from electrum_rutanio.wallet import Multisig_Wallet
 from electrum_rutanio.util import bh2u, bfh
 from electrum_rutanio.util import InvalidPassword
 
-from electrum_rutanio.gui.qt.transaction_dialog import show_transaction_timeout, TxDialogTimeout
+from electrum_rutanio.gui.qt.transaction_dialog_timeout import show_transaction_timeout, TxDialogTimeout
 from electrum_rutanio.gui.qt.transaction_wait_dialog import show_timeout_wait_dialog, TimeoutWaitDialog
 from electrum_rutanio.gui.qt.util import WaitingDialog, EnterButton, Buttons, WindowModalDialog, CloseButton, OkButton, read_QIcon
 
@@ -426,9 +426,9 @@ class Plugin(BasePlugin):
 
         xprv = None
         try:
-        xprv = wallet.keystore.get_master_private_key(password)
-        if not xprv:
-            return
+            xprv = wallet.keystore.get_master_private_key(password)
+            if not xprv:
+                return
         except InvalidPassword as e:
             self.logger.info("Incorrect Password")
             window.show_error(_("Incorrect Password"))
