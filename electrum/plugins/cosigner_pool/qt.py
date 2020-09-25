@@ -49,6 +49,7 @@ from electrum_rutanio.plugin import BasePlugin, hook, run_hook
 from electrum_rutanio.i18n import _
 from electrum_rutanio.wallet import Multisig_Wallet
 from electrum_rutanio.util import bh2u, bfh
+from electrum_rutanio.util import InvalidPassword
 
 from electrum_rutanio.gui.qt.transaction_dialog import show_transaction_timeout, TxDialogTimeout
 from electrum_rutanio.gui.qt.transaction_wait_dialog import show_timeout_wait_dialog, TimeoutWaitDialog
@@ -423,9 +424,16 @@ class Plugin(BasePlugin):
                                    _("Do you want to open it now?")):
                 return
 
+        xprv = None
+        try:
         xprv = wallet.keystore.get_master_private_key(password)
         if not xprv:
             return
+        except InvalidPassword as e:
+            self.logger.info("Incorrect Password")
+            window.show_error(_("Incorrect Password"))
+            return
+
         try:
             privkey = BIP32Node.from_xkey(xprv).eckey
             message = bh2u(privkey.decrypt_message(message))
