@@ -290,6 +290,8 @@ class Plugin(BasePlugin):
             self.listener = None
         self.keys = []
         self.cosigner_list = []
+        server.xpub([])
+        server.cosigners([])
         for key, keystore in wallet.keystores.items():
             xpub = keystore.get_master_public_key()
             pubkey = BIP32Node.from_xkey(xpub).eckey.get_public_key_bytes(compressed=True)
@@ -297,7 +299,7 @@ class Plugin(BasePlugin):
             self.logger.info(_hash)
             if not keystore.is_watching_only():
                 self.keys.append((key, _hash, window))
-                server.xpub(_hash)
+                server.xpub().append(_hash)
             else:
                 self.cosigner_list.append((window, xpub, pubkey, _hash))
                 server.cosigners().append(_hash)

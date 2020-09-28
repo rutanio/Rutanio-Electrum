@@ -75,7 +75,7 @@ class gRPCServer:
 class Cosigner(gRPCServer):
 
     __lock = None
-    __xpub = None
+    __xpub = []
     __cosigners = []
     __wallet_hash = None
 
@@ -93,7 +93,7 @@ class Cosigner(gRPCServer):
     def xpub(cls, xpub=None):
         if xpub is None:
             return cls.__xpub
-        cls.__xpub = [xpub]
+        cls.__xpub = xpub
         return cls.__xpub
 
     @classmethod
