@@ -1783,6 +1783,8 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, Logger):
                     parent.show_message(_('Payment sent.') + '\n' + msg)
                     self.invoice_list.update()
                     self.do_clear()
+                    if isinstance(self.wallet, Multisig_Wallet):
+                        parent.close()
                 else:
                     msg = msg or ''
                     parent.show_error(msg)
